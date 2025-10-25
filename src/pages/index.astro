@@ -1,16 +1,380 @@
 ---
+import "../styles/global.css"
+import { Image } from "astro:assets"
+import image from "../../public/matteo-2.jpeg"
+import Footer from "../components/Footer.astro"
 
+const title = "Matteo Cavallo"
+const description =
+  "Web engineer crafting meaningful digital experiences with care, clarity and intention. Building interfaces for purpose-driven people who want to leave things better than they found them."
+const siteUrl = "https://matteocavallo.com"
+const imageUrl = `${siteUrl}/matteo-2.jpeg`
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Primary Meta Tags -->
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <meta name="author" content="Matteo Cavallo" />
+    <meta
+      name="keywords"
+      content="frontend engineer, web engineer, UI developer, React, React Native, design systems, digital experiences, Paris, France"
+    />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href={siteUrl} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Matteo Cavallo" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={siteUrl} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={imageUrl} />
+
+    <!-- Additional SEO -->
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="7 days" />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Matteo Cavallo",
+        "url": "https://matteocavallo.com",
+        "image": "https://matteocavallo.com/matteo-2.jpeg",
+        "jobTitle": "Web Engineer",
+        "description": "Frontend engineer crafting meaningful digital experiences with care, clarity and intention.",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Paris",
+          "addressCountry": "France"
+        },
+        "worksFor": {
+          "@type": "Organization",
+          "name": "Qonto"
+        },
+        "sameAs": [
+          "https://medium.com/@m.cavallo1011",
+          "https://github.com/matteocavallo"
+        ]
+      }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="flex min-h-screen flex-col bg-white text-gray-800 antialiased">
+    <main class="container mx-auto px-6 py-12 sm:px-8 sm:py-16 lg:py-20">
+      <!-- Hero Section -->
+      <section
+        class="mx-auto flex max-w-5xl flex-col gap-10 border-b border-gray-200 pb-16 sm:pb-20 md:flex-row md:items-center md:justify-between md:gap-16 lg:gap-20 lg:pb-24"
+      >
+        <div class="flex-1 md:max-w-md">
+          <h1
+            class="mb-6 font-serif text-2xl leading-tight font-semibold text-gray-900 sm:text-3xl lg:text-4xl"
+          >
+            Matteo Cavallo
+          </h1>
+          <p class="mb-5 text-base leading-relaxed text-gray-700 sm:text-lg">
+            I craft meaningful digital experiences with <em
+              class="font-medium text-gray-900 not-italic"
+              >care, clarity and intention</em
+            > — helping purpose-driven people leave things better than they found
+            them.
+          </p>
+          <p class="mb-5 text-sm leading-relaxed text-gray-600 sm:text-base">
+            <em>Currently based in Paris, France.</em>
+          </p>
+          <p class="mt-8">
+            <a
+              href="mailto:m.cavallo1011@gmail.com"
+              class="inline-flex items-center text-sm font-medium text-gray-900 underline decoration-gray-300 underline-offset-4 transition-colors duration-200 hover:decoration-gray-900 sm:text-base"
+            >
+              Let's talk
+            </a>
+          </p>
+        </div>
+        <figure class="shrink-0 md:w-80 lg:w-96">
+          <Image
+            src={image}
+            alt="Matteo Cavallo"
+            class="aspect-4/3 w-full rounded-lg object-cover ring-1 ring-gray-100 md:max-w-full"
+          />
+        </figure>
+      </section>
+
+      <!-- Vision Section -->
+      <section
+        class="mx-auto grid max-w-5xl grid-cols-1 gap-10 border-b border-gray-200 py-12 sm:py-20 md:grid-cols-12 md:gap-12 lg:gap-16 lg:py-24"
+      >
+        <div class="md:sticky md:top-16 md:col-span-4 md:self-start">
+          <h2
+            class="mb-3 font-serif text-2xl font-semibold text-gray-900 sm:text-3xl lg:text-3xl"
+          >
+            Vision
+          </h2>
+          <p class="text-base leading-relaxed text-gray-500 sm:text-lg">
+            A compass for how I build, think, and live.
+          </p>
+        </div>
+        <div
+          class="space-y-6 text-base leading-relaxed text-gray-700 sm:space-y-8 sm:text-lg md:col-span-8"
+        >
+          <p>
+            <i class="font-medium text-gray-900 not-italic">I believe</i> that good
+            work can change things — for people, for communities, for the world around
+            us.
+          </p>
+          <p>
+            <i class="font-medium text-gray-900 not-italic">I believe</i> in clarity,
+            in quiet design, in beauty as a form of truth.
+          </p>
+          <p>
+            <i class="font-medium text-gray-900 not-italic">I believe</i> that purpose
+            matters more than performance. That what we make should leave the world
+            — <i class="text-gray-900">even slightly</i> — better.
+          </p>
+          <p>
+            <i class="font-medium text-gray-900 not-italic">I believe</i> in people
+            — in the quiet power of collaboration, empathy, and care.
+          </p>
+        </div>
+      </section>
+
+      <!-- About Section -->
+      <section
+        class="mx-auto grid max-w-5xl grid-cols-1 gap-10 py-12 sm:py-20 md:grid-cols-12 md:gap-12 lg:gap-16 lg:py-24"
+      >
+        <div class="md:sticky md:top-16 md:col-span-4 md:self-start">
+          <h2
+            class="mb-3 font-serif text-2xl font-semibold text-gray-900 sm:text-3xl lg:text-3xl"
+          >
+            About
+          </h2>
+          <p class="text-base leading-relaxed text-gray-500 sm:text-lg">
+            Still falling, still learning.
+          </p>
+        </div>
+        <div
+          class="space-y-6 text-base leading-relaxed text-gray-700 sm:space-y-8 sm:text-lg md:col-span-8"
+        >
+          <p>
+            For years, I've worked as a frontend engineer, building interfaces
+            for large-scale projects. I've learned precision, structure, and how
+            to make complex systems feel simple.
+          </p>
+          <p>
+            But somewhere along the way, I started craving something more
+            personal — something that could reflect not just <i
+              class="text-gray-900">what</i
+            > I do, but
+            <i class="text-gray-900">why</i> I do it.
+          </p>
+          <p>This site is where that idea starts to take form.</p>
+          <p>
+            It's not a portfolio in the traditional sense. It's a living space —
+            a place to experiment, to connect dots between design and
+            engineering, to explore the balance between logic and emotion.
+          </p>
+          <p>
+            I'm learning to move slower. To build with intention. To make things
+            that last.
+          </p>
+          <p>This space will grow with me — changing shape as I do.</p>
+
+          <!-- Experience subsection -->
+          <div class="mt-12">
+            <h3
+              class="mb-6 font-sans text-sm font-medium tracking-wide text-gray-400 uppercase"
+            >
+              Experience
+            </h3>
+            <div class="space-y-6">
+              <div class="border-b border-gray-100 pb-6 last:border-0">
+                <div
+                  class="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4"
+                >
+                  <div class="flex-1">
+                    <p class="font-sans text-base font-medium text-gray-900">
+                      Web Engineer
+                    </p>
+                    <p class="mt-0.5 font-sans text-sm text-gray-500">Qonto</p>
+                  </div>
+                  <p
+                    class="shrink-0 font-sans text-sm text-gray-400 tabular-nums"
+                  >
+                    2024—Present
+                  </p>
+                </div>
+                <p class="mt-3 text-sm leading-relaxed text-gray-600">
+                  Building web experiences for a fintech platform that serves
+                  hundreds of thousands of businesses. Learning to balance speed
+                  with care, working at scale while keeping the human experience
+                  at the center.
+                </p>
+              </div>
+              <div class="border-b border-gray-100 pb-6 last:border-0">
+                <div
+                  class="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4"
+                >
+                  <div class="flex-1">
+                    <p class="font-sans text-base font-medium text-gray-900">
+                      Mobile Engineer
+                    </p>
+                    <p class="mt-0.5 font-sans text-sm text-gray-500">Soldo</p>
+                  </div>
+                  <p
+                    class="shrink-0 font-sans text-sm text-gray-400 tabular-nums"
+                  >
+                    2020—2024
+                  </p>
+                </div>
+                <p class="mt-3 text-sm leading-relaxed text-gray-600">
+                  Spent four years building and evolving a React Native design
+                  system from the ground up. Learned that good systems aren't
+                  just about code — they're about empowering teams, maintaining
+                  consistency, and knowing when to be flexible.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Talks & Writings subsection -->
+          <div class="mt-12 border-t border-gray-200 pt-10">
+            <h3
+              class="mb-6 font-sans text-sm font-medium tracking-wide text-gray-400 uppercase"
+            >
+              Talks & Writings
+            </h3>
+            <div class="space-y-6">
+              <div class="border-b border-gray-100 pb-6 last:border-0">
+                <div
+                  class="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4"
+                >
+                  <div class="flex-1">
+                    <a
+                      href="https://medium.com/@m.cavallo1011/list/building-an-open-source-react-ui-library-8d39ebd5c402"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="group inline-block"
+                    >
+                      <p
+                        class="font-sans text-base font-medium text-gray-900 transition-colors duration-200 group-hover:text-gray-600"
+                      >
+                        Building an Open Source React UI Library
+                      </p>
+                    </a>
+                    <p class="mt-1 font-sans text-sm text-gray-500">
+                      Article Series
+                    </p>
+                  </div>
+                  <p
+                    class="shrink-0 font-sans text-sm text-gray-400 tabular-nums"
+                  >
+                    2024
+                  </p>
+                </div>
+                <p class="mt-3 text-sm leading-relaxed text-gray-600">
+                  A deep dive into creating accessible, thoughtfully designed
+                  components from scratch. I wanted to understand every layer —
+                  from TypeScript patterns to API design choices — and share
+                  what I learned.
+                </p>
+              </div>
+              <div class="border-b border-gray-100 pb-6 last:border-0">
+                <div
+                  class="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4"
+                >
+                  <div class="flex-1">
+                    <a
+                      href="https://medium.com/@m.cavallo1011/list/soldo-react-native-ui-kit-3a290da16f10"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="group inline-block"
+                    >
+                      <p
+                        class="font-sans text-base font-medium text-gray-900 transition-colors duration-200 group-hover:text-gray-600"
+                      >
+                        Soldo React Native UI Kit
+                      </p>
+                    </a>
+                    <p class="mt-1 font-sans text-sm text-gray-500">
+                      Article Series
+                    </p>
+                  </div>
+                  <p
+                    class="shrink-0 font-sans text-sm text-gray-400 tabular-nums"
+                  >
+                    2024
+                  </p>
+                </div>
+                <p class="mt-3 text-sm leading-relaxed text-gray-600">
+                  Reflecting on four years of building and maintaining a design
+                  system for mobile. The technical decisions, the tradeoffs, and
+                  what I'd do differently knowing what I know now.
+                </p>
+              </div>
+              <div class="border-b border-gray-100 pb-6 last:border-0">
+                <div
+                  class="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4"
+                >
+                  <div class="flex-1">
+                    <a
+                      href="https://open.spotify.com/show/2kzDycMHhUhgs8WMVsmLsX?si=27ee50885f4241de"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="group inline-block"
+                    >
+                      <p
+                        class="font-sans text-base font-medium text-gray-900 transition-colors duration-200 group-hover:text-gray-600"
+                      >
+                        Accademia dei Pugni
+                      </p>
+                    </a>
+                    <p class="mt-1 font-sans text-sm text-gray-500">Podcast</p>
+                  </div>
+                  <p
+                    class="shrink-0 font-sans text-sm text-gray-400 tabular-nums"
+                  >
+                    2021
+                  </p>
+                </div>
+                <p class="mt-3 text-sm leading-relaxed text-gray-600">
+                  A weekly podcast I co-created during university with Lorenzo.
+                  We talked about work, learning, and life from a student's
+                  perspective. Ten episodes of conversations, ideas, and not
+                  taking ourselves too seriously.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <Footer />
+  </body>
 </html>
