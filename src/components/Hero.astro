@@ -5,21 +5,23 @@ import { site } from "../data/site"
 ---
 
 <section
-  class="mx-auto flex max-w-5xl flex-col gap-6 px-6 pt-16 pb-8 md:flex-row md:items-center md:justify-between md:gap-16 lg:gap-20 lg:pb-24"
+  class="hero mx-auto flex min-h-[100svh] max-w-5xl flex-col justify-center gap-6 px-6 py-8 md:flex-row md:items-center md:justify-between md:gap-16 lg:gap-20"
 >
   <div class="flex flex-1 flex-col gap-6 md:max-w-md">
-    <p class="text-text font-serif text-[18px] leading-[1.6]">
+    <p class="hero-text text-text font-serif text-[18px] leading-[1.6]">
       I craft meaningful digital experiences with care, clarity and intention —
       helping purpose-driven people leave things better than they found them.
     </p>
     <div
-      class="font-handwriting text-text text-[20px] leading-normal font-bold"
+      class="hero-signature font-handwriting text-text text-[20px] leading-normal font-bold"
     >
-      <span class="block">Matteo</span>
-      <span class="block">{site.author.location}</span>
+      <span class="signature-line signature-name block">Matteo</span>
+      <span class="signature-line signature-location block"
+        >{site.author.location}</span
+      >
     </div>
   </div>
-  <figure class="shrink-0 md:w-80 lg:w-96">
+  <figure class="hero-image shrink-0 md:w-80 lg:w-96">
     <Image
       src={image}
       alt={site.author.name}
@@ -27,3 +29,12 @@ import { site } from "../data/site"
     />
   </figure>
 </section>
+
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", function () {
+    requestAnimationFrame(function () {
+      var hero = document.querySelector(".hero")
+      if (hero) hero.classList.add("hero--visible")
+    })
+  })
+</script>
