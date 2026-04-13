@@ -1,0 +1,41 @@
+---
+import { Image } from "astro:assets"
+import image from "../../public/matteo-2.jpeg"
+import { site } from "../data/site"
+---
+
+<section
+  class="mx-auto flex max-w-5xl flex-col gap-10 border-b border-gray-200 pb-16 sm:pb-20 md:flex-row md:items-center md:justify-between md:gap-16 lg:gap-20 lg:pb-24"
+>
+  <div class="flex-1 md:max-w-md">
+    <h1
+      class="mb-6 font-serif text-2xl leading-tight font-semibold text-gray-900 sm:text-3xl lg:text-4xl"
+    >
+      {site.author.name}
+    </h1>
+    <p class="mb-5 text-base leading-relaxed text-gray-700 sm:text-lg">
+      I craft meaningful digital experiences with <em
+        class="font-medium text-gray-900 not-italic"
+        >care, clarity and intention</em
+      > — helping purpose-driven people leave things better than they found them.
+    </p>
+    <p class="mb-5 text-sm leading-relaxed text-gray-600 sm:text-base">
+      <em>Currently based in {site.author.location}.</em>
+    </p>
+    <p class="mt-8">
+      <a
+        href={`mailto:${site.author.email}`}
+        class="inline-flex items-center text-sm font-medium text-gray-900 underline decoration-gray-300 underline-offset-4 transition-colors duration-200 hover:decoration-gray-900 sm:text-base"
+      >
+        Let's talk
+      </a>
+    </p>
+  </div>
+  <figure class="shrink-0 md:w-80 lg:w-96">
+    <Image
+      src={image}
+      alt={site.author.name}
+      class="aspect-4/3 w-full rounded-lg object-cover ring-1 ring-gray-100 md:max-w-full"
+    />
+  </figure>
+</section>

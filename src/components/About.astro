@@ -1,0 +1,74 @@
+---
+import Section from "./Section.astro"
+import ContentItem from "./ContentItem.astro"
+import { experience, talks } from "../data/site"
+---
+
+<Section
+  title="About"
+  subtitle="Still falling, still learning."
+  bordered={false}
+>
+  <p>
+    For years, I've worked as a frontend engineer, building interfaces for
+    large-scale projects. I've learned precision, structure, and how to make
+    complex systems feel simple.
+  </p>
+  <p>
+    But somewhere along the way, I started craving something more personal —
+    something that could reflect not just <i class="text-gray-900">what</i> I do,
+    but <i class="text-gray-900">why</i> I do it.
+  </p>
+  <p>This site is where that idea starts to take form.</p>
+  <p>
+    It's not a portfolio in the traditional sense. It's a living space — a place
+    to experiment, to connect dots between design and engineering, to explore
+    the balance between logic and emotion.
+  </p>
+  <p>
+    I'm learning to move slower. To build with intention. To make things that
+    last.
+  </p>
+  <p>This space will grow with me — changing shape as I do.</p>
+
+  <div class="mt-12">
+    <h3
+      class="mb-6 font-sans text-sm font-medium tracking-wide text-gray-400 uppercase"
+    >
+      Experience
+    </h3>
+    <div class="space-y-6">
+      {
+        experience.map((item) => (
+          <ContentItem
+            title={item.role}
+            subtitle={item.company}
+            period={item.period}
+            description={item.description}
+          />
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="mt-12 border-t border-gray-200 pt-10">
+    <h3
+      class="mb-6 font-sans text-sm font-medium tracking-wide text-gray-400 uppercase"
+    >
+      Talks & Writings
+    </h3>
+    <div class="space-y-6">
+      {
+        talks.map((item) => (
+          <ContentItem
+            title={item.title}
+            subtitle={item.type}
+            period={item.year}
+            description={item.description}
+            href={item.href}
+          />
+        ))
+      }
+    </div>
+  </div>
+</Section>

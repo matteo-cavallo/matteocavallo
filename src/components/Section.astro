@@ -1,0 +1,32 @@
+---
+interface Props {
+  title: string
+  subtitle: string
+  bordered?: boolean
+}
+
+const { title, subtitle, bordered = true } = Astro.props
+---
+
+<section
+  class:list={[
+    "mx-auto grid max-w-5xl grid-cols-1 gap-10 py-12 sm:py-20 md:grid-cols-12 md:gap-12 lg:gap-16 lg:py-24",
+    bordered && "border-b border-gray-200",
+  ]}
+>
+  <div class="md:sticky md:top-16 md:col-span-4 md:self-start">
+    <h2
+      class="mb-3 font-serif text-2xl font-semibold text-gray-900 sm:text-3xl lg:text-3xl"
+    >
+      {title}
+    </h2>
+    <p class="text-base leading-relaxed text-gray-500 sm:text-lg">
+      {subtitle}
+    </p>
+  </div>
+  <div
+    class="space-y-6 text-base leading-relaxed text-gray-700 sm:space-y-8 sm:text-lg md:col-span-8"
+  >
+    <slot />
+  </div>
+</section>

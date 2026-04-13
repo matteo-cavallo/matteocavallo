@@ -1,0 +1,80 @@
+---
+import { site } from "../data/site"
+
+interface Props {
+  title?: string
+  description?: string
+}
+
+const { title = site.title, description = site.description } = Astro.props
+const imageUrl = `${site.url}/matteo-2.jpeg`
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: site.author.name,
+  url: site.url,
+  image: imageUrl,
+  jobTitle: site.author.jobTitle,
+  description:
+    "Frontend engineer crafting meaningful digital experiences with care, clarity and intention.",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Paris",
+    addressCountry: "France",
+  },
+  worksFor: {
+    "@type": "Organization",
+    name: site.author.employer,
+  },
+  sameAs: [site.social.medium, site.social.github],
+}
+---
+
+<meta charset="utf-8" />
+<link rel="icon" type="image/svg+xml" href="/favicon.png" />
+<meta name="viewport" content="width=device-width" />
+<meta name="generator" content={Astro.generator} />
+
+<!-- Primary Meta Tags -->
+<title>{title}</title>
+<meta name="title" content={title} />
+<meta name="description" content={description} />
+<meta name="author" content={site.author.name} />
+<meta name="keywords" content={site.keywords} />
+
+<!-- Canonical URL -->
+<link rel="canonical" href={site.url} />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={site.url} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={imageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:site_name" content={site.author.name} />
+<meta property="og:locale" content={site.locale} />
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content={site.url} />
+<meta property="twitter:title" content={title} />
+<meta property="twitter:description" content={description} />
+<meta property="twitter:image" content={imageUrl} />
+
+<!-- Additional SEO -->
+<meta name="robots" content="index, follow" />
+<meta name="language" content="English" />
+<meta name="revisit-after" content="7 days" />
+
+<!-- Structured Data (JSON-LD) -->
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:ital,wght@0,100..900;1,100..900&display=swap"
+  rel="stylesheet"
+/>
