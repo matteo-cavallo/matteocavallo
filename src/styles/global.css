@@ -28,7 +28,7 @@
    The cursive system font is used as fallback until the file is added. */
 @font-face {
   font-family: "LiebeHeide Fineliner";
-  src: url("/fonts/LiebeHeide-Fineliner.woff2") format("woff2");
+  src: url("/fonts/LiebeHeide-FinelinerBold.otf") format("otf");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
