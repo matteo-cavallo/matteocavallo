@@ -4,11 +4,7 @@ import ContentItem from "./ContentItem.astro"
 import { experience, talks } from "../data/site"
 ---
 
-<Section
-  title="About"
-  subtitle="Still falling, still learning."
-  bordered={false}
->
+<Section title="About" subtitle="Still falling, still learning.">
   <p>
     For years, I've worked as a frontend engineer, building interfaces for
     large-scale projects. I've learned precision, structure, and how to make
@@ -16,8 +12,7 @@ import { experience, talks } from "../data/site"
   </p>
   <p>
     But somewhere along the way, I started craving something more personal —
-    something that could reflect not just <i class="text-gray-900">what</i> I do,
-    but <i class="text-gray-900">why</i> I do it.
+    something that could reflect not just what I do, but why I do it.
   </p>
   <p>This site is where that idea starts to take form.</p>
   <p>
@@ -31,9 +26,9 @@ import { experience, talks } from "../data/site"
   </p>
   <p>This space will grow with me — changing shape as I do.</p>
 
-  <div class="mt-12">
+  <div>
     <h3
-      class="mb-6 font-sans text-sm font-medium tracking-wide text-gray-400 uppercase"
+      class="text-muted mb-6 font-serif text-[14px] font-medium tracking-wide uppercase"
     >
       Experience
     </h3>
@@ -51,9 +46,9 @@ import { experience, talks } from "../data/site"
     </div>
   </div>
 
-  <div class="mt-12 border-t border-gray-200 pt-10">
+  <div class="border-divider border-t pt-8">
     <h3
-      class="mb-6 font-sans text-sm font-medium tracking-wide text-gray-400 uppercase"
+      class="text-muted mb-6 font-serif text-[14px] font-medium tracking-wide uppercase"
     >
       Talks & Writings
     </h3>

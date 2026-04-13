@@ -3,16 +3,39 @@
 @theme {
   --font-serif: "Libre Baskerville", serif;
   --font-sans: "Libre Franklin", sans-serif;
+  /* WARNING: LiebeHeide Fineliner font file not found in public/fonts/.
+     Add the font file (e.g. public/fonts/LiebeHeide-Fineliner.woff2) and update
+     the @font-face src below. The cursive system font is used as fallback. */
+  --font-handwriting: "LiebeHeide Fineliner", cursive;
+
+  --color-bg: #fffcf0;
+  --color-text: #100f0f;
+  --color-muted: #6f6e69;
+  --color-divider: #e5e3d9;
+  --color-cta: #100f0f;
+}
+
+/* WARNING: LiebeHeide Fineliner font file not found in public/fonts/.
+   Expected path: public/fonts/LiebeHeide-Fineliner.woff2
+   The cursive system font is used as fallback until the file is added. */
+@font-face {
+  font-family: "LiebeHeide Fineliner";
+  src: url("/fonts/LiebeHeide-Fineliner.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
 }
 
 @layer components {
   p {
     @apply font-serif;
+    text-wrap: pretty;
   }
 }
 
-/* Better text rendering */
 body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;

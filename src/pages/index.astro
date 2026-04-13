@@ -3,13 +3,16 @@ import BaseLayout from "../layouts/BaseLayout.astro"
 import Hero from "../components/Hero.astro"
 import Vision from "../components/Vision.astro"
 import About from "../components/About.astro"
+import Divider from "../components/Divider.astro"
 import Footer from "../components/Footer.astro"
 ---
 
 <BaseLayout>
-  <main class="container mx-auto px-6 py-12 sm:px-8 sm:py-16 lg:py-20">
+  <main>
     <Hero />
+    <Divider />
     <Vision />
+    <Divider />
     <About />
   </main>
   <Footer />
