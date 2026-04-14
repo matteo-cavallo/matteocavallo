@@ -75,10 +75,15 @@ import Signature from "./Signature.astro"
   const curtain = document.getElementById("curtain")!
   const quote = document.getElementById("curtain-quote")!
 
+  document.body.style.overflow = "hidden"
+
   setTimeout(() => quote.classList.add("is-visible"), QUOTE_IN)
 
   setTimeout(() => {
     curtain.classList.add("is-exiting")
-    setTimeout(() => curtain.remove(), EXIT_DURATION + 50)
+    setTimeout(() => {
+      document.body.style.overflow = ""
+      curtain.remove()
+    }, EXIT_DURATION + 50)
   }, EXIT_AT)
 </script>
