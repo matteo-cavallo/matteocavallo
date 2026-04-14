@@ -1,0 +1,112 @@
+---
+interface Props {
+  class?: string
+  animated?: boolean
+  delay?: number
+}
+
+const { class: className = "", animated = false, delay = 0 } = Astro.props
+---
+
+<svg
+  data-signature={animated ? "" : undefined}
+  data-delay={animated ? delay : undefined}
+  width="676"
+  height="167"
+  viewBox="0 0 676 167"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  class={className}
+  aria-label="Matteo"
+>
+  <!-- M -->
+  <path
+    pathLength="1"
+    d="M78.5776 84.9159C83.3528 81.6477 85.4903 52.4851 65.1698 51.2999C15.8014 48.4204 -13.0216 143.034 24.9466 155.51C84.1451 174.962 163.383 3.03176 159.024 7.5991C128.59 142.394 145.439 144.249 239.471 7.5991C212.388 85.3577 183.895 147.97 205.951 155.51"
+  ></path>
+  <!-- a -->
+  <path
+    pathLength="1"
+    d="M313.194 91.6338C313.401 87.0285 323.976 76.9242 326.602 84.9106C334.12 107.776 283.623 180.355 259.563 152.143C236.644 125.268 282.111 56.2344 306.49 74.8258C318.687 84.1263 317.419 93.101 316.546 108.442C315.923 119.394 304.302 138.53 323.25 145.419C341.026 151.882 365.327 106.777 365.584 111.803"
+  ></path>
+  <!-- tt body -->
+  <path
+    pathLength="1"
+    d="M390.289 37.8482C390.289 37.8482 345.577 137.407 376.881 147.743C410.704 158.91 457.482 46.2323 460.68 37.8482C440.293 114.962 417.22 176.001 460.68 155.504"
+  ></path>
+  <!-- tt crossbar -->
+  <path
+    pathLength="1"
+    d="M353.418 71.4642C353.155 63.927 561.001 46.8524 564.59 34.4866"></path>
+  <!-- e -->
+  <path
+    pathLength="1"
+    d="M487.495 111.803C551.811 107.841 538.352 74.6359 534.422 71.4642C515.8 56.4342 475.112 103.869 490.847 135.335C502.287 158.211 538.603 139.43 541.126 131.973"
+  ></path>
+  <!-- o -->
+  <path
+    pathLength="1"
+    d="M624.925 81.549C584.282 40.2578 548.67 138.297 581.35 152.143C615.21 166.488 634.844 85.7658 614.869 98.357C594.894 110.948 641.947 148.831 668.5 108.442"
+  ></path>
+</svg>
+
+<style>
+  svg {
+    fill: none;
+  }
+
+  svg path {
+    stroke: currentColor;
+    stroke-width: 15;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Animated state: paths start hidden and draw in */
+  svg[data-signature] {
+    opacity: 0;
+    transition: opacity 400ms ease;
+  }
+
+  svg[data-signature] path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    svg[data-signature] {
+      opacity: 1 !important;
+      transition: none !important;
+    }
+
+    svg[data-signature] path {
+      stroke-dashoffset: 0 !important;
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+  const STAGGER = 250
+
+  document
+    .querySelectorAll<SVGSVGElement>("svg[data-signature]")
+    .forEach((svg) => {
+      const delay = Number(svg.dataset.delay ?? 0)
+      const paths = svg.querySelectorAll<SVGPathElement>("path")
+
+      setTimeout(() => {
+        svg.style.opacity = "1"
+      }, delay)
+
+      paths.forEach((path, i) => {
+        setTimeout(
+          () => {
+            path.style.strokeDashoffset = "0"
+          },
+          delay + i * STAGGER,
+        )
+      })
+    })
+</script>
