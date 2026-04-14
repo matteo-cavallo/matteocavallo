@@ -2,14 +2,12 @@
 import { site } from "../data/site"
 ---
 
-<footer class="border-divider bg-bg mt-auto border-t">
-  <div class="container mx-auto px-6 py-12 sm:px-8 sm:py-16">
-    <div
-      class="mx-auto flex max-w-5xl flex-col justify-between gap-8 md:flex-row"
-    >
+<footer class="mt-auto border-t border-stone-200 bg-stone-50 dark:border-stone-700 dark:bg-stone-800">
+  <div class="mx-auto max-w-5xl px-8 py-12 lg:px-12 md:py-16">
+    <div class="flex flex-col justify-between gap-8 md:flex-row">
       <div class="will-animate space-y-2">
-        <p class="text-muted font-sans text-sm">Made slowly in Paris.</p>
-        <p class="text-muted/60 font-sans text-sm">
+        <p class="font-sans text-sm text-stone-500 dark:text-stone-400">Made slowly in Paris.</p>
+        <p class="font-sans text-sm text-stone-500/60 dark:text-stone-400/60">
           © {site.author.name} 2025 All Rights Reserved
         </p>
       </div>
@@ -17,7 +15,7 @@ import { site } from "../data/site"
       <div class="will-animate flex flex-wrap items-start gap-6 delay-100">
         <a
           href={`mailto:${site.author.email}`}
-          class="text-muted hover:text-text font-sans text-sm font-medium transition-colors duration-150"
+          class="font-sans text-sm font-medium text-stone-500 transition-colors duration-150 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100"
         >
           Email
         </a>
@@ -25,7 +23,7 @@ import { site } from "../data/site"
           href={site.social.instagram}
           target="_blank"
           rel="noopener noreferrer"
-          class="text-muted hover:text-text font-sans text-sm font-medium transition-colors duration-150"
+          class="font-sans text-sm font-medium text-stone-500 transition-colors duration-150 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100"
         >
           Instagram
         </a>
@@ -33,7 +31,7 @@ import { site } from "../data/site"
           href={site.social.linkedin}
           target="_blank"
           rel="noopener noreferrer"
-          class="text-muted hover:text-text font-sans text-sm font-medium transition-colors duration-150"
+          class="font-sans text-sm font-medium text-stone-500 transition-colors duration-150 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100"
         >
           LinkedIn
         </a>

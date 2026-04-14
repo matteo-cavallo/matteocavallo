@@ -1,40 +1,13 @@
 ---
-import { Image } from "astro:assets"
-import image from "../../public/matteo-2.jpeg"
 import { site } from "../data/site"
 ---
 
-<section
-  class="hero mx-auto flex min-h-[100svh] max-w-5xl flex-col justify-center gap-6 px-6 py-8 md:flex-row md:items-center md:justify-between md:gap-16 lg:gap-20"
->
-  <div class="flex flex-1 flex-col gap-6 md:max-w-md">
-    <p class="hero-text text-text font-serif text-[18px] leading-[1.6]">
-      I craft meaningful digital experiences with care, clarity and intention —
-      helping purpose-driven people leave things better than they found them.
-    </p>
-    <div
-      class="hero-signature font-handwriting text-text text-[20px] leading-normal font-bold"
-    >
-      <span class="signature-line signature-name block">Matteo</span>
-      <span class="signature-line signature-location block"
-        >{site.author.location}</span
-      >
-    </div>
-  </div>
-  <figure class="hero-image shrink-0 md:w-80 lg:w-96">
-    <Image
-      src={image}
-      alt={site.author.name}
-      class="ring-divider aspect-4/3 w-full rounded-sm object-cover ring-1 md:max-w-full"
-    />
-  </figure>
-</section>
-
-<script is:inline>
-  document.addEventListener("DOMContentLoaded", function () {
-    requestAnimationFrame(function () {
-      var hero = document.querySelector(".hero")
-      if (hero) hero.classList.add("hero--visible")
-    })
-  })
-</script>
+<aside class="animate-on-load min-h-screen py-16 md:sticky md:top-16 md:self-start md:py-16">
+  <p class="font-serif text-[18px] leading-[1.6] text-stone-900 dark:text-stone-100">
+    I craft meaningful digital experiences with care, clarity and intention —
+    helping purpose-driven people leave things better than they found them.
+  </p>
+  <p class="mt-4 font-serif text-sm text-stone-500 italic dark:text-stone-400">
+    Currently based in {site.author.location}
+  </p>
+</aside>

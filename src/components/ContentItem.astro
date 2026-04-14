@@ -10,7 +10,7 @@ interface Props {
 const { title, subtitle, period, description, href } = Astro.props
 ---
 
-<div class="border-divider border-b pb-6 last:border-0">
+<div class="border-b border-stone-200 pb-6 last:border-0 dark:border-stone-700">
   <div
     class="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4"
   >
@@ -23,25 +23,25 @@ const { title, subtitle, period, description, href } = Astro.props
             rel="noopener noreferrer"
             class="group inline-block"
           >
-            <p class="text-text group-hover:text-muted font-sans text-base font-medium transition-colors duration-150">
+            <p class="font-sans text-base font-medium text-stone-900 transition-colors duration-150 group-hover:text-stone-500 dark:text-stone-100 dark:group-hover:text-stone-400">
               {title}
             </p>
           </a>
         ) : (
-          <p class="text-text font-sans text-base font-medium">{title}</p>
+          <p class="font-sans text-base font-medium text-stone-900 dark:text-stone-100">{title}</p>
         )
       }
       <p
-        class:list={["text-muted font-sans text-sm", href ? "mt-1" : "mt-0.5"]}
+        class:list={["font-sans text-sm text-stone-500 dark:text-stone-400", href ? "mt-1" : "mt-0.5"]}
       >
         {subtitle}
       </p>
     </div>
-    <p class="text-muted shrink-0 font-sans text-sm tabular-nums">
+    <p class="shrink-0 font-sans text-sm tabular-nums text-stone-500 dark:text-stone-400">
       {period}
     </p>
   </div>
-  <p class="text-muted mt-3 text-sm leading-relaxed">
+  <p class="mt-3 text-sm leading-relaxed text-stone-500 dark:text-stone-400">
     {description}
   </p>
 </div>

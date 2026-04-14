@@ -3,29 +3,9 @@
 @theme {
   --font-serif: "Libre Baskerville", serif;
   --font-sans: "Libre Franklin", sans-serif;
-  /* WARNING: LiebeHeide Fineliner font file not found in public/fonts/.
-     Add the font file (e.g. public/fonts/LiebeHeide-Fineliner.woff2) and update
-     the @font-face src below. The cursive system font is used as fallback. */
   --font-handwriting: "LiebeHeide Fineliner", cursive;
-
-  --color-bg: #fffcf0;
-  --color-text: #100f0f;
-  --color-muted: #6f6e69;
-  --color-divider: #e5e3d9;
-  --color-cta: #100f0f;
 }
 
-:root {
-  --ease-out-soft: cubic-bezier(0.25, 0.1, 0.25, 1);
-  --hero-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
-  --hero-duration-text: 900ms;
-  --hero-duration-image: 800ms;
-  --hero-duration-signature: 700ms;
-}
-
-/* WARNING: LiebeHeide Fineliner font file not found in public/fonts/.
-   Expected path: public/fonts/LiebeHeide-Fineliner.woff2
-   The cursive system font is used as fallback until the file is added. */
 @font-face {
   font-family: "LiebeHeide Fineliner";
   src: url("/fonts/LiebeHeide-FinelinerBold.otf") format("otf");
@@ -42,11 +22,16 @@
 }
 
 body {
-  background-color: var(--color-bg);
-  color: var(--color-text);
+  @apply bg-stone-50 text-stone-900;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    @apply bg-stone-800 text-stone-100;
+  }
 }
 
 /* Scroll-triggered entrance animations */
@@ -57,7 +42,7 @@ body {
     transform: translateY(12px);
     transition-property: opacity, transform;
     transition-duration: 600ms;
-    transition-timing-function: var(--ease-out-soft);
+    transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
   }
 
   .will-animate.fade-only,
@@ -86,55 +71,6 @@ body {
   .delay-500 {
     transition-delay: 500ms;
   }
-
-  .duration-700 {
-    transition-duration: 700ms;
-  }
-  .duration-800 {
-    transition-duration: 800ms;
-  }
-}
-
-/* Hero entrance sequence */
-@media (prefers-reduced-motion: no-preference) {
-  .hero-text {
-    opacity: 0;
-    transform: translateY(10px);
-    transition:
-      opacity var(--hero-duration-text) var(--hero-ease),
-      transform var(--hero-duration-text) var(--hero-ease);
-    transition-delay: 300ms;
-  }
-
-  .hero--visible .hero-text {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .hero-image {
-    opacity: 0;
-    transition: opacity var(--hero-duration-image) var(--hero-ease);
-    transition-delay: 700ms;
-  }
-
-  .hero--visible .hero-image {
-    opacity: 1;
-  }
-
-  .signature-line {
-    clip-path: inset(0 100% 0 0);
-    transition: clip-path var(--hero-duration-signature) var(--hero-ease);
-  }
-
-  .hero--visible .signature-name {
-    clip-path: inset(0 0% 0 0);
-    transition-delay: 1000ms;
-  }
-
-  .hero--visible .signature-location {
-    clip-path: inset(0 0% 0 0);
-    transition-delay: 1400ms;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -142,17 +78,5 @@ body {
   .animate-on-load {
     opacity: 1 !important;
     transform: none !important;
-  }
-
-  .hero-text,
-  .hero-image {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
-
-  .signature-line {
-    clip-path: none !important;
-    transition: none !important;
   }
 }
