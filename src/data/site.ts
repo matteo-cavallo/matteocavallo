@@ -6,6 +6,7 @@ export const site = {
   locale: "en_US",
   keywords:
     "frontend engineer, web engineer, UI developer, React, React Native, design systems, digital experiences, Paris, France",
+  tagline: "Made slowly in Paris.",
   author: {
     name: "Matteo Cavallo",
     email: "m.cavallo1011@gmail.com",

@@ -4,7 +4,7 @@ import ContentItem from "./ContentItem.astro"
 import { experience, talks } from "../data/site"
 ---
 
-<Section title="About" subtitle="Still falling, still learning.">
+<Section id="about" title="About" subtitle="Still falling, still learning.">
   <p class="will-animate delay-100">
     For years, I've worked as a frontend engineer, building interfaces for
     large-scale projects. I've learned precision, structure, and how to make
@@ -32,7 +32,7 @@ import { experience, talks } from "../data/site"
 
   <div class="will-animate">
     <h3
-      class="mb-6 font-serif text-[14px] font-medium uppercase tracking-wide text-stone-500 dark:text-stone-400"
+      class="mb-6 font-serif text-[14px] font-medium tracking-wide text-stone-500 uppercase dark:text-stone-400"
     >
       Experience
     </h3>
@@ -50,9 +50,11 @@ import { experience, talks } from "../data/site"
     </div>
   </div>
 
-  <div class="will-animate border-t border-stone-200 pt-8 dark:border-stone-700">
+  <div
+    class="will-animate border-t border-stone-200 pt-8 dark:border-stone-700"
+  >
     <h3
-      class="mb-6 font-serif text-[14px] font-medium uppercase tracking-wide text-stone-500 dark:text-stone-400"
+      class="mb-6 font-serif text-[14px] font-medium tracking-wide text-stone-500 uppercase dark:text-stone-400"
     >
       Talks & Writings
     </h3>

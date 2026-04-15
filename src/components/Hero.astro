@@ -1,13 +1,19 @@
 ---
+import Image from "astro/components/Image.astro"
 import { site } from "../data/site"
 ---
 
-<aside class="animate-on-load min-h-screen py-16 md:sticky md:top-16 md:self-start md:py-16">
-  <p class="font-serif text-[18px] leading-[1.6] text-stone-900 dark:text-stone-100">
-    I craft meaningful digital experiences with care, clarity and intention —
-    helping purpose-driven people leave things better than they found them.
-  </p>
-  <p class="mt-4 font-serif text-sm text-stone-500 italic dark:text-stone-400">
-    Currently based in {site.author.location}
-  </p>
-</aside>
+<div class="flex min-h-screen flex-col gap-8 px-8 py-16 lg:min-h-0">
+  <div class="space-y-4">
+    <p
+      class="font-serif text-2xl leading-relaxed text-stone-900 dark:text-stone-100"
+    >
+      I craft meaningful digital experiences with care, clarity and intention —
+      helping purpose-driven people leave things better than they found them.
+    </p>
+    <p class="font-serif text-lg text-neutral-500 italic dark:text-neutral-400">
+      Currently based in {site.author.location}
+    </p>
+  </div>
+  <!-- <Image src="/matteo-2.jpeg" alt="Matteo Cavallo" width={1000} height={1000} /> -->
+</div>

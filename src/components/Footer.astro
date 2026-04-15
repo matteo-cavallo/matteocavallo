@@ -1,40 +1,54 @@
 ---
+import { Icon } from "astro-icon/components"
 import { site } from "../data/site"
+
+const socials = [
+  {
+    href: `mailto:${site.author.email}`,
+    icon: "lucide:mail",
+    label: "Email",
+  },
+  {
+    href: site.social.instagram,
+    icon: "simple-icons:instagram",
+    label: "Instagram",
+    external: true,
+  },
+  {
+    href: site.social.linkedin,
+    icon: "simple-icons:linkedin",
+    label: "LinkedIn",
+    external: true,
+  },
+]
 ---
 
-<footer class="mt-auto border-t border-stone-200 bg-stone-50 dark:border-stone-700 dark:bg-stone-800">
-  <div class="mx-auto max-w-5xl px-8 py-12 lg:px-12 md:py-16">
-    <div class="flex flex-col justify-between gap-8 md:flex-row">
+<footer class="border-t border-neutral-200 dark:border-neutral-700">
+  <div class="px-8 py-12">
+    <div class="flex flex-col justify-between gap-8 md:flex-row md:items-end">
       <div class="will-animate space-y-2">
-        <p class="font-sans text-sm text-stone-500 dark:text-stone-400">Made slowly in Paris.</p>
+        <p class="font-sans text-sm text-stone-500 dark:text-stone-400">
+          {site.tagline}
+        </p>
         <p class="font-sans text-sm text-stone-500/60 dark:text-stone-400/60">
-          © {site.author.name} 2025 All Rights Reserved
+          © {site.author.name}
+          {new Date().getFullYear()} All Rights Reserved
         </p>
       </div>
-
-      <div class="will-animate flex flex-wrap items-start gap-6 delay-100">
-        <a
-          href={`mailto:${site.author.email}`}
-          class="font-sans text-sm font-medium text-stone-500 transition-colors duration-150 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100"
-        >
-          Email
-        </a>
-        <a
-          href={site.social.instagram}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="font-sans text-sm font-medium text-stone-500 transition-colors duration-150 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100"
-        >
-          Instagram
-        </a>
-        <a
-          href={site.social.linkedin}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="font-sans text-sm font-medium text-stone-500 transition-colors duration-150 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100"
-        >
-          LinkedIn
-        </a>
+      <div class="will-animate flex items-center gap-4 delay-100">
+        {
+          socials.map(({ href, icon, label, external }) => (
+            <a
+              href={href}
+              aria-label={label}
+              target={external ? "_blank" : undefined}
+              rel={external ? "noopener noreferrer" : undefined}
+              class="text-stone-400 transition-colors duration-150 hover:text-stone-900 dark:text-stone-500 dark:hover:text-stone-100"
+            >
+              <Icon name={icon} class="h-4 w-4" />
+            </a>
+          ))
+        }
       </div>
     </div>
   </div>

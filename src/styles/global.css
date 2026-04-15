@@ -4,6 +4,21 @@
   --font-serif: "Libre Baskerville", serif;
   --font-sans: "Libre Franklin", sans-serif;
   --font-handwriting: "LiebeHeide Fineliner", cursive;
+
+  /* Mobile card stack — same hue/chroma as slate, stepping lightness by 3% */
+  --color-card-1: oklch(98% 0.006 247);
+  --color-card-2: oklch(95% 0.006 247);
+  --color-card-3: oklch(92% 0.006 247);
+  --color-card-4: oklch(89% 0.006 247);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-card-1: oklch(18% 0.010 247);
+    --color-card-2: oklch(21% 0.010 247);
+    --color-card-3: oklch(24% 0.010 247);
+    --color-card-4: oklch(27% 0.010 247);
+  }
 }
 
 @font-face {
@@ -21,8 +36,13 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  @apply bg-stone-50 text-stone-900;
+  background-color: var(--color-card-1);
+  @apply text-slate-900;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -30,7 +50,7 @@ body {
 
 @media (prefers-color-scheme: dark) {
   body {
-    @apply bg-stone-800 text-stone-100;
+    @apply text-slate-100;
   }
 }
 
