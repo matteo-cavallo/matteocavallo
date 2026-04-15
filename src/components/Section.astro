@@ -8,15 +8,18 @@ interface Props {
 const { title, subtitle, id } = Astro.props
 ---
 
-<section id={id} class="flex min-h-screen flex-col gap-8 px-8 py-16 lg:min-h-0">
+<section
+  id={id}
+  class="flex min-h-screen flex-col gap-8 border-b border-slate-200 px-8 py-16 lg:min-h-0 dark:border-slate-700"
+>
   <div class="space-y-2">
     <h2
-      class="font-serif text-xl leading-relaxed font-bold text-stone-900 dark:text-stone-100"
+      class="will-animate font-serif text-xl leading-relaxed font-bold text-stone-900 dark:text-stone-100"
     >
       {title}
     </h2>
     <p
-      class="text-md font-serif leading-relaxed text-stone-500 italic dark:text-stone-400"
+      class="will-animate text-md font-serif leading-relaxed text-stone-500 italic delay-100 dark:text-stone-400"
     >
       {subtitle}
     </p>
