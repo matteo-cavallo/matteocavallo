@@ -27,13 +27,17 @@ import Curtain from "../components/Curtain.astro"
     </div>
     <!-- Mobile: sticky card stack -->
     <div class="lg:hidden">
-      <div class="bg-card-3 sticky top-0 z-10 min-h-screen">
+      <div class="bg-card-1 sticky top-0 z-10 min-h-screen">
         <Hero />
       </div>
-      <div class="bg-card-2 sticky top-0 z-20 min-h-screen">
+      <div
+        class="bg-card-2 sticky top-0 z-20 min-h-screen rounded-t-3xl border-t border-slate-200 dark:border-slate-700"
+      >
         <Vision />
       </div>
-      <div class="bg-card-1 sticky top-0 z-30 min-h-screen">
+      <div
+        class="bg-card-3 sticky top-0 z-30 min-h-screen rounded-t-3xl border-t border-slate-200 dark:border-slate-700"
+      >
         <About />
         <Footer />
       </div>
