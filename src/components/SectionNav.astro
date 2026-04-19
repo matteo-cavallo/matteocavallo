@@ -12,7 +12,7 @@ const { sections } = Astro.props
 ---
 
 <nav
-  class="section-nav pointer-events-none absolute top-1/2 right-8 z-10 hidden -translate-y-1/2 items-center justify-items-end md:grid"
+  class="section-nav pointer-events-none z-10 hidden items-center justify-items-end md:col-start-1 md:row-start-2 md:mr-8 md:grid md:self-center md:justify-self-end"
   aria-label="Section navigation"
 >
   {
@@ -260,16 +260,21 @@ const { sections } = Astro.props
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => Boolean(el))
 
-    if (nav && effectsEnabled) {
-      nav.style.perspective = `${MOTION.nav.wheelPerspective}px`
-      nav.style.perspectiveOrigin = "100% 50%"
-      slots.forEach((slot) => {
-        slot.style.transformOrigin = `100% 50% -${MOTION.nav.wheelRadius}px`
-        slot.style.transformStyle = "preserve-3d"
-      })
-    }
-
     ctx = gsap.context(() => {
+      // 3D environment — owned by the context so ctx.revert() wipes all
+      // perspective / transform-origin / transform-style properties on
+      // teardown (no manual clearing required).
+      if (nav && effectsEnabled) {
+        gsap.set(nav, {
+          perspective: MOTION.nav.wheelPerspective,
+          perspectiveOrigin: "100% 50%",
+        })
+        gsap.set(slots, {
+          transformOrigin: `100% 50% -${MOTION.nav.wheelRadius}px`,
+          transformStyle: "preserve-3d",
+        })
+      }
+
       if (effectsEnabled) {
         gsap.set(navLinks, { x: 0, scale: 1 })
         gsap.set(slots, { rotationX: 0, y: 0 })
@@ -345,15 +350,9 @@ const { sections } = Astro.props
     if (!isSetUp) return
     isSetUp = false
 
-    const nav = document.querySelector<HTMLElement>(".section-nav")
-    if (nav) {
-      nav.style.perspective = ""
-      nav.style.perspectiveOrigin = ""
-    }
-    slotsRef.forEach((slot) => {
-      slot.style.transformOrigin = ""
-      slot.style.transformStyle = ""
-    })
+    // Perspective / transformOrigin / transformStyle are set via gsap.set
+    // inside ctx, so ctx.revert() restores them. No manual style clearing
+    // needed.
     detachProximity?.()
     detachProximity = null
     keydownCleanup?.()

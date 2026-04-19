@@ -63,6 +63,7 @@ const keys = Array.from({ length: count }, (_, i) => i + 1)
 
 <script>
   import gsap from "gsap"
+  import { MOTION } from "../lib/motion"
   import {
     DESKTOP_MQL,
     REDUCED_MOTION_MQL,
@@ -70,6 +71,13 @@ const keys = Array.from({ length: count }, (_, i) => i + 1)
   } from "../lib/runtime"
 
   const IDLE_HIDE_MS = 12000
+  // On repeat visits the curtain is skipped entirely, so no
+  // `curtain:done` event fires. Start the idle countdown after a short
+  // grace window that roughly matches the chrome fade-in — long enough
+  // for the hint to actually appear, short enough that the 12s window
+  // still feels like "idle" to the user.
+  const REPEAT_VISIT_DELAY_MS = 1200
+  const SEEN_KEY = "matteo-curtain-seen"
 
   let cleanup: (() => void) | null = null
 
@@ -87,25 +95,55 @@ const keys = Array.from({ length: count }, (_, i) => i + 1)
     const reduced = REDUCED_MOTION_MQL.matches
 
     let hideTimer: number | null = null
+    let repeatVisitTimer: number | null = null
     let hidden = false
+    let ctx: ReturnType<typeof gsap.context> | null = null
 
     const hide = () => {
       if (hidden) return
       hidden = true
       if (reduced) {
         hint.style.opacity = "0"
-      } else {
+        return
+      }
+      // Context captures the one-shot fade so a mid-animation teardown
+      // (e.g. astro:before-swap) cleanly kills the tween and reverts
+      // the inline opacity.
+      ctx = gsap.context(() => {
         gsap.to(hint, {
           opacity: 0,
           duration: 0.6,
-          ease: "sine.out",
+          ease: MOTION.entryEase,
         })
-      }
+      })
     }
 
-    const scheduleHide = () => {
+    const startIdleTimer = () => {
       if (hideTimer !== null) window.clearTimeout(hideTimer)
       hideTimer = window.setTimeout(hide, IDLE_HIDE_MS)
+    }
+
+    // First-visit anchor: wait until the curtain ceremony is fully
+    // complete before the hint is considered "visible", so the 12s
+    // idle window is measured from when the user can actually see it.
+    const onCurtainDone = () => startIdleTimer()
+    window.addEventListener("curtain:done", onCurtainDone, { once: true })
+
+    // Repeat-visit anchor: the curtain is skipped and no event fires,
+    // so fall back to a small fixed delay that lines up with the
+    // chrome fade-in on subsequent visits.
+    let hasSeen = false
+    try {
+      hasSeen = sessionStorage.getItem(SEEN_KEY) === "1"
+    } catch {
+      // storage unavailable (private mode, quota) — treat as first visit
+      hasSeen = false
+    }
+    if (hasSeen) {
+      repeatVisitTimer = window.setTimeout(
+        startIdleTimer,
+        REPEAT_VISIT_DELAY_MS,
+      )
     }
 
     const onKeydown = (event: KeyboardEvent) => {
@@ -121,12 +159,16 @@ const keys = Array.from({ length: count }, (_, i) => i + 1)
     }
 
     document.addEventListener("keydown", onKeydown)
-    scheduleHide()
 
     cleanup = () => {
       document.removeEventListener("keydown", onKeydown)
+      window.removeEventListener("curtain:done", onCurtainDone)
       if (hideTimer !== null) window.clearTimeout(hideTimer)
       hideTimer = null
+      if (repeatVisitTimer !== null) window.clearTimeout(repeatVisitTimer)
+      repeatVisitTimer = null
+      ctx?.revert()
+      ctx = null
     }
   }
 

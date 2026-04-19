@@ -1,6 +1,4 @@
 ---
-import { Icon } from "astro-icon/components"
-
 const words: { text: string; em?: boolean; dash?: boolean }[] = [
   { text: "I" },
   { text: "craft" },
@@ -26,8 +24,8 @@ const words: { text: string; em?: boolean; dash?: boolean }[] = [
 ]
 ---
 
-<div class="flex flex-col gap-8 md:gap-12">
-  <p class="font-serif text-3xl leading-tight md:text-5xl" data-hero-text>
+<div class="flex flex-col gap-8 pb-8 md:gap-12 md:px-0">
+  <p class="font-serif text-2xl leading-tight md:text-5xl" data-hero-text>
     {
       words.map((w, i) => (
         <>
@@ -45,15 +43,6 @@ const words: { text: string; em?: boolean; dash?: boolean }[] = [
       ))
     }
   </p>
-
-  <div
-    class="hero-scroll-hint mt-2 flex justify-start text-neutral-400 md:hidden dark:text-neutral-600"
-    data-enter-chrome
-    data-hero-scroll-hint
-    aria-hidden="true"
-  >
-    <Icon name="lucide:chevron-down" class="h-5 w-5" />
-  </div>
 </div>
 
 <style>
@@ -64,88 +53,10 @@ const words: { text: string; em?: boolean; dash?: boolean }[] = [
     will-change: opacity, transform;
   }
 
-  /* Gentle bob to suggest the page is scrollable. We only animate
-     `transform` here so the keyframes don't fight the entry fade-in
-     (`[data-enter-chrome]` → GSAP drives opacity on load). */
-  .hero-scroll-hint {
-    animation: hero-scroll-hint 1.8s ease-in-out infinite;
-    will-change: transform;
-  }
-
-  @keyframes hero-scroll-hint {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(4px);
-    }
-  }
-
-  /* `!important` so this rule beats the inline `opacity` that GSAP's
-     chrome fade-in is still writing every frame during the intro. Without
-     `!important` on a proper CSS rule, GSAP's non-important inline style
-     would clobber the dismiss on the next animation frame. */
-  .hero-scroll-hint.is-dismissed {
-    opacity: 0 !important;
-    transition: opacity 400ms ease !important;
-    pointer-events: none !important;
-    animation-play-state: paused !important;
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .hero-word {
       opacity: 1;
       transform: none;
     }
-
-    .hero-scroll-hint {
-      animation: none;
-    }
   }
 </style>
-
-<script>
-  import { DESKTOP_MQL, onReady } from "../lib/runtime"
-
-  function setup() {
-    const hint = document.querySelector<HTMLElement>("[data-hero-scroll-hint]")
-    if (!hint) return
-    // Scroll hint is a mobile-only affordance — skip wiring on desktop.
-    if (DESKTOP_MQL.matches) return
-
-    let dismissed = false
-    const dismiss = () => {
-      if (dismissed) return
-      dismissed = true
-      // Class + `!important` in CSS reliably beats GSAP's per-frame inline
-      // opacity writes during the chrome fade-in, on both iOS Safari and
-      // desktop/mobile Chrome.
-      hint.classList.add("is-dismissed")
-      cleanup()
-    }
-
-    // Listen on both document (capture phase, catches events before bubbling)
-    // and window (catches events that originate outside the document flow on
-    // some mobile browsers — notably iOS Safari, where the scroll event only
-    // fires at the document level in certain viewport conditions).
-    // Cleaned up after the first event via cleanup().
-    const listenerOpts: AddEventListenerOptions = {
-      passive: true,
-      capture: true,
-    }
-    document.addEventListener("scroll", dismiss, listenerOpts)
-    window.addEventListener("scroll", dismiss, { passive: true })
-    window.addEventListener("touchmove", dismiss, { passive: true })
-    window.addEventListener("wheel", dismiss, { passive: true })
-
-    function cleanup() {
-      document.removeEventListener("scroll", dismiss, listenerOpts)
-      window.removeEventListener("scroll", dismiss)
-      window.removeEventListener("touchmove", dismiss)
-      window.removeEventListener("wheel", dismiss)
-    }
-  }
-
-  onReady(setup)
-</script>

@@ -136,6 +136,7 @@ const SIGNATURE_DELAY_MS = 2200 + ENTRY_DELAY_MS
 
 <script>
   import gsap from "gsap"
+  import { MOTION } from "../lib/motion"
   import { REDUCED_MOTION_MQL, onReady } from "../lib/runtime"
 
   const SEEN_KEY = "matteo-curtain-seen"
@@ -152,13 +153,16 @@ const SIGNATURE_DELAY_MS = 2200 + ENTRY_DELAY_MS
   // softly before the words begin their staggered rise.
   const QUOTE_FADE_DURATION = 0.9
 
-  // Must match the `delay` prop passed to <Signature /> above (seconds)
+  // Must match the `delay` prop passed to <Signature /> above (seconds).
+  // Signature draw duration is owned by MOTION.signatureDraw (shared with
+  // Signature.astro) so the two cannot drift apart.
   const SIGNATURE_START = 2.2
-  const SIGNATURE_DURATION = 1.9
 
   const HOLD = 0.65
   const EXIT_DURATION = 1.2
-  const EXIT_EASE = "power4.inOut"
+  // Exit accelerates away (slow start → fast exit) so the curtain reads as
+  // leaving, not as easing in and out of rest.
+  const EXIT_EASE = "power3.in"
 
   // Matches ENTRY_DELAY_MS in the component frontmatter — a small beat so
   // the word reveal doesn't start the instant the curtain paints.
@@ -276,7 +280,7 @@ const SIGNATURE_DELAY_MS = 2200 + ENTRY_DELAY_MS
       {
         opacity: 1,
         duration: QUOTE_FADE_DURATION,
-        ease: "sine.out",
+        ease: MOTION.entryEase,
       },
       0,
     )
@@ -292,9 +296,11 @@ const SIGNATURE_DELAY_MS = 2200 + ENTRY_DELAY_MS
       WORD_START,
     )
 
-    // Reserve the signature's self-playing handwriting slice so the slide is
-    // scheduled only after it completes, with a trailing hold for breathing.
-    tl.set({}, {}, SIGNATURE_START + SIGNATURE_DURATION)
+    // Anchor the end of the signature's self-playing handwriting slice so
+    // the slide is scheduled only after it completes, with a trailing hold
+    // for breathing. Using a label (rather than tl.set({},{},pos)) keeps the
+    // timing relationship explicit and named.
+    tl.addLabel("sig-end", SIGNATURE_START + MOTION.signatureDraw)
 
     tl.to(
       curtain,
@@ -307,7 +313,7 @@ const SIGNATURE_DELAY_MS = 2200 + ENTRY_DELAY_MS
           dispatchExitStart()
         },
       },
-      `>+=${HOLD}`,
+      `sig-end+=${HOLD}`,
     )
   }
 

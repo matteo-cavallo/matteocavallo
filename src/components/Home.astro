@@ -15,20 +15,51 @@ const sections = [
 ]
 ---
 
+{
+  /* Pre-paint gate: runs synchronously before the chrome markup below is
+    parsed, so the `html.is-home` rule (which holds header/footer/section-nav
+    at opacity: 0) is in effect from the very first frame. Without this, the
+    module script that adds the class is deferred and the chrome flashes
+    visible on hard refresh before the entry timeline begins. The class is
+    re-added (idempotent) by the module script for view-transition revisits,
+    and removed by `releaseHomeScope()` once chrome has finished fading in. */
+}
+<script is:inline>
+  document.documentElement.classList.add("is-home")
+</script>
+
 <div
-  class="relative container mx-auto flex flex-col md:h-screen md:overflow-hidden"
+  class="relative container mx-auto flex flex-col md:grid md:h-screen md:grid-cols-1 md:grid-rows-[auto_1fr_auto] md:overflow-hidden"
 >
   <header
-    class="flex flex-none items-center justify-center p-4"
+    class="flex flex-none items-center justify-center px-4 py-8 md:justify-between md:px-8"
     data-enter-chrome
   >
     <a href="/" aria-label="Matteo Cavallo">
-      <Signature class="h-6" replayOnHover />
+      <Signature class="h-6 w-auto" replayOnHover />
     </a>
+
+    <nav
+      data-header-nav
+      class="text-nav tracking-nav font-sans hidden items-center gap-10 uppercase md:flex"
+      aria-label="Section navigation"
+    >
+      {
+        sections.map((section) => (
+          <a
+            href={`#${section.id}`}
+            class="text-neutral-900 transition-colors duration-500 hover:text-neutral-500 dark:text-neutral-100 dark:hover:text-neutral-400"
+            aria-label={`Jump to ${section.label}`}
+          >
+            {section.label}
+          </a>
+        ))
+      }
+    </nav>
   </header>
 
   <div
-    class="no-scrollbar flex w-full flex-col items-start px-4 md:flex-1 md:overflow-y-auto md:px-0"
+    class="no-scrollbar flex w-full flex-col items-start px-4 md:overflow-y-auto md:px-8"
     data-scroll-container
   >
     <ScrollSection id="hero" first>
@@ -42,29 +73,38 @@ const sections = [
     </ScrollSection>
   </div>
 
-  <SectionNav sections={sections} />
+  {/* <SectionNav sections={sections} /> */}
 
-  <div class="md:flex-none" data-enter-chrome>
+  <div data-enter-chrome>
     <Footer />
   </div>
 </div>
 
-<KeyboardHint count={sections.length} prefix="Navigate with" />
+{/* <KeyboardHint count={sections.length} prefix="Navigate with" /> */}
 
 <style is:global>
   /* Chrome starts hidden, revealed by entry timeline after the curtain.
      The curtain covers these elements until it exits, so this also ensures
-     they remain blank for the brief moment after the curtain clears. */
-  [data-enter-chrome],
-  .section-nav {
+     they remain blank for the brief moment after the curtain clears.
+
+     Scoped to `html.is-home` — the class is added by this component's
+     module script on first execution and removed after the chrome fade
+     completes. Scoping prevents this global rule from leaking to any
+     future page that re-uses the [data-enter-chrome] attribute without
+     running an entry timeline, and `pointer-events: none` keeps
+     keyboard-focus traversal out of invisible chrome during the curtain. */
+  html.is-home [data-enter-chrome],
+  html.is-home .section-nav {
     opacity: 0;
+    pointer-events: none;
     will-change: opacity;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    [data-enter-chrome],
-    .section-nav {
+    html.is-home [data-enter-chrome],
+    html.is-home .section-nav {
       opacity: 1;
+      pointer-events: auto;
     }
   }
 </style>
@@ -96,7 +136,17 @@ const sections = [
    *   - Faded in at the tail of the entry timeline so chrome and hero blend.
    */
   import gsap from "gsap"
+  import { MOTION } from "../lib/motion"
   import { REDUCED_MOTION_MQL, onReady } from "../lib/runtime"
+
+  // Marker class that scopes the "chrome starts hidden" global style to
+  // this component. The pre-paint inline script above sets this class
+  // synchronously before the chrome markup is parsed (preventing a flash
+  // on hard refresh where this deferred module script would otherwise
+  // run after the first paint). Re-adding here is idempotent and covers
+  // edge cases where this script runs without the inline gate. Removed
+  // once chrome has finished fading in by releaseHomeScope().
+  document.documentElement.classList.add("is-home")
 
   // Non-em baseline: unhurried, fluid reveal.
   const HERO_DURATION = 1.05
@@ -114,15 +164,27 @@ const sections = [
 
   // Single gentle deceleration curve used across every word; the variable
   // durations do the emphasis work, not a change of ease mid-sentence.
-  const HERO_EASE = "sine.out"
+  // Sourced from MOTION so the entry sequence and one-shot UI fades
+  // (KeyboardHint) share the same ease identity.
+  const HERO_EASE = MOTION.entryEase
 
-  // Wait past the "slow" half of the curtain's power4.inOut slide so the
-  // curtain has cleared the hero before its words begin their rise.
+  // Wait past the initial slow portion of the curtain's power3.in slide
+  // so the curtain has cleared enough of the hero before its words begin
+  // their rise — the two motions rhyme as the curtain accelerates away.
   const ENTRY_DELAY_WITH_CURTAIN = 0.55
   const ENTRY_DELAY_WITHOUT_CURTAIN = 0.1
 
   let entryDelay = ENTRY_DELAY_WITHOUT_CURTAIN
   let didRun = false
+  let ctx: ReturnType<typeof gsap.context> | null = null
+
+  // Called once the entry sequence is complete, regardless of the path
+  // taken (normal, reduced-motion, or early return). Releases the
+  // `is-home` scope on the global "chrome hidden" style so the class
+  // only persists while it's actively doing work.
+  function releaseHomeScope() {
+    document.documentElement.classList.remove("is-home")
+  }
 
   function enter() {
     if (didRun) return
@@ -141,10 +203,16 @@ const sections = [
 
     if (prefersReducedMotion) {
       gsap.set(heroWords, { opacity: 1, clearProps: "transform" })
-      gsap.set(chromeTargets, { opacity: 1 })
+      gsap.set(chromeTargets, { opacity: 1, clearProps: "pointerEvents" })
+      releaseHomeScope()
       return
     }
 
+    // All GSAP work for the entry sequence runs inside a context so any
+    // mid-animation teardown (e.g. astro:before-swap on a future second
+    // page) cleanly kills the timeline and reverts the inline styles
+    // written by gsap.set / tl.to.
+    ctx = gsap.context(() => {
     // Explicitly set the starting transform so GSAP doesn't infer it from
     // computed CSS. Matches Hero.astro's initial pose:
     //   opacity: 0; transform: translateY(0.5em)
@@ -197,6 +265,10 @@ const sections = [
       gsap.set([...heroWords, ...chromeTargets], {
         clearProps: "willChange",
       })
+      // Chrome has finished fading in — release the home-scope class so
+      // [data-enter-chrome] elements (nav, footer, KeyboardHint) return
+      // to normal pointer-events / opacity inheritance.
+      releaseHomeScope()
     }
 
     const tl = gsap.timeline({
@@ -230,11 +302,24 @@ const sections = [
       },
       Math.max(0, heroEnd - 0.5),
     )
+    })
+  }
+
+  function teardown() {
+    ctx?.revert()
+    ctx = null
+    didRun = false
+    // If we tear down before the entry completes, still release the
+    // home-scope class so a subsequent page isn't stuck at opacity: 0.
+    releaseHomeScope()
   }
 
   function setup() {
     didRun = false
     entryDelay = ENTRY_DELAY_WITHOUT_CURTAIN
+    // Re-apply the home-scope class on every setup so view-transition
+    // navigations back to this page restore the initial chrome pose.
+    document.documentElement.classList.add("is-home")
 
     if (document.getElementById("curtain")) {
       // Start entry as the curtain begins to slide away so the two motions
@@ -251,6 +336,44 @@ const sections = [
 
     // No curtain (e.g. subsequent navigation) — reveal immediately.
     enter()
+  }
+
+  onReady(setup)
+  // Kill any in-flight entry timeline on view-transition navigations so
+  // tweens don't continue ticking against detached DOM.
+  document.addEventListener("astro:before-swap", teardown)
+</script>
+
+<script>
+  /**
+   * Header nav jump links.
+   *
+   * Flat jump list: no scroll-spy, no active state. Routes clicks through the
+   * shared Lenis instance (set by SmoothScroll.astro) so the smooth-scroll
+   * feel matches the rest of the page, and falls back to native smooth scroll
+   * when Lenis isn't available (mobile / reduced-motion / before hydration).
+   */
+  import { onReady } from "../lib/runtime"
+  import { MOTION } from "../lib/motion"
+
+  function setup() {
+    const links = document.querySelectorAll<HTMLAnchorElement>(
+      "[data-header-nav] a",
+    )
+    links.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        const id = link.getAttribute("href")?.slice(1)
+        const target = id ? document.getElementById(id) : null
+        if (!target) return
+        event.preventDefault()
+        const lenis = window.lenisInstance
+        if (lenis) {
+          lenis.scrollTo(target, { offset: 0, duration: MOTION.scrollTo })
+        } else {
+          target.scrollIntoView({ behavior: "smooth", block: "start" })
+        }
+      })
+    })
   }
 
   onReady(setup)

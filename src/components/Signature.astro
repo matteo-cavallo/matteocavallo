@@ -114,12 +114,19 @@ const {
 </style>
 
 <script>
+  import { MOTION } from "../lib/motion"
   import { REDUCED_MOTION_MQL, onReady } from "../lib/runtime"
 
   const STAGGER = 250
-  const DRAW_DURATION = 500
-  const OPACITY_DURATION = 400
   const HOVER_DEBOUNCE = 80
+
+  // End-to-end handwriting time in milliseconds. MOTION.signatureDraw owns
+  // the value in seconds (shared with Curtain.astro's timeline reservation);
+  // we convert once for setTimeout parity.
+  //
+  // Opacity fades IN PARALLEL with the first stroke — it is NOT additive to
+  // the total. Total = (pathCount - 1) * STAGGER + single-draw duration.
+  const TOTAL_DRAW_MS = MOTION.signatureDraw * 1000
 
   function play(svg: SVGSVGElement) {
     const paths = svg.querySelectorAll<SVGPathElement>("path")
@@ -151,9 +158,6 @@ const {
     svg.style.transition = ""
   }
 
-  function totalDuration(pathCount: number): number {
-    return (pathCount - 1) * STAGGER + DRAW_DURATION + OPACITY_DURATION
-  }
 
   function initAnimated() {
     if (REDUCED_MOTION_MQL.matches) return
@@ -181,10 +185,9 @@ const {
           reset(svg)
           requestAnimationFrame(() => {
             play(svg)
-            const pathCount = svg.querySelectorAll("path").length
             window.setTimeout(() => {
               playing = false
-            }, totalDuration(pathCount))
+            }, TOTAL_DRAW_MS)
           })
         }
 

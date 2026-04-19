@@ -16,13 +16,13 @@ const { title, subtitle } = Astro.props
       {title}
     </h2>
     <p
-      class="font-serif text-xl text-neutral-600 italic dark:text-neutral-400"
+      class="font-serif text-xl text-neutral-500 italic dark:text-neutral-400"
       data-reveal
     >
       {subtitle}
     </p>
   </div>
-  <div class="flex w-full max-w-3xl flex-col gap-6 text-xl leading-relaxed">
+  <div class="flex w-full max-w-3xl flex-col gap-4 text-xl leading-relaxed">
     <slot />
   </div>
 </section>
