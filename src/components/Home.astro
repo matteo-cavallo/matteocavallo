@@ -1,0 +1,229 @@
+---
+import Footer from "./Footer.astro"
+import Hero from "./Hero.astro"
+import Vision from "./Vision.astro"
+import About from "./About.astro"
+import Signature from "./Signature.astro"
+import SectionNav from "./SectionNav.astro"
+import ScrollSection from "./ScrollSection.astro"
+import KeyboardHint from "./KeyboardHint.astro"
+
+const sections = [
+  { id: "hero", label: "Mission" },
+  { id: "vision", label: "Vision" },
+  { id: "about", label: "About" },
+]
+---
+
+<div
+  class="relative container mx-auto flex flex-col md:h-screen md:overflow-hidden"
+>
+  <header
+    class="flex flex-none items-center justify-center p-4"
+    data-enter-chrome
+  >
+    <a href="/" aria-label="Matteo Cavallo">
+      <Signature class="h-6" replayOnHover />
+    </a>
+  </header>
+
+  <div
+    class="no-scrollbar flex w-full flex-col items-start px-4 md:flex-1 md:overflow-y-auto md:px-0"
+    data-scroll-container
+  >
+    <ScrollSection id="hero" first>
+      <Hero />
+    </ScrollSection>
+    <ScrollSection id="vision">
+      <Vision />
+    </ScrollSection>
+    <ScrollSection id="about">
+      <About />
+    </ScrollSection>
+  </div>
+
+  <SectionNav sections={sections} />
+
+  <div class="md:flex-none" data-enter-chrome>
+    <Footer />
+  </div>
+</div>
+
+<KeyboardHint count={sections.length} prefix="Navigate with" />
+
+<style is:global>
+  /* Chrome starts hidden, revealed by entry timeline after the curtain.
+     The curtain covers these elements until it exits, so this also ensures
+     they remain blank for the brief moment after the curtain clears. */
+  [data-enter-chrome],
+  .section-nav {
+    opacity: 0;
+    will-change: opacity;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-enter-chrome],
+    .section-nav {
+      opacity: 1;
+    }
+  }
+</style>
+
+<script>
+  import gsap from "gsap"
+
+  const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)"
+
+  // Non-em baseline: unhurried, fluid reveal.
+  const HERO_DURATION = 1.05
+  const HERO_STAGGER = 0.055
+
+  // Em peak: per-word duration and stagger when a word is fully inside the
+  // emphasized phrase. The reveal ramps smoothly toward these values around
+  // the phrase and back down after — a ritardando, not a step change.
+  const HERO_EM_DURATION = 1.6
+  const HERO_EM_STAGGER = 0.14
+
+  // How many words on each side of the em phrase transition between the
+  // baseline and peak pacing. Larger = gentler slowdown.
+  const HERO_FALLOFF = 6
+
+  // Single gentle deceleration curve used across every word; the variable
+  // durations do the emphasis work, not a change of ease mid-sentence.
+  const HERO_EASE = "sine.out"
+
+  // Wait past the "slow" half of the curtain's power4.inOut slide so the
+  // curtain has cleared the hero before its words begin their rise.
+  const ENTRY_DELAY_WITH_CURTAIN = 0.55
+  const ENTRY_DELAY_WITHOUT_CURTAIN = 0.1
+
+  let entryDelay = ENTRY_DELAY_WITHOUT_CURTAIN
+  let didRun = false
+
+  function enter() {
+    if (didRun) return
+    didRun = true
+
+    const heroWords = Array.from(
+      document.querySelectorAll<HTMLElement>(".hero-word"),
+    )
+    const chrome = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-enter-chrome]"),
+    )
+    const sectionNav = document.querySelector<HTMLElement>(".section-nav")
+    const chromeTargets = sectionNav ? [...chrome, sectionNav] : chrome
+
+    const prefersReducedMotion = window.matchMedia(REDUCED_MOTION_QUERY).matches
+
+    if (prefersReducedMotion) {
+      gsap.set(heroWords, { opacity: 1, clearProps: "transform" })
+      gsap.set(chromeTargets, { opacity: 1 })
+      return
+    }
+
+    // Locate the emphasized phrase so we can ramp the pacing around it.
+    const firstEm = heroWords.findIndex((w) => w.hasAttribute("data-em"))
+    let lastEm = -1
+    for (let i = heroWords.length - 1; i >= 0; i--) {
+      if (heroWords[i].hasAttribute("data-em")) {
+        lastEm = i
+        break
+      }
+    }
+    const hasEm = firstEm >= 0 && lastEm >= 0
+
+    // Smoothstep from baseline (0) to peak (1) based on how close a word is
+    // to the em phrase: 1 inside, ramping down over HERO_FALLOFF words.
+    const smoothstep = (t: number) => {
+      const c = Math.max(0, Math.min(1, t))
+      return c * c * (3 - 2 * c)
+    }
+    const emWeight = (i: number): number => {
+      if (!hasEm) return 0
+      if (i >= firstEm && i <= lastEm) return 1
+      const dist = i < firstEm ? firstEm - i : i - lastEm
+      return smoothstep(1 - dist / (HERO_FALLOFF + 1))
+    }
+
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * t
+
+    // Walk the sentence once to compute per-word start time and duration.
+    // The gap *after* each word (the stagger step) depends on the weight at
+    // that word, so the slowdown is distributed gradually rather than
+    // snapping at a boundary.
+    const starts: number[] = []
+    const durations: number[] = []
+    let cursor = 0
+    for (let i = 0; i < heroWords.length; i++) {
+      const w = emWeight(i)
+      starts.push(cursor)
+      durations.push(lerp(HERO_DURATION, HERO_EM_DURATION, w))
+      cursor += lerp(HERO_STAGGER, HERO_EM_STAGGER, w)
+    }
+
+    const onEnterDone = () => {
+      gsap.set([...heroWords, ...chromeTargets], {
+        clearProps: "willChange",
+      })
+    }
+
+    const tl = gsap.timeline({
+      delay: entryDelay,
+      defaults: { ease: HERO_EASE },
+      onComplete: onEnterDone,
+    })
+
+    heroWords.forEach((word, i) => {
+      tl.to(
+        word,
+        {
+          opacity: 1,
+          y: 0,
+          duration: durations[i],
+        },
+        starts[i],
+      )
+    })
+
+    // Chrome fades in while the tail of the hero stagger is still animating
+    // so the two phases blend into one continuous motion.
+    const lastStart = starts[starts.length - 1] ?? 0
+    const lastDuration = durations[durations.length - 1] ?? HERO_DURATION
+    const heroEnd = lastStart + lastDuration
+    tl.to(
+      chromeTargets,
+      {
+        opacity: 1,
+        duration: 1.0,
+      },
+      Math.max(0, heroEnd - 0.5),
+    )
+  }
+
+  function setup() {
+    didRun = false
+    entryDelay = ENTRY_DELAY_WITHOUT_CURTAIN
+
+    if (document.getElementById("curtain")) {
+      // Start entry as the curtain begins to slide away so the two motions
+      // rhyme (the curtain uncovers exactly where the hero words rise).
+      const onExitStart = () => {
+        entryDelay = ENTRY_DELAY_WITH_CURTAIN
+        enter()
+      }
+      window.addEventListener("curtain:exit-start", onExitStart, { once: true })
+      // Fallback in case the exit event is missed (e.g. repeat-visit skip).
+      window.addEventListener("curtain:done", enter, { once: true })
+      return
+    }
+
+    // No curtain (e.g. subsequent navigation) — reveal immediately.
+    enter()
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setup, { once: true })
+  } else {
+    setup()
+  }
+</script>

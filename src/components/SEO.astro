@@ -20,8 +20,8 @@ const jsonLd = {
     "Frontend engineer crafting meaningful digital experiences with care, clarity and intention.",
   address: {
     "@type": "PostalAddress",
-    addressLocality: "Paris",
-    addressCountry: "France",
+    addressLocality: site.author.address.locality,
+    addressCountry: site.author.address.country,
   },
   worksFor: {
     "@type": "Organization",
@@ -32,8 +32,8 @@ const jsonLd = {
 ---
 
 <meta charset="utf-8" />
-<link rel="icon" type="image/svg+xml" href="/favicon.png" />
-<meta name="viewport" content="width=device-width" />
+<link rel="icon" type="image/png" href="/favicon.png" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="generator" content={Astro.generator} />
 
 <!-- Primary Meta Tags -->
@@ -70,7 +70,11 @@ const jsonLd = {
 <meta name="revisit-after" content="7 days" />
 
 <!-- Structured Data (JSON-LD) -->
-<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+<script
+  is:inline
+  type="application/ld+json"
+  set:html={JSON.stringify(jsonLd).replace(/</g, "\\u003c")}
+/>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

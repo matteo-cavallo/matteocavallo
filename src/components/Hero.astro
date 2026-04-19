@@ -1,21 +1,152 @@
 ---
-import Image from "astro/components/Image.astro"
-import { site } from "../data/site"
+import { Icon } from "astro-icon/components"
+
+const words: { text: string; em?: boolean; dash?: boolean }[] = [
+  { text: "I" },
+  { text: "craft" },
+  { text: "meaningful" },
+  { text: "digital" },
+  { text: "experiences" },
+  { text: "with" },
+  { text: "care,", em: true },
+  { text: "clarity", em: true },
+  { text: "and", em: true },
+  { text: "intention", em: true },
+  { text: "—" },
+  { text: "helping" },
+  { text: "purpose-driven" },
+  { text: "people" },
+  { text: "leave" },
+  { text: "things" },
+  { text: "better" },
+  { text: "than" },
+  { text: "they" },
+  { text: "found" },
+  { text: "them." },
+]
 ---
 
-<div class="flex min-h-screen flex-col gap-8 px-8 py-16 lg:min-h-0">
-  <div class="space-y-4">
-    <p
-      class="will-animate font-serif text-2xl leading-relaxed text-stone-900 dark:text-stone-100"
-    >
-      I craft meaningful digital experiences with care, clarity and intention —
-      helping purpose-driven people leave things better than they found them.
-    </p>
-    <p
-      class="will-animate delay-100 font-serif text-lg text-neutral-500 italic dark:text-neutral-400"
-    >
-      Currently based in {site.author.location}
-    </p>
+<div class="flex flex-col gap-8 md:gap-12">
+  <p class="font-serif text-3xl leading-tight md:text-5xl" data-hero-text>
+    {
+      words.map((w, i) => (
+        <>
+          {w.em ? (
+            <em class="hero-word" data-em>
+              {w.text}
+            </em>
+          ) : (
+            <span class="hero-word" data-dash={w.dash ? "" : undefined}>
+              {w.text}
+            </span>
+          )}
+          {i < words.length - 1 ? " " : ""}
+        </>
+      ))
+    }
+  </p>
+
+  <div
+    class="hero-scroll-hint mt-2 flex justify-start text-neutral-400 md:hidden dark:text-neutral-600"
+    data-enter-chrome
+    data-hero-scroll-hint
+    aria-hidden="true"
+  >
+    <Icon name="lucide:chevron-down" class="h-5 w-5" />
   </div>
-  <!-- <Image src="/matteo-2.jpeg" alt="Matteo Cavallo" width={1000} height={1000} /> -->
 </div>
+
+<style>
+  .hero-word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(0.5em);
+    will-change: opacity, transform;
+  }
+
+  /* Gentle bob to suggest the page is scrollable. We only animate
+     `transform` here so the keyframes don't fight the entry fade-in
+     (`[data-enter-chrome]` → GSAP drives opacity on load). */
+  .hero-scroll-hint {
+    animation: hero-scroll-hint 1.8s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  @keyframes hero-scroll-hint {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(4px);
+    }
+  }
+
+  /* `!important` so this rule beats the inline `opacity` that GSAP's
+     chrome fade-in is still writing every frame during the intro. Without
+     `!important` on a proper CSS rule, GSAP's non-important inline style
+     would clobber the dismiss on the next animation frame. */
+  .hero-scroll-hint.is-dismissed {
+    opacity: 0 !important;
+    transition: opacity 400ms ease !important;
+    pointer-events: none !important;
+    animation-play-state: paused !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-word {
+      opacity: 1;
+      transform: none;
+    }
+
+    .hero-scroll-hint {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  const MOBILE_QUERY = "(max-width: 767px)"
+
+  function setup() {
+    const hint = document.querySelector<HTMLElement>("[data-hero-scroll-hint]")
+    if (!hint) return
+    if (!window.matchMedia(MOBILE_QUERY).matches) return
+
+    let dismissed = false
+    const dismiss = () => {
+      if (dismissed) return
+      dismissed = true
+      // Class + `!important` in CSS reliably beats GSAP's per-frame inline
+      // opacity writes during the chrome fade-in, on both iOS Safari and
+      // desktop/mobile Chrome.
+      hint.classList.add("is-dismissed")
+      cleanup()
+    }
+
+    // Any scroll or user-initiated scroll gesture dismisses. We listen on
+    // `document` (capture) in addition to `window` because on some iOS
+    // Safari versions the scroll event only fires at the document level.
+    const listenerOpts: AddEventListenerOptions = {
+      passive: true,
+      capture: true,
+    }
+    document.addEventListener("scroll", dismiss, listenerOpts)
+    window.addEventListener("scroll", dismiss, { passive: true })
+    window.addEventListener("touchmove", dismiss, { passive: true })
+    window.addEventListener("wheel", dismiss, { passive: true })
+
+    function cleanup() {
+      document.removeEventListener("scroll", dismiss, listenerOpts)
+      window.removeEventListener("scroll", dismiss)
+      window.removeEventListener("touchmove", dismiss)
+      window.removeEventListener("wheel", dismiss)
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setup, { once: true })
+  } else {
+    setup()
+  }
+</script>

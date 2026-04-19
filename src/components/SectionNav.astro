@@ -1,0 +1,367 @@
+---
+interface Section {
+  id: string
+  label: string
+}
+
+interface Props {
+  sections: Section[]
+}
+
+const { sections } = Astro.props
+---
+
+<nav
+  class="section-nav pointer-events-none absolute top-1/2 right-8 z-10 hidden -translate-y-1/2 items-center justify-items-end md:grid"
+  aria-label="Section navigation"
+>
+  {
+    sections.map((section) => (
+      <div
+        data-wheel-slot
+        class="col-start-1 row-start-1 flex items-center justify-end"
+      >
+        <a
+          href={`#${section.id}`}
+          data-section-link={section.id}
+          class="group pointer-events-auto flex items-center justify-end gap-3 outline-none will-change-transform"
+          aria-label={`Jump to ${section.label}`}
+        >
+          <span class="nav-label">{section.label}</span>
+          <span class="nav-line" />
+        </a>
+      </div>
+    ))
+  }
+</nav>
+
+<script>
+  import gsap from "gsap"
+  import type Lenis from "lenis"
+  import { MOTION } from "../lib/motion"
+
+  const DESKTOP_QUERY = "(min-width: 768px)"
+  const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)"
+
+  let isSetUp = false
+  let ctx: ReturnType<typeof gsap.context> | null = null
+  let observer: IntersectionObserver | null = null
+  let activeId: string | null = null
+  let currentActiveIdx = 0
+  let currentFlatten = 0
+  let detachProximity: (() => void) | null = null
+  let slotsRef: HTMLElement[] = []
+  let effectsEnabledRef = false
+  let keydownCleanup: (() => void) | null = null
+
+  function getLenis(): Lenis | undefined {
+    return window.lenisInstance
+  }
+
+  function smoothstep(t: number) {
+    const c = Math.max(0, Math.min(1, t))
+    return c * c * (3 - 2 * c)
+  }
+
+  function applySlotRotations(duration: number, immediate = false) {
+    if (!effectsEnabledRef) return
+    slotsRef.forEach((slot, i) => {
+      const offset = i - currentActiveIdx
+      const rotX = -offset * MOTION.nav.wheelAngle * (1 - currentFlatten)
+      const y = offset * MOTION.nav.flatSpacing * currentFlatten
+      if (immediate) {
+        gsap.set(slot, { rotationX: rotX, y })
+      } else {
+        gsap.to(slot, {
+          rotationX: rotX,
+          y,
+          duration,
+          ease: MOTION.ease,
+          overwrite: "auto",
+        })
+      }
+    })
+  }
+
+  function setupProximity(links: HTMLAnchorElement[]): () => void {
+    const xTo = links.map((link) =>
+      gsap.quickTo(link, "x", {
+        duration: MOTION.nav.dockDuration,
+        ease: MOTION.ease,
+      }),
+    )
+    const scaleTo = links.map((link) =>
+      gsap.quickTo(link, "scale", {
+        duration: MOTION.nav.dockDuration,
+        ease: MOTION.ease,
+      }),
+    )
+
+    const update = (mouseX: number | null, mouseY: number | null) => {
+      let minDist = Infinity
+      const perItemDist: number[] = []
+
+      links.forEach((link, i) => {
+        const rect = link.getBoundingClientRect()
+        const cx = rect.left + rect.width / 2
+        const cy = rect.top + rect.height / 2
+        const dist =
+          mouseX !== null && mouseY !== null
+            ? Math.hypot(mouseX - cx, mouseY - cy)
+            : Infinity
+        perItemDist[i] = dist
+        if (dist < minDist) minDist = dist
+      })
+
+      const nextFlatten =
+        mouseX !== null &&
+        mouseY !== null &&
+        minDist < MOTION.nav.flattenThreshold
+          ? 1
+          : 0
+
+      if (nextFlatten !== currentFlatten) {
+        currentFlatten = nextFlatten
+        applySlotRotations(MOTION.nav.flattenDuration)
+      }
+
+      links.forEach((_, i) => {
+        const s =
+          mouseX !== null && mouseY !== null
+            ? smoothstep(1 - perItemDist[i] / MOTION.nav.dockRadius)
+            : 0
+        xTo[i](-s * MOTION.nav.dockPull)
+        scaleTo[i](1 + s * MOTION.nav.dockScale)
+      })
+    }
+
+    const onPointerMove = (event: PointerEvent) => {
+      update(event.clientX, event.clientY)
+    }
+    const onPointerLeave = () => update(null, null)
+    const onBlur = () => update(null, null)
+
+    window.addEventListener("pointermove", onPointerMove, { passive: true })
+    document.addEventListener("pointerleave", onPointerLeave)
+    window.addEventListener("blur", onBlur)
+
+    return () => {
+      window.removeEventListener("pointermove", onPointerMove)
+      document.removeEventListener("pointerleave", onPointerLeave)
+      window.removeEventListener("blur", onBlur)
+    }
+  }
+
+  function setup() {
+    if (isSetUp) return
+
+    const prefersReducedMotion = window.matchMedia(REDUCED_MOTION_QUERY).matches
+    const isDesktop = window.matchMedia(DESKTOP_QUERY).matches
+
+    const nav = document.querySelector<HTMLElement>(".section-nav")
+
+    const slots = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-wheel-slot]"),
+    )
+
+    const navLinks = Array.from(
+      document.querySelectorAll<HTMLAnchorElement>("[data-section-link]"),
+    )
+
+    if (navLinks.length === 0) return
+    isSetUp = true
+
+    slotsRef = slots
+    const effectsEnabled = isDesktop && !prefersReducedMotion
+    effectsEnabledRef = effectsEnabled
+
+    const scrollWrapper =
+      document.querySelector<HTMLElement>("[data-scroll-container]") ??
+      undefined
+
+    const scrollToSection = (id: string) => {
+      const target = document.getElementById(id)
+      if (!target) return
+      const lenis = getLenis()
+      if (lenis) {
+        lenis.scrollTo(target, {
+          offset: 0,
+          duration: prefersReducedMotion ? 0 : MOTION.scrollTo,
+        })
+      } else {
+        target.scrollIntoView({
+          behavior: prefersReducedMotion ? "auto" : "smooth",
+          block: "start",
+        })
+      }
+    }
+
+    navLinks.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        const id = link.dataset.sectionLink
+        if (!id) return
+        event.preventDefault()
+        scrollToSection(id)
+      })
+    })
+
+    const onKeydown = (event: KeyboardEvent) => {
+      const target = event.target
+      if (
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        (target instanceof HTMLElement && target.isContentEditable)
+      ) {
+        return
+      }
+
+      // Number keys 1..n jump directly to that section.
+      if (event.key >= "1" && event.key <= "9") {
+        const idx = parseInt(event.key, 10) - 1
+        const link = navLinks[idx]
+        if (!link) return
+        event.preventDefault()
+        const id = link.dataset.sectionLink
+        if (id) scrollToSection(id)
+        return
+      }
+    }
+
+    document.addEventListener("keydown", onKeydown)
+    keydownCleanup = () => document.removeEventListener("keydown", onKeydown)
+
+    const sectionIds = navLinks
+      .map((link) => link.dataset.sectionLink)
+      .filter((id): id is string => Boolean(id))
+
+    const sectionElements = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => Boolean(el))
+
+    if (nav && effectsEnabled) {
+      nav.style.perspective = `${MOTION.nav.wheelPerspective}px`
+      nav.style.perspectiveOrigin = "100% 50%"
+      slots.forEach((slot) => {
+        slot.style.transformOrigin = `100% 50% -${MOTION.nav.wheelRadius}px`
+        slot.style.transformStyle = "preserve-3d"
+      })
+    }
+
+    ctx = gsap.context(() => {
+      if (effectsEnabled) {
+        gsap.set(navLinks, { x: 0, scale: 1 })
+        gsap.set(slots, { rotationX: 0, y: 0 })
+      }
+
+      function setActive(nextId: string | null, immediate = false) {
+        if (!nextId || nextId === activeId) return
+        const isFirst = activeId === null
+        activeId = nextId
+
+        const activeIdx = navLinks.findIndex(
+          (link) => link.dataset.sectionLink === nextId,
+        )
+        if (activeIdx >= 0) currentActiveIdx = activeIdx
+
+        navLinks.forEach((link) => {
+          const isActive = link.dataset.sectionLink === nextId
+          link.toggleAttribute("data-active", isActive)
+
+          const line = link.querySelector<HTMLElement>(".nav-line")
+          const label = link.querySelector<HTMLElement>(".nav-label")
+
+          if (line) {
+            gsap.to(line, {
+              width: isActive
+                ? MOTION.nav.lineActive
+                : MOTION.nav.lineInactive,
+              duration: prefersReducedMotion ? 0 : MOTION.medium,
+              ease: MOTION.ease,
+              overwrite: "auto",
+            })
+          }
+
+          if (label) {
+            gsap.to(label, {
+              x: isActive ? MOTION.nav.labelShiftX : 0,
+              letterSpacing: isActive
+                ? MOTION.nav.labelTrackingActive
+                : MOTION.nav.labelTrackingInactive,
+              duration: prefersReducedMotion ? 0 : MOTION.short,
+              ease: MOTION.ease,
+              overwrite: "auto",
+            })
+          }
+        })
+
+        applySlotRotations(
+          MOTION.nav.wheelDuration,
+          immediate || isFirst,
+        )
+      }
+
+      observer = new IntersectionObserver(
+        (entries) => {
+          const inView = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
+          if (inView) setActive((inView.target as HTMLElement).id)
+        },
+        {
+          root: isDesktop && scrollWrapper ? scrollWrapper : null,
+          rootMargin: "-45% 0px -45% 0px",
+          threshold: 0,
+        },
+      )
+
+      sectionElements.forEach((section) => observer!.observe(section))
+
+      setActive(sectionIds[0] ?? null, true)
+
+      if (effectsEnabled) {
+        detachProximity = setupProximity(navLinks)
+      }
+    })
+  }
+
+  function teardown() {
+    if (!isSetUp) return
+    isSetUp = false
+
+    const nav = document.querySelector<HTMLElement>(".section-nav")
+    if (nav) {
+      nav.style.perspective = ""
+      nav.style.perspectiveOrigin = ""
+    }
+    slotsRef.forEach((slot) => {
+      slot.style.transformOrigin = ""
+      slot.style.transformStyle = ""
+    })
+    detachProximity?.()
+    detachProximity = null
+    keydownCleanup?.()
+    keydownCleanup = null
+    observer?.disconnect()
+    observer = null
+    ctx?.revert()
+    ctx = null
+    activeId = null
+    currentActiveIdx = 0
+    currentFlatten = 0
+    slotsRef = []
+    effectsEnabledRef = false
+  }
+
+  function reapply() {
+    teardown()
+    setup()
+  }
+
+  const mql = window.matchMedia(DESKTOP_QUERY)
+  mql.addEventListener("change", reapply)
+
+  document.addEventListener("astro:page-load", setup)
+  document.addEventListener("astro:before-swap", teardown)
+
+  setup()
+</script>

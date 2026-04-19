@@ -3,100 +3,82 @@
 @theme {
   --font-serif: "Libre Baskerville", serif;
   --font-sans: "Libre Franklin", sans-serif;
-  --font-handwriting: "LiebeHeide Fineliner", cursive;
-
-  /* Mobile card stack — same hue/chroma as slate, stepping lightness by 3% */
-  --color-card-1: oklch(98% 0.006 247);
-  --color-card-2: oklch(95% 0.006 247);
-  --color-card-3: oklch(92% 0.006 247);
-  --color-card-4: oklch(89% 0.006 247);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-card-1: oklch(18% 0.010 247);
-    --color-card-2: oklch(21% 0.010 247);
-    --color-card-3: oklch(24% 0.010 247);
-    --color-card-4: oklch(27% 0.010 247);
-  }
-}
-
-@font-face {
-  font-family: "LiebeHeide Fineliner";
-  src: url("/fonts/LiebeHeide-FinelinerBold.otf") format("otf");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
+  --text-nav: 11px;
+  --tracking-nav: 0.28em;
+  --tracking-nav-active: 0.32em;
 }
 
 @layer components {
   p {
-    @apply font-serif;
+    @apply font-sans;
     text-wrap: pretty;
+  }
+
+  .nav-label {
+    @apply font-sans text-nav tracking-nav uppercase text-neutral-400 transition-colors duration-500 group-hover:text-neutral-600 group-data-[active]:text-neutral-900 dark:text-neutral-500 dark:group-hover:text-neutral-300 dark:group-data-[active]:text-neutral-50;
+  }
+
+  .nav-line {
+    @apply block h-px w-2.5 bg-neutral-300 transition-colors duration-500 group-hover:bg-neutral-500 group-data-[active]:bg-neutral-900 dark:bg-neutral-700 dark:group-hover:bg-neutral-400 dark:group-data-[active]:bg-neutral-50;
   }
 }
 
-html {
-  scroll-behavior: smooth;
+@media (max-width: 767px) {
+  /* Safety net: never allow horizontal scrolling on mobile. If any element
+     briefly overflows (transforms, absolute positioning, animation ghosts)
+     we clip it rather than exposing a horizontal scrollbar. */
+  html,
+  body {
+    overflow-x: hidden;
+  }
+}
+
+@media (min-width: 768px) {
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+  }
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 body {
-  background-color: var(--color-card-1);
-  @apply text-slate-900;
+  @apply bg-neutral-100 text-neutral-900 dark:bg-neutral-950 dark:text-neutral-50;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+::selection {
+  background: var(--color-neutral-900);
+  color: var(--color-neutral-100);
+}
+
 @media (prefers-color-scheme: dark) {
-  body {
-    @apply text-slate-100;
+  ::selection {
+    background: var(--color-neutral-100);
+    color: var(--color-neutral-900);
   }
 }
 
-/* Scroll-triggered entrance animations */
-@media (prefers-reduced-motion: no-preference) {
-  .will-animate,
-  .animate-on-load {
-    opacity: 0;
-    transform: translateY(12px);
-    transition-property: opacity, transform;
-    transition-duration: 600ms;
-    transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
-  }
-
-  .will-animate.fade-only,
-  .animate-on-load.fade-only {
-    transform: translateY(0);
-  }
-
-  .will-animate.is-visible,
-  .animate-on-load.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .delay-100 {
-    transition-delay: 100ms;
-  }
-  .delay-200 {
-    transition-delay: 200ms;
-  }
-  .delay-300 {
-    transition-delay: 300ms;
-  }
-  .delay-400 {
-    transition-delay: 400ms;
-  }
-  .delay-500 {
-    transition-delay: 500ms;
-  }
+:focus {
+  outline: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .will-animate,
-  .animate-on-load {
-    opacity: 1 !important;
-    transform: none !important;
-  }
+:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 4px;
+  border-radius: 2px;
 }

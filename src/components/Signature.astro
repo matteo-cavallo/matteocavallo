@@ -3,14 +3,21 @@ interface Props {
   class?: string
   animated?: boolean
   delay?: number
+  replayOnHover?: boolean
 }
 
-const { class: className = "", animated = false, delay = 0 } = Astro.props
+const {
+  class: className = "",
+  animated = false,
+  delay = 0,
+  replayOnHover = false,
+} = Astro.props
 ---
 
 <svg
   data-signature={animated ? "" : undefined}
   data-delay={animated ? delay : undefined}
+  data-signature-replay={replayOnHover ? "" : undefined}
   width="676"
   height="167"
   viewBox="0 0 676 167"
@@ -62,7 +69,7 @@ const { class: className = "", animated = false, delay = 0 } = Astro.props
     stroke-linejoin: round;
   }
 
-  /* Animated state: paths start hidden and draw in */
+  /* Animated-on-load: start hidden, transitions drive the draw-in */
   svg[data-signature] {
     opacity: 0;
     transition: opacity 400ms ease;
@@ -71,6 +78,17 @@ const { class: className = "", animated = false, delay = 0 } = Astro.props
   svg[data-signature] path {
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
+    transition: stroke-dashoffset 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Hover-replay uses the same transitions; initial state stays un-dashed so
+     the signature shows fully drawn until the user interacts. */
+  svg[data-signature-replay] {
+    cursor: pointer;
+    transition: opacity 400ms ease;
+  }
+
+  svg[data-signature-replay] path {
     transition: stroke-dashoffset 500ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
@@ -84,29 +102,118 @@ const { class: className = "", animated = false, delay = 0 } = Astro.props
       stroke-dashoffset: 0 !important;
       transition: none !important;
     }
+
+    svg[data-signature-replay] {
+      transition: none !important;
+    }
+
+    svg[data-signature-replay] path {
+      transition: none !important;
+    }
   }
 </style>
 
 <script>
   const STAGGER = 250
+  const DRAW_DURATION = 500
+  const OPACITY_DURATION = 400
+  const HOVER_DEBOUNCE = 80
+  const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)"
 
-  document
-    .querySelectorAll<SVGSVGElement>("svg[data-signature]")
-    .forEach((svg) => {
-      const delay = Number(svg.dataset.delay ?? 0)
-      const paths = svg.querySelectorAll<SVGPathElement>("path")
-
+  function play(svg: SVGSVGElement) {
+    const paths = svg.querySelectorAll<SVGPathElement>("path")
+    svg.style.opacity = "1"
+    paths.forEach((path, i) => {
       setTimeout(() => {
-        svg.style.opacity = "1"
-      }, delay)
-
-      paths.forEach((path, i) => {
-        setTimeout(
-          () => {
-            path.style.strokeDashoffset = "0"
-          },
-          delay + i * STAGGER,
-        )
-      })
+        path.style.strokeDashoffset = "0"
+      }, i * STAGGER)
     })
+  }
+
+  function reset(svg: SVGSVGElement) {
+    const paths = svg.querySelectorAll<SVGPathElement>("path")
+
+    paths.forEach((path) => {
+      path.style.transition = "none"
+      path.style.strokeDasharray = "1"
+      path.style.strokeDashoffset = "1"
+    })
+    svg.style.transition = "none"
+    svg.style.opacity = "0"
+
+    // Force reflow so the transitions apply cleanly on the next frame.
+    void svg.getBoundingClientRect()
+
+    paths.forEach((path) => {
+      path.style.transition = ""
+    })
+    svg.style.transition = ""
+  }
+
+  function totalDuration(pathCount: number): number {
+    return (pathCount - 1) * STAGGER + DRAW_DURATION + OPACITY_DURATION
+  }
+
+  function initAnimated() {
+    if (window.matchMedia(REDUCED_MOTION_QUERY).matches) return
+
+    document
+      .querySelectorAll<SVGSVGElement>("svg[data-signature]")
+      .forEach((svg) => {
+        const delay = Number(svg.dataset.delay ?? 0)
+        setTimeout(() => play(svg), delay)
+      })
+  }
+
+  function initHoverReplay() {
+    const reduced = window.matchMedia(REDUCED_MOTION_QUERY).matches
+
+    document
+      .querySelectorAll<SVGSVGElement>("svg[data-signature-replay]")
+      .forEach((svg) => {
+        let hoverTimer: number | null = null
+        let playing = false
+
+        const replay = () => {
+          if (reduced || playing) return
+          playing = true
+          reset(svg)
+          requestAnimationFrame(() => {
+            play(svg)
+            const pathCount = svg.querySelectorAll("path").length
+            window.setTimeout(() => {
+              playing = false
+            }, totalDuration(pathCount))
+          })
+        }
+
+        const onEnter = () => {
+          if (hoverTimer) window.clearTimeout(hoverTimer)
+          hoverTimer = window.setTimeout(replay, HOVER_DEBOUNCE)
+        }
+
+        const onLeave = () => {
+          if (hoverTimer) {
+            window.clearTimeout(hoverTimer)
+            hoverTimer = null
+          }
+        }
+
+        svg.addEventListener("pointerenter", onEnter)
+        svg.addEventListener("pointerleave", onLeave)
+        svg.addEventListener("focus", onEnter)
+        svg.addEventListener("blur", onLeave)
+      })
+  }
+
+  function boot() {
+    initAnimated()
+    initHoverReplay()
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot, { once: true })
+  } else {
+    boot()
+  }
 </script>

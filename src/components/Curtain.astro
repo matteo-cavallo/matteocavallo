@@ -1,97 +1,330 @@
 ---
 import Signature from "./Signature.astro"
+
+const quote = [
+  { text: "I" },
+  { text: "believe" },
+  { text: "that" },
+  { text: "good", em: true },
+  { text: "work", em: true },
+  { text: "can" },
+  { text: "change" },
+  { text: "things" },
+  { text: "—", dash: true },
+  { text: "for" },
+  { text: "people," },
+  { text: "for" },
+  { text: "communities," },
+  { text: "for" },
+  { text: "the" },
+  { text: "world" },
+  { text: "around" },
+  { text: "us." },
+]
+
+// Settle beat between the curtain appearing and the word reveal starting,
+// so the text doesn't animate the instant the curtain paints.
+const ENTRY_DELAY_MS = 500
+
+// Signature's own handwriting animation runs on DOMContentLoaded with the
+// given delay. We offset it so it starts as the word reveal finishes, and
+// shift it by the entry delay so it stays aligned with the word animation.
+const SIGNATURE_DELAY_MS = 2200 + ENTRY_DELAY_MS
 ---
+
+{/* Pre-paint gate: runs synchronously before the curtain markup is parsed,
+    so on repeat visits within the same tab the curtain is hidden by CSS
+    from the very first frame (no flash on fast refresh).
+    The key is duplicated in the module script below — keep them in sync. */}
+<script is:inline>
+  try {
+    if (sessionStorage.getItem("matteo-curtain-seen") === "1") {
+      document.documentElement.classList.add("curtain-seen")
+    }
+  } catch (e) {
+    // ignore storage failures (private mode, quota, etc.)
+  }
+</script>
 
 <div
   id="curtain"
   aria-hidden="true"
   role="presentation"
-  class="fixed inset-0 z-50 flex flex-col items-center justify-center gap-5 bg-neutral-100 px-2 dark:bg-neutral-900"
+  class="bg-neutral-100 dark:bg-neutral-950 fixed inset-0 z-100 flex flex-col items-center justify-center gap-12 px-6"
 >
   <p
     id="curtain-quote"
-    class="max-w-lg text-center text-2xl text-stone-900 dark:text-stone-100"
+    class="font-serif text-2xl leading-snug text-neutral-900 dark:text-neutral-50 max-w-xl text-center md:text-3xl"
   >
-    I believe that good work can change things — for people, for communities,
-    for the world around us.
+    {
+      quote.map((word, i) => (
+        <>
+          {word.em ? (
+            <em
+              class="word"
+              data-word-index={i}
+              data-em
+            >
+              {word.text}
+            </em>
+          ) : (
+            <span
+              class="word"
+              data-word-index={i}
+              data-dash={word.dash ? "" : undefined}
+            >
+              {word.text}
+            </span>
+          )}
+          {i < quote.length - 1 ? " " : ""}
+        </>
+      ))
+    }
   </p>
 
   <Signature
-    class="h-7 text-stone-900 dark:text-stone-100"
+    class="h-6 text-neutral-900 dark:text-neutral-50 md:h-7"
     animated
-    delay={1000}
+    delay={SIGNATURE_DELAY_MS}
   />
 </div>
 
 <style>
-  #curtain-quote {
-    opacity: 0;
-    transform: translateY(10px);
-    transition:
-      opacity 700ms cubic-bezier(0.25, 0.1, 0.25, 1),
-      transform 700ms cubic-bezier(0.25, 0.1, 0.25, 1);
-  }
-
-  #curtain-quote.is-visible {
-    opacity: 1;
-    transform: translateY(0);
+  /* Repeat-visit: skip the curtain entirely so a fast refresh doesn't
+     show it for a single frame before the module script can remove it.
+     The `curtain-seen` class is set by the pre-paint inline script above,
+     before this element is parsed, so the browser never builds a box. */
+  :global(html.curtain-seen) #curtain {
+    display: none !important;
   }
 
   #curtain {
     touch-action: none;
-    transition: transform 900ms cubic-bezier(0.76, 0, 0.24, 1);
     will-change: transform;
+    /* Pin to the small viewport height so the mobile URL bar
+       collapsing/expanding mid-animation can't resize the curtain and
+       cause it to jump. Falls back to 100vh on older browsers. */
+    height: 100vh;
+    height: 100svh;
   }
 
-  #curtain.is-exiting {
-    transform: translateY(-100%);
-    pointer-events: none;
+  /* The quote fades in from transparent at the start of the timeline.
+     We intentionally do NOT set `opacity: 0` here: if the module script
+     fails to load (e.g. transient CDN 404) the text must still be
+     readable. The module script applies the initial opacity just before
+     animating it in, so the fade still works when JS is available. */
+  #curtain-quote {
+    will-change: opacity;
+  }
+
+  #curtain-quote .word {
+    display: inline-block;
+    opacity: 0.2;
+    /* Match the JS entry state so the words paint in their pre-animation
+       pose on first frame. Without this, GSAP's initial `y: 8` is applied
+       one frame after the browser has already painted the words at y: 0,
+       which shows up as a visible jolt on slower devices. */
+    transform: translateY(8px);
+    will-change: opacity, transform;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    #curtain-quote {
+    #curtain-quote .word {
       opacity: 1;
       transform: none;
-      transition: none;
-    }
-
-    #curtain-quote.is-visible {
-      opacity: 1;
-      transform: none;
-    }
-
-    #curtain {
-      transition: opacity 400ms ease;
-      transform: none !important;
-    }
-
-    #curtain.is-exiting {
-      opacity: 0;
-      pointer-events: none;
     }
   }
 </style>
 
 <script>
-  const QUOTE_IN = 200
-  const EXIT_AT = 750 + 5 * 250 + 500 + 1000
-  const EXIT_DURATION = 900
+  import gsap from "gsap"
 
-  const curtain = document.getElementById("curtain")!
-  const quote = document.getElementById("curtain-quote")!
+  const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)"
+  const SEEN_KEY = "matteo-curtain-seen"
 
-  // Lock scroll on both html + body — body alone doesn't block on iOS Safari
-  document.documentElement.style.overflow = "hidden"
-  document.body.style.overflow = "hidden"
+  // Word reveal
+  const WORD_START = 0.2
+  const WORD_DURATION = 1.1
+  const WORD_STAGGER = 0.05
+  const EM_EMPHASIS = 0.08
+  const DASH_BREATH = 0.22
 
-  setTimeout(() => quote.classList.add("is-visible"), QUOTE_IN)
+  // Gentle fade-in for the quote container at the very start of the
+  // timeline. Compounds with the per-word opacity so the text appears
+  // softly before the words begin their staggered rise.
+  const QUOTE_FADE_DURATION = 0.9
 
-  setTimeout(() => {
-    // Restore scroll and disable pointer events before the slide starts
-    // so content beneath is accessible as soon as the curtain clears it
+  // Must match the `delay` prop passed to <Signature /> above (seconds)
+  const SIGNATURE_START = 2.2
+  const SIGNATURE_DURATION = 1.9
+
+  const HOLD = 0.65
+  const EXIT_DURATION = 1.2
+  const EXIT_EASE = "power4.inOut"
+
+  // Matches ENTRY_DELAY_MS in the component frontmatter — a small beat so
+  // the word reveal doesn't start the instant the curtain paints.
+  const ENTRY_DELAY = 0.5
+
+  function lockScroll() {
+    document.documentElement.style.overflow = "hidden"
+    document.body.style.overflow = "hidden"
+    window.lenisInstance?.stop()
+  }
+
+  function unlockScroll() {
     document.documentElement.style.overflow = ""
     document.body.style.overflow = ""
-    curtain.classList.add("is-exiting")
-    setTimeout(() => curtain.remove(), EXIT_DURATION + 50)
-  }, EXIT_AT)
+    window.lenisInstance?.start()
+  }
+
+  function dispatchDone() {
+    window.dispatchEvent(new CustomEvent("curtain:done"))
+  }
+
+  function dispatchExitStart() {
+    window.dispatchEvent(new CustomEvent("curtain:exit-start"))
+  }
+
+  function markSeen() {
+    try {
+      sessionStorage.setItem(SEEN_KEY, "1")
+    } catch {
+      // ignore storage failures (private mode, quota, etc.)
+    }
+  }
+
+  function hasBeenSeen(): boolean {
+    try {
+      return sessionStorage.getItem(SEEN_KEY) === "1"
+    } catch {
+      return false
+    }
+  }
+
+  function run() {
+    const curtain = document.getElementById("curtain")
+    const quote = document.getElementById("curtain-quote")
+    if (!curtain || !quote) return
+
+    // Repeat-visit gate: within the same tab session, skip the ceremony.
+    // Defer the event so listeners registered in the same tick (e.g. Home's
+    // entry script) can subscribe before it fires. Skip `exit-start` so the
+    // home entry uses its short delay (no curtain = nothing to rhyme with).
+    if (hasBeenSeen()) {
+      curtain.remove()
+      requestAnimationFrame(() => dispatchDone())
+      return
+    }
+
+    const words = Array.from(quote.querySelectorAll<HTMLElement>(".word"))
+    const prefersReducedMotion = window.matchMedia(REDUCED_MOTION_QUERY).matches
+
+    lockScroll()
+
+    if (prefersReducedMotion) {
+      gsap.to(curtain, {
+        autoAlpha: 0,
+        duration: 0.5,
+        delay: 0.7 + ENTRY_DELAY,
+        ease: "power2.out",
+        onStart: dispatchExitStart,
+        onComplete: () => {
+          unlockScroll()
+          curtain.remove()
+          markSeen()
+          dispatchDone()
+        },
+      })
+      return
+    }
+
+    // Compute per-word delays so em words get a micro-emphasis lift and the
+    // em-dash gets a short "breath" before the sentence resumes.
+    const dashIdx = words.findIndex((w) => w.hasAttribute("data-dash"))
+    const wordDelay = (i: number): number => {
+      let d = i * WORD_STAGGER
+      if (words[i].hasAttribute("data-em")) d += EM_EMPHASIS
+      if (dashIdx >= 0 && i >= dashIdx) d += DASH_BREATH
+      return d
+    }
+
+    const tl = gsap.timeline({
+      delay: ENTRY_DELAY,
+      defaults: { ease: "power2.out" },
+      onComplete: () => {
+        unlockScroll()
+        curtain.remove()
+        markSeen()
+        dispatchDone()
+      },
+    })
+
+    // Start the quote fully transparent only once we know GSAP is loaded
+    // and we're about to animate it back in. If the module script ever
+    // fails to load, the CSS default keeps the text visible.
+    gsap.set(quote, { opacity: 0 })
+
+    tl.to(
+      quote,
+      {
+        opacity: 1,
+        duration: QUOTE_FADE_DURATION,
+        ease: "sine.out",
+      },
+      0,
+    )
+
+    tl.to(
+      words,
+      {
+        opacity: 1,
+        y: 0,
+        duration: WORD_DURATION,
+        stagger: wordDelay,
+      },
+      WORD_START,
+    )
+
+    // Reserve the signature's self-playing handwriting slice so the slide is
+    // scheduled only after it completes, with a trailing hold for breathing.
+    tl.set({}, {}, SIGNATURE_START + SIGNATURE_DURATION)
+
+    tl.to(
+      curtain,
+      {
+        yPercent: -100,
+        duration: EXIT_DURATION,
+        ease: EXIT_EASE,
+        onStart: () => {
+          curtain.style.pointerEvents = "none"
+          dispatchExitStart()
+        },
+      },
+      `>+=${HOLD}`,
+    )
+  }
+
+  // Wait until the web fonts are resolved before starting the ceremony.
+  // The quote is set in Libre Baskerville; if we animate while the fallback
+  // serif is still showing, the swap to Baskerville reflows the centered
+  // block and reads as a sudden jump (especially on mobile). The curtain is
+  // already covering the page during this wait so the delay is invisible.
+  function start() {
+    const FONT_TIMEOUT_MS = 1200
+    const ready =
+      document.fonts && typeof document.fonts.ready?.then === "function"
+        ? document.fonts.ready
+        : Promise.resolve()
+    const timeout = new Promise((resolve) =>
+      window.setTimeout(resolve, FONT_TIMEOUT_MS),
+    )
+    Promise.race([ready, timeout]).then(() => run())
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", start, { once: true })
+  } else {
+    start()
+  }
 </script>

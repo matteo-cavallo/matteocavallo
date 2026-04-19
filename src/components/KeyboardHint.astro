@@ -1,0 +1,167 @@
+---
+interface Props {
+  count: number
+  prefix?: string
+  suffix?: string
+}
+
+const {
+  count,
+  prefix = "You can navigate using",
+  suffix,
+} = Astro.props
+const keys = Array.from({ length: count }, (_, i) => i + 1)
+---
+
+<aside
+  class="keyboard-hint pointer-events-none fixed right-6 bottom-6 z-10 hidden items-center gap-2 md:flex"
+  aria-hidden="true"
+  data-enter-chrome
+  data-keyboard-hint
+>
+  {prefix && <span class="keyboard-hint-copy">{prefix}</span>}
+  <span class="flex items-center gap-1">
+    {keys.map((k) => <kbd class="keyboard-hint-key">{k}</kbd>)}
+  </span>
+  {suffix && <span class="keyboard-hint-copy">{suffix}</span>}
+</aside>
+
+<style>
+  .keyboard-hint-copy {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    line-height: 1;
+    color: var(--color-neutral-400);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .keyboard-hint-copy {
+      color: var(--color-neutral-500);
+    }
+  }
+
+  .keyboard-hint-key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 1.125rem;
+    min-width: 1.125rem;
+    padding: 0 0.25rem;
+    border: 1px solid var(--color-neutral-300);
+    border-radius: 3px;
+    font-family: var(--font-sans);
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--color-neutral-500);
+    background: transparent;
+    transition:
+      color 400ms ease,
+      border-color 400ms ease,
+      transform 400ms ease;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .keyboard-hint-key {
+      border-color: var(--color-neutral-800);
+      color: var(--color-neutral-400);
+    }
+  }
+
+  .keyboard-hint-key[data-pressed] {
+    color: var(--color-neutral-900);
+    border-color: var(--color-neutral-900);
+    transform: translateY(1px);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .keyboard-hint-key[data-pressed] {
+      color: var(--color-neutral-50);
+      border-color: var(--color-neutral-50);
+    }
+  }
+</style>
+
+<script>
+  import gsap from "gsap"
+
+  const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)"
+  const DESKTOP_QUERY = "(min-width: 768px)"
+  const IDLE_HIDE_MS = 12000
+
+  let cleanup: (() => void) | null = null
+
+  function setup() {
+    teardown()
+
+    if (!window.matchMedia(DESKTOP_QUERY).matches) return
+
+    const hint = document.querySelector<HTMLElement>("[data-keyboard-hint]")
+    if (!hint) return
+
+    const keys = Array.from(
+      hint.querySelectorAll<HTMLElement>(".keyboard-hint-key"),
+    )
+    const reduced = window.matchMedia(REDUCED_MOTION_QUERY).matches
+
+    let hideTimer: number | null = null
+    let hidden = false
+
+    const hide = () => {
+      if (hidden) return
+      hidden = true
+      if (reduced) {
+        hint.style.opacity = "0"
+      } else {
+        gsap.to(hint, {
+          opacity: 0,
+          duration: 0.6,
+          ease: "sine.out",
+        })
+      }
+    }
+
+    const scheduleHide = () => {
+      if (hideTimer !== null) window.clearTimeout(hideTimer)
+      hideTimer = window.setTimeout(hide, IDLE_HIDE_MS)
+    }
+
+    const onKeydown = (event: KeyboardEvent) => {
+      if (event.key < "1" || event.key > "9") return
+      const idx = parseInt(event.key, 10) - 1
+      const key = keys[idx]
+      if (!key) return
+
+      key.setAttribute("data-pressed", "")
+      window.setTimeout(() => key.removeAttribute("data-pressed"), 220)
+
+      hide()
+    }
+
+    document.addEventListener("keydown", onKeydown)
+    scheduleHide()
+
+    cleanup = () => {
+      document.removeEventListener("keydown", onKeydown)
+      if (hideTimer !== null) window.clearTimeout(hideTimer)
+      hideTimer = null
+    }
+  }
+
+  function teardown() {
+    cleanup?.()
+    cleanup = null
+  }
+
+  const mql = window.matchMedia(DESKTOP_QUERY)
+  mql.addEventListener("change", setup)
+
+  document.addEventListener("astro:page-load", setup)
+  document.addEventListener("astro:before-swap", teardown)
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setup, { once: true })
+  } else {
+    setup()
+  }
+</script>

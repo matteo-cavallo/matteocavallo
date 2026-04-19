@@ -11,6 +11,10 @@ export const site = {
     name: "Matteo Cavallo",
     email: "m.cavallo1011@gmail.com",
     location: "Paris, France",
+    address: {
+      locality: "Paris",
+      country: "France",
+    },
     jobTitle: "Senior Web Engineer",
     employer: "Qonto",
   },

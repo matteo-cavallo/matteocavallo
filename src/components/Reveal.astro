@@ -1,0 +1,154 @@
+---
+// Scroll-triggered reveal for elements marked with [data-reveal] inside a
+// [data-reveal-section]. First-time visibility animates children in with a
+// small stagger; direction-aware y offset matches the user's scroll momentum.
+---
+
+<style is:global>
+  [data-reveal-section] [data-reveal] {
+    opacity: 0;
+    will-change: opacity, transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal-section] [data-reveal] {
+      opacity: 1;
+    }
+  }
+</style>
+
+<script>
+  import gsap from "gsap"
+
+  const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)"
+  const DESKTOP_QUERY = "(min-width: 768px)"
+
+  const REVEAL_DURATION = 0.95
+  const REVEAL_STAGGER = 0.09
+  const REVEAL_OFFSET = 14
+
+  let observer: IntersectionObserver | null = null
+  let scrollCleanup: (() => void) | null = null
+  let lastScrollY = 0
+  let scrollDir: 1 | -1 = 1
+
+  function getScrollRoot(): HTMLElement | null {
+    return document.querySelector<HTMLElement>("[data-scroll-container]")
+  }
+
+  function currentScrollY(): number {
+    const lenis = window.lenisInstance
+    if (lenis) return lenis.scroll
+    const root = getScrollRoot()
+    if (root && window.matchMedia(DESKTOP_QUERY).matches) {
+      return root.scrollTop
+    }
+    return window.scrollY
+  }
+
+  function trackScrollDirection() {
+    lastScrollY = currentScrollY()
+
+    const onScroll = () => {
+      const y = currentScrollY()
+      if (y === lastScrollY) return
+      scrollDir = y >= lastScrollY ? 1 : -1
+      lastScrollY = y
+    }
+
+    const lenis = window.lenisInstance
+    if (lenis) {
+      lenis.on("scroll", onScroll)
+      scrollCleanup = () => lenis.off("scroll", onScroll)
+      return
+    }
+
+    const root = getScrollRoot()
+    const target: EventTarget =
+      root && window.matchMedia(DESKTOP_QUERY).matches ? root : window
+    target.addEventListener("scroll", onScroll, { passive: true })
+    scrollCleanup = () =>
+      target.removeEventListener("scroll", onScroll)
+  }
+
+  function revealSection(section: HTMLElement) {
+    const targets = Array.from(
+      section.querySelectorAll<HTMLElement>("[data-reveal]"),
+    )
+    if (!targets.length) return
+
+    const fromY = scrollDir >= 0 ? REVEAL_OFFSET : -REVEAL_OFFSET
+
+    gsap.fromTo(
+      targets,
+      { opacity: 0, y: fromY },
+      {
+        opacity: 1,
+        y: 0,
+        duration: REVEAL_DURATION,
+        ease: "power2.out",
+        stagger: REVEAL_STAGGER,
+        onComplete: () => {
+          gsap.set(targets, { clearProps: "willChange" })
+        },
+      },
+    )
+  }
+
+  function setup() {
+    teardown()
+
+    const reduced = window.matchMedia(REDUCED_MOTION_QUERY).matches
+    const sections = document.querySelectorAll<HTMLElement>(
+      "[data-reveal-section]",
+    )
+    if (!sections.length) return
+
+    if (reduced) {
+      sections.forEach((section) => {
+        const targets = section.querySelectorAll<HTMLElement>("[data-reveal]")
+        gsap.set(targets, { opacity: 1, clearProps: "willChange" })
+      })
+      return
+    }
+
+    trackScrollDirection()
+
+    const isDesktop = window.matchMedia(DESKTOP_QUERY).matches
+    const scrollRoot = getScrollRoot()
+
+    observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+          const section = entry.target as HTMLElement
+          revealSection(section)
+          observer?.unobserve(section)
+        })
+      },
+      {
+        root: isDesktop && scrollRoot ? scrollRoot : null,
+        rootMargin: "0px 0px -15% 0px",
+        threshold: 0,
+      },
+    )
+
+    sections.forEach((section) => observer!.observe(section))
+  }
+
+  function teardown() {
+    observer?.disconnect()
+    observer = null
+    scrollCleanup?.()
+    scrollCleanup = null
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setup, { once: true })
+  } else {
+    setup()
+  }
+
+  document.addEventListener("astro:page-load", setup)
+  document.addEventListener("astro:before-swap", teardown)
+</script>
