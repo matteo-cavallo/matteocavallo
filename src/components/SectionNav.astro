@@ -24,7 +24,7 @@ const { sections } = Astro.props
         <a
           href={`#${section.id}`}
           data-section-link={section.id}
-          class="group pointer-events-auto flex items-center justify-end gap-3 outline-none will-change-transform"
+          class="group pointer-events-auto flex items-center justify-end gap-3 will-change-transform outline-none"
           aria-label={`Jump to ${section.label}`}
         >
           <span class="nav-label">{section.label}</span>
@@ -36,12 +36,34 @@ const { sections } = Astro.props
 </nav>
 
 <script>
+  /**
+   * SectionNav — 3D perspective wheel navigation (desktop only).
+   *
+   * Animation contract:
+   * - Requires window.lenisInstance to be set by SmoothScroll.astro before
+   *   setup() (desktop only; mobile has no Lenis and uses native scroll).
+   * - Reads [data-scroll-container] as the IntersectionObserver root on desktop.
+   * - Each [data-wheel-slot] wraps an <a data-section-link> and a .nav-line.
+   * - Active state is driven by an IntersectionObserver watching the section
+   *   elements whose ids come from [data-section-link].
+   * - Proximity/magnetic effect on desktop: gsap.quickTo on x/scale per link,
+   *   with a "flatten" transition when the cursor is close to the wheel.
+   * - Keyboard: digit keys 1–9 scroll to the matching section via
+   *   lenis.scrollTo (or native scrollIntoView as a fallback).
+   *
+   * Teardown: ctx.revert() clears all GSAP state created inside the context;
+   * observer.disconnect(), detachProximity(), and keydownCleanup() remove all
+   * external listeners. Inline styles applied outside the context (perspective,
+   * transformOrigin, transformStyle) are cleared explicitly.
+   */
   import gsap from "gsap"
   import type Lenis from "lenis"
   import { MOTION } from "../lib/motion"
-
-  const DESKTOP_QUERY = "(min-width: 768px)"
-  const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)"
+  import {
+    DESKTOP_MQL,
+    REDUCED_MOTION_MQL,
+    withLifecycle,
+  } from "../lib/runtime"
 
   let isSetUp = false
   let ctx: ReturnType<typeof gsap.context> | null = null
@@ -155,8 +177,8 @@ const { sections } = Astro.props
   function setup() {
     if (isSetUp) return
 
-    const prefersReducedMotion = window.matchMedia(REDUCED_MOTION_QUERY).matches
-    const isDesktop = window.matchMedia(DESKTOP_QUERY).matches
+    const prefersReducedMotion = REDUCED_MOTION_MQL.matches
+    const isDesktop = DESKTOP_MQL.matches
 
     const nav = document.querySelector<HTMLElement>(".section-nav")
 
@@ -272,9 +294,7 @@ const { sections } = Astro.props
 
           if (line) {
             gsap.to(line, {
-              width: isActive
-                ? MOTION.nav.lineActive
-                : MOTION.nav.lineInactive,
+              width: isActive ? MOTION.nav.lineActive : MOTION.nav.lineInactive,
               duration: prefersReducedMotion ? 0 : MOTION.medium,
               ease: MOTION.ease,
               overwrite: "auto",
@@ -294,10 +314,7 @@ const { sections } = Astro.props
           }
         })
 
-        applySlotRotations(
-          MOTION.nav.wheelDuration,
-          immediate || isFirst,
-        )
+        applySlotRotations(MOTION.nav.wheelDuration, immediate || isFirst)
       }
 
       observer = new IntersectionObserver(
@@ -357,11 +374,7 @@ const { sections } = Astro.props
     setup()
   }
 
-  const mql = window.matchMedia(DESKTOP_QUERY)
-  mql.addEventListener("change", reapply)
+  DESKTOP_MQL.addEventListener("change", reapply)
 
-  document.addEventListener("astro:page-load", setup)
-  document.addEventListener("astro:before-swap", teardown)
-
-  setup()
+  withLifecycle(setup, teardown)
 </script>

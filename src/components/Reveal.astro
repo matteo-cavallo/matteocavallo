@@ -19,9 +19,11 @@
 
 <script>
   import gsap from "gsap"
-
-  const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)"
-  const DESKTOP_QUERY = "(min-width: 768px)"
+  import {
+    DESKTOP_MQL,
+    REDUCED_MOTION_MQL,
+    withLifecycle,
+  } from "../lib/runtime"
 
   const REVEAL_DURATION = 0.95
   const REVEAL_STAGGER = 0.09
@@ -40,7 +42,7 @@
     const lenis = window.lenisInstance
     if (lenis) return lenis.scroll
     const root = getScrollRoot()
-    if (root && window.matchMedia(DESKTOP_QUERY).matches) {
+    if (root && DESKTOP_MQL.matches) {
       return root.scrollTop
     }
     return window.scrollY
@@ -49,7 +51,9 @@
   function trackScrollDirection() {
     lastScrollY = currentScrollY()
 
-    const onScroll = () => {
+    // Named handler so `lenis.off("scroll", handleScroll)` can unsubscribe
+    // with the exact same function reference it registered with.
+    const handleScroll = () => {
       const y = currentScrollY()
       if (y === lastScrollY) return
       scrollDir = y >= lastScrollY ? 1 : -1
@@ -58,17 +62,15 @@
 
     const lenis = window.lenisInstance
     if (lenis) {
-      lenis.on("scroll", onScroll)
-      scrollCleanup = () => lenis.off("scroll", onScroll)
+      lenis.on("scroll", handleScroll)
+      scrollCleanup = () => lenis.off("scroll", handleScroll)
       return
     }
 
     const root = getScrollRoot()
-    const target: EventTarget =
-      root && window.matchMedia(DESKTOP_QUERY).matches ? root : window
-    target.addEventListener("scroll", onScroll, { passive: true })
-    scrollCleanup = () =>
-      target.removeEventListener("scroll", onScroll)
+    const target: EventTarget = root && DESKTOP_MQL.matches ? root : window
+    target.addEventListener("scroll", handleScroll, { passive: true })
+    scrollCleanup = () => target.removeEventListener("scroll", handleScroll)
   }
 
   function revealSection(section: HTMLElement) {
@@ -98,7 +100,7 @@
   function setup() {
     teardown()
 
-    const reduced = window.matchMedia(REDUCED_MOTION_QUERY).matches
+    const reduced = REDUCED_MOTION_MQL.matches
     const sections = document.querySelectorAll<HTMLElement>(
       "[data-reveal-section]",
     )
@@ -114,7 +116,7 @@
 
     trackScrollDirection()
 
-    const isDesktop = window.matchMedia(DESKTOP_QUERY).matches
+    const isDesktop = DESKTOP_MQL.matches
     const scrollRoot = getScrollRoot()
 
     observer = new IntersectionObserver(
@@ -143,12 +145,5 @@
     scrollCleanup = null
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", setup, { once: true })
-  } else {
-    setup()
-  }
-
-  document.addEventListener("astro:page-load", setup)
-  document.addEventListener("astro:before-swap", teardown)
+  withLifecycle(setup, teardown)
 </script>

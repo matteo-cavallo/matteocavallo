@@ -15,7 +15,7 @@
   }
 
   .nav-label {
-    @apply font-sans text-nav tracking-nav uppercase text-neutral-400 transition-colors duration-500 group-hover:text-neutral-600 group-data-[active]:text-neutral-900 dark:text-neutral-500 dark:group-hover:text-neutral-300 dark:group-data-[active]:text-neutral-50;
+    @apply text-nav tracking-nav font-sans text-neutral-400 uppercase transition-colors duration-500 group-hover:text-neutral-600 group-data-[active]:text-neutral-900 dark:text-neutral-500 dark:group-hover:text-neutral-300 dark:group-data-[active]:text-neutral-50;
   }
 
   .nav-line {

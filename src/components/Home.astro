@@ -70,9 +70,33 @@ const sections = [
 </style>
 
 <script>
+  /**
+   * Entry animation orchestrator.
+   *
+   * Animation contract — dependencies on other components:
+   *
+   * Hero.astro:
+   *   - Renders .hero-word spans (and <em> for emphasis words).
+   *   - Sets initial CSS: opacity: 0; transform: translateY(0.5em) on
+   *     .hero-word so the pre-JS paint matches the timeline's starting pose.
+   *   - GSAP re-sets this same initial pose explicitly via gsap.set() below so
+   *     the timeline doesn't depend on parsing the computed CSS translation
+   *     (which is a font-metric-sensitive value).
+   *   - If Hero.astro's initial CSS changes, update the gsap.set() call here.
+   *
+   * Curtain.astro:
+   *   - Dispatches "curtain:exit-start" when its slide-out begins.
+   *   - This triggers enter() with entryDelay = ENTRY_DELAY_WITH_CURTAIN
+   *     (overlap with the curtain slide so the two motions rhyme).
+   *   - If the curtain is absent (repeat-visit session skip, or subsequent
+   *     navigation), enter() runs immediately with the "without-curtain" delay.
+   *
+   * [data-enter-chrome] elements (header, footer, .section-nav):
+   *   - Initially hidden via <style is:global> in this file (opacity: 0).
+   *   - Faded in at the tail of the entry timeline so chrome and hero blend.
+   */
   import gsap from "gsap"
-
-  const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)"
+  import { REDUCED_MOTION_MQL, onReady } from "../lib/runtime"
 
   // Non-em baseline: unhurried, fluid reveal.
   const HERO_DURATION = 1.05
@@ -113,13 +137,21 @@ const sections = [
     const sectionNav = document.querySelector<HTMLElement>(".section-nav")
     const chromeTargets = sectionNav ? [...chrome, sectionNav] : chrome
 
-    const prefersReducedMotion = window.matchMedia(REDUCED_MOTION_QUERY).matches
+    const prefersReducedMotion = REDUCED_MOTION_MQL.matches
 
     if (prefersReducedMotion) {
       gsap.set(heroWords, { opacity: 1, clearProps: "transform" })
       gsap.set(chromeTargets, { opacity: 1 })
       return
     }
+
+    // Explicitly set the starting transform so GSAP doesn't infer it from
+    // computed CSS. Matches Hero.astro's initial pose:
+    //   opacity: 0; transform: translateY(0.5em)
+    // GSAP parses the computed `translateY` in px at timeline-start time, and
+    // a font-loading race can produce the wrong px value; setting it here in
+    // em makes the entry timeline robust to font metric shifts.
+    gsap.set(heroWords, { y: "0.5em", opacity: 0 })
 
     // Locate the emphasized phrase so we can ramp the pacing around it.
     const firstEm = heroWords.findIndex((w) => w.hasAttribute("data-em"))
@@ -221,9 +253,5 @@ const sections = [
     enter()
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", setup, { once: true })
-  } else {
-    setup()
-  }
+  onReady(setup)
 </script>

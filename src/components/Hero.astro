@@ -106,12 +106,13 @@ const words: { text: string; em?: boolean; dash?: boolean }[] = [
 </style>
 
 <script>
-  const MOBILE_QUERY = "(max-width: 767px)"
+  import { DESKTOP_MQL, onReady } from "../lib/runtime"
 
   function setup() {
     const hint = document.querySelector<HTMLElement>("[data-hero-scroll-hint]")
     if (!hint) return
-    if (!window.matchMedia(MOBILE_QUERY).matches) return
+    // Scroll hint is a mobile-only affordance — skip wiring on desktop.
+    if (DESKTOP_MQL.matches) return
 
     let dismissed = false
     const dismiss = () => {
@@ -124,9 +125,11 @@ const words: { text: string; em?: boolean; dash?: boolean }[] = [
       cleanup()
     }
 
-    // Any scroll or user-initiated scroll gesture dismisses. We listen on
-    // `document` (capture) in addition to `window` because on some iOS
-    // Safari versions the scroll event only fires at the document level.
+    // Listen on both document (capture phase, catches events before bubbling)
+    // and window (catches events that originate outside the document flow on
+    // some mobile browsers — notably iOS Safari, where the scroll event only
+    // fires at the document level in certain viewport conditions).
+    // Cleaned up after the first event via cleanup().
     const listenerOpts: AddEventListenerOptions = {
       passive: true,
       capture: true,
@@ -144,9 +147,5 @@ const words: { text: string; em?: boolean; dash?: boolean }[] = [
     }
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", setup, { once: true })
-  } else {
-    setup()
-  }
+  onReady(setup)
 </script>

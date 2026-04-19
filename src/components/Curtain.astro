@@ -32,10 +32,12 @@ const ENTRY_DELAY_MS = 500
 const SIGNATURE_DELAY_MS = 2200 + ENTRY_DELAY_MS
 ---
 
-{/* Pre-paint gate: runs synchronously before the curtain markup is parsed,
+{
+  /* Pre-paint gate: runs synchronously before the curtain markup is parsed,
     so on repeat visits within the same tab the curtain is hidden by CSS
     from the very first frame (no flash on fast refresh).
-    The key is duplicated in the module script below — keep them in sync. */}
+    The key is duplicated in the module script below — keep them in sync. */
+}
 <script is:inline>
   try {
     if (sessionStorage.getItem("matteo-curtain-seen") === "1") {
@@ -50,21 +52,17 @@ const SIGNATURE_DELAY_MS = 2200 + ENTRY_DELAY_MS
   id="curtain"
   aria-hidden="true"
   role="presentation"
-  class="bg-neutral-100 dark:bg-neutral-950 fixed inset-0 z-100 flex flex-col items-center justify-center gap-12 px-6"
+  class="fixed inset-0 z-100 flex flex-col items-center justify-center gap-12 bg-neutral-100 px-6 dark:bg-neutral-950"
 >
   <p
     id="curtain-quote"
-    class="font-serif text-2xl leading-snug text-neutral-900 dark:text-neutral-50 max-w-xl text-center md:text-3xl"
+    class="max-w-xl text-center font-serif text-2xl leading-snug text-neutral-900 md:text-3xl dark:text-neutral-50"
   >
     {
       quote.map((word, i) => (
         <>
           {word.em ? (
-            <em
-              class="word"
-              data-word-index={i}
-              data-em
-            >
+            <em class="word" data-word-index={i} data-em>
               {word.text}
             </em>
           ) : (
@@ -83,7 +81,7 @@ const SIGNATURE_DELAY_MS = 2200 + ENTRY_DELAY_MS
   </p>
 
   <Signature
-    class="h-6 text-neutral-900 dark:text-neutral-50 md:h-7"
+    class="h-6 text-neutral-900 md:h-7 dark:text-neutral-50"
     animated
     delay={SIGNATURE_DELAY_MS}
   />
@@ -138,8 +136,8 @@ const SIGNATURE_DELAY_MS = 2200 + ENTRY_DELAY_MS
 
 <script>
   import gsap from "gsap"
+  import { REDUCED_MOTION_MQL, onReady } from "../lib/runtime"
 
-  const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)"
   const SEEN_KEY = "matteo-curtain-seen"
 
   // Word reveal
@@ -166,6 +164,11 @@ const SIGNATURE_DELAY_MS = 2200 + ENTRY_DELAY_MS
   // the word reveal doesn't start the instant the curtain paints.
   const ENTRY_DELAY = 0.5
 
+  // Locks scroll during curtain display.
+  // Both html/body overflow and Lenis are stopped to prevent any scroll
+  // input from reaching the page before the curtain exits — html/body
+  // overflow catches native scroll (desktop without Lenis, and mobile),
+  // and lenis.stop() halts the Lenis RAF loop on desktop.
   function lockScroll() {
     document.documentElement.style.overflow = "hidden"
     document.body.style.overflow = "hidden"
@@ -182,6 +185,9 @@ const SIGNATURE_DELAY_MS = 2200 + ENTRY_DELAY_MS
     window.dispatchEvent(new CustomEvent("curtain:done"))
   }
 
+  // Signals Home.astro to begin the hero word-stagger entry timeline.
+  // Home.astro listens once for this event and calls enter() with the
+  // "with-curtain" delay so the two motions rhyme.
   function dispatchExitStart() {
     window.dispatchEvent(new CustomEvent("curtain:exit-start"))
   }
@@ -218,7 +224,7 @@ const SIGNATURE_DELAY_MS = 2200 + ENTRY_DELAY_MS
     }
 
     const words = Array.from(quote.querySelectorAll<HTMLElement>(".word"))
-    const prefersReducedMotion = window.matchMedia(REDUCED_MOTION_QUERY).matches
+    const prefersReducedMotion = REDUCED_MOTION_MQL.matches
 
     lockScroll()
 
@@ -322,9 +328,5 @@ const SIGNATURE_DELAY_MS = 2200 + ENTRY_DELAY_MS
     Promise.race([ready, timeout]).then(() => run())
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", start, { once: true })
-  } else {
-    start()
-  }
+  onReady(start)
 </script>

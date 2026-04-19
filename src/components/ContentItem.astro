@@ -28,16 +28,23 @@ const { title, subtitle, period, description, href } = Astro.props
             </p>
           </a>
         ) : (
-          <p class="font-sans text-base font-medium text-stone-900 dark:text-stone-100">{title}</p>
+          <p class="font-sans text-base font-medium text-stone-900 dark:text-stone-100">
+            {title}
+          </p>
         )
       }
       <p
-        class:list={["font-sans text-sm text-stone-500 dark:text-stone-400", href ? "mt-1" : "mt-0.5"]}
+        class:list={[
+          "font-sans text-sm text-stone-500 dark:text-stone-400",
+          href ? "mt-1" : "mt-0.5",
+        ]}
       >
         {subtitle}
       </p>
     </div>
-    <p class="shrink-0 font-sans text-sm tabular-nums text-stone-500 dark:text-stone-400">
+    <p
+      class="shrink-0 font-sans text-sm text-stone-500 tabular-nums dark:text-stone-400"
+    >
       {period}
     </p>
   </div>

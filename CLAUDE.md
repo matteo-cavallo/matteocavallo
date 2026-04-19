@@ -5,57 +5,69 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-pnpm dev          # Start dev server at localhost:4321
-pnpm build        # Production build to ./dist/
+pnpm dev          # Start dev server
+pnpm build        # Build for production
 pnpm preview      # Preview production build
-pnpm format       # Format all files with Prettier
+pnpm format       # Format code with Prettier
 pnpm format:check # Check formatting without writing
 ```
 
-No test or lint commands beyond Prettier formatting.
-
-## Stack
-
-- **Astro 5** — static site generator, single route (`src/pages/index.astro`)
-- **Tailwind CSS v4** — integrated via `@tailwindcss/vite` Vite plugin (not the Astro integration)
-- **TypeScript** — strict mode via `astro/tsconfigs/strict`
-- **Prettier** — with `prettier-plugin-astro` and `prettier-plugin-tailwindcss`; no semicolons
+No test suite is configured.
 
 ## Architecture
 
-Single-page personal portfolio. `src/pages/index.astro` is a thin orchestrator that composes layout and section components.
+Personal portfolio site built with **Astro 5**, **Tailwind CSS 4**, **GSAP**, and **Lenis**.
 
-### Data layer
+### Key Files
 
-`src/data/site.ts` is the single source of truth for all content and metadata:
+- `src/data/site.ts` — All content data (bio, social links)
+- `src/lib/motion.ts` — Centralized animation constants (durations, easings, stagger values)
+- `src/lib/runtime.ts` — Shared client-side utilities: media queries and Astro lifecycle helpers
+- `src/env.d.ts` — Ambient types (`astro/client` + `Window.lenisInstance`)
+- `src/styles/global.css` — Tailwind theme, custom CSS vars (`--font-serif`, `--font-sans`, `--text-nav`)
+- `src/layouts/Layout.astro` — Root template; imports SEO, SmoothScroll, Curtain, Reveal
+- `src/pages/index.astro` — Single page entry; imports Home component
 
-- `site` — site title, description, URL, locale, keywords, author info (name, email, location, job title, employer), and social links
-- `experience` — array of work history entries
-- `talks` — array of articles, talks, and podcast entries
+### Component Hierarchy
 
-Components and layouts import from `src/data/site.ts`; nothing is hardcoded in markup.
+```
+Layout.astro
+└── Home.astro
+    ├── Curtain.astro       (full-screen intro overlay)
+    ├── Hero.astro
+    ├── Vision.astro
+    ├── About.astro
+    ├── SectionNav.astro    (desktop-only 3D wheel nav)
+    ├── Footer.astro
+    └── Signature.astro
+```
 
-### Layout
+### Animation System
 
-`src/layouts/BaseLayout.astro` wraps `<html>`, `<head>` (via `SEO.astro`), and `<body>`. It accepts optional `title` and `description` props to override defaults.
+Entry animation is a coordinated sequence:
 
-### Components
+1. **Curtain** waits for `document.fonts.ready`, then reveals a quote, then exits
+2. **Hero** text reveals with word-level stagger on `curtain:exit-start`
+3. **Chrome** (header/footer) fades in synchronized with hero
 
-| Component           | Purpose                                                                                                                 |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `SEO.astro`         | All `<head>` tags — meta, Open Graph, Twitter, JSON-LD, font loading                                                    |
-| `Hero.astro`        | Top section — name, bio, location, CTA link, profile image                                                              |
-| `Vision.astro`      | Beliefs section — uses `Section.astro`                                                                                  |
-| `About.astro`       | Bio text + experience list + talks/writings list — uses `Section.astro` and `ContentItem.astro`                         |
-| `Section.astro`     | Reusable sticky-header + content grid (accepts `title`, `subtitle`, optional `bordered` prop)                           |
-| `ContentItem.astro` | Single list card shared by experience and talks (accepts `title`, `subtitle`, `period`, `description`, optional `href`) |
-| `Footer.astro`      | Site footer — social links sourced from `site.ts`                                                                       |
+Cross-component coordination uses window custom events:
 
-### Styles
+- `curtain:exit-start` — curtain begins sliding away (Home.astro listens to start hero entry)
+- `curtain:done` — curtain animation complete (fallback trigger for Home's entry)
 
-`src/styles/global.css` contains only:
+All timing lives in `motion.ts` — edit that file to tune rhythm globally.
 
-- Tailwind import
-- Font theme tokens (`--font-serif`, `--font-sans`)
-- Global `p { font-serif }` rule
-- Body text rendering smoothing
+### Scroll & Navigation
+
+- **Desktop**: Lenis smooth scroll on a fixed viewport container; 3D perspective wheel nav (`SectionNav`)
+- **Mobile**: Native scroll; linear nav with keyboard hints (keys 1–3)
+- **Breakpoint**: `md` (768px) separates the two behaviors
+- `window.lenisInstance` is set globally after Lenis initializes
+
+### Responsive Pattern
+
+Most components handle both modes in a single file using Tailwind's `md:` prefix and inline JS checks (`window.innerWidth`). `SectionNav` and proximity/magnetic effects are desktop-only.
+
+### Accessibility
+
+Respects `prefers-reduced-motion` — check existing components for the pattern before adding new animations. Curtain skips on repeat visits via `sessionStorage`.

@@ -114,11 +114,12 @@ const {
 </style>
 
 <script>
+  import { REDUCED_MOTION_MQL, onReady } from "../lib/runtime"
+
   const STAGGER = 250
   const DRAW_DURATION = 500
   const OPACITY_DURATION = 400
   const HOVER_DEBOUNCE = 80
-  const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)"
 
   function play(svg: SVGSVGElement) {
     const paths = svg.querySelectorAll<SVGPathElement>("path")
@@ -155,7 +156,7 @@ const {
   }
 
   function initAnimated() {
-    if (window.matchMedia(REDUCED_MOTION_QUERY).matches) return
+    if (REDUCED_MOTION_MQL.matches) return
 
     document
       .querySelectorAll<SVGSVGElement>("svg[data-signature]")
@@ -166,7 +167,7 @@ const {
   }
 
   function initHoverReplay() {
-    const reduced = window.matchMedia(REDUCED_MOTION_QUERY).matches
+    const reduced = REDUCED_MOTION_MQL.matches
 
     document
       .querySelectorAll<SVGSVGElement>("svg[data-signature-replay]")
@@ -211,9 +212,5 @@ const {
     initHoverReplay()
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot, { once: true })
-  } else {
-    boot()
-  }
+  onReady(boot)
 </script>
