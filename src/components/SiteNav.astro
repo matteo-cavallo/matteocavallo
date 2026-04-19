@@ -1,0 +1,27 @@
+---
+interface Props {
+  pathname: string
+}
+
+const { pathname } = Astro.props
+
+const navLinks = [{ href: "/about", label: "About" }]
+---
+
+<nav class="hidden items-center gap-10 md:flex" aria-label="Primary navigation">
+  {
+    navLinks.map((link) => (
+      <a
+        href={link.href}
+        class:list={[
+          "text-nav tracking-nav font-sans uppercase transition-colors duration-500",
+          pathname === link.href
+            ? "text-neutral-900 dark:text-neutral-100"
+            : "text-neutral-400 hover:text-neutral-900 dark:text-neutral-500 dark:hover:text-neutral-100",
+        ]}
+      >
+        {link.label}
+      </a>
+    ))
+  }
+</nav>
