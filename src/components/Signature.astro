@@ -115,7 +115,7 @@ const {
 
 <script>
   import { MOTION } from "../lib/motion"
-  import { REDUCED_MOTION_MQL, onReady } from "../lib/runtime"
+  import { REDUCED_MOTION_MQL } from "../lib/runtime"
 
   const STAGGER = 250
   const HOVER_DEBOUNCE = 80
@@ -161,6 +161,11 @@ const {
 
   function initAnimated() {
     if (REDUCED_MOTION_MQL.matches) return
+    // `data-signature` is only set on the curtain's signature. On
+    // ClientRouter navigations within the same session the curtain is
+    // `display: none` via `html.curtain-seen`, so playing the handwriting
+    // would be invisible work. Skip it once the curtain has been seen.
+    if (document.documentElement.classList.contains("curtain-seen")) return
 
     document
       .querySelectorAll<SVGSVGElement>("svg[data-signature]")
@@ -215,5 +220,11 @@ const {
     initHoverReplay()
   }
 
-  onReady(boot)
+  // astro:page-load fires on the initial full page load AND after every
+  // ClientRouter navigation. The header <Signature replayOnHover /> is a
+  // fresh DOM element after each swap, so hover listeners must be
+  // re-attached every time — bundled module scripts execute only once per
+  // session, so a plain onReady(boot) would only wire the listeners on
+  // the first page and silently break replay on every subsequent page.
+  document.addEventListener("astro:page-load", boot)
 </script>

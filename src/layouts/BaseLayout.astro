@@ -19,6 +19,8 @@ const pathname = Astro.url.pathname
     class="relative container mx-auto flex flex-col md:h-screen md:overflow-hidden"
   >
     <header
+      data-site-header
+      transition:name="site-header"
       class="flex flex-none items-center justify-center px-4 py-8 md:justify-between md:px-8"
     >
       <a href="/" aria-label="Matteo Cavallo">
@@ -33,7 +35,9 @@ const pathname = Astro.url.pathname
       data-scroll-container
     >
       <slot />
-      <Footer />
+      <div data-site-footer transition:name="site-footer">
+        <Footer />
+      </div>
     </main>
   </div>
 </Layout>

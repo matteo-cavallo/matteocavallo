@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css"
+import { ClientRouter } from "astro:transitions"
 import SEO from "../components/SEO.astro"
 import SmoothScroll from "../components/SmoothScroll.astro"
 import Curtain from "../components/Curtain.astro"
@@ -16,6 +17,7 @@ const { title, description } = Astro.props
 <html lang="en">
   <head>
     <SEO title={title} description={description} />
+    <ClientRouter />
   </head>
   <body>
     <Curtain />

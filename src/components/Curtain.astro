@@ -36,9 +36,15 @@ const SIGNATURE_DELAY_MS = 2200 + ENTRY_DELAY_MS
   /* Pre-paint gate: runs synchronously before the curtain markup is parsed,
     so on repeat visits within the same tab the curtain is hidden by CSS
     from the very first frame (no flash on fast refresh).
-    The key is duplicated in the module script below — keep them in sync. */
+    The key is duplicated in the module script below — keep them in sync.
+
+    `data-astro-rerun` is required for ClientRouter navigations: Astro's
+    default swap calls swapRootAttributes() which wipes the <html> class
+    list, and inline scripts don't re-execute on swap unless opted in.
+    Without this, `curtain-seen` would be lost on every navigation and
+    the curtain would re-appear fully opaque in the new snapshot. */
 }
-<script is:inline>
+<script is:inline data-astro-rerun>
   try {
     if (sessionStorage.getItem("matteo-curtain-seen") === "1") {
       document.documentElement.classList.add("curtain-seen")
@@ -52,6 +58,8 @@ const SIGNATURE_DELAY_MS = 2200 + ENTRY_DELAY_MS
   id="curtain"
   aria-hidden="true"
   role="presentation"
+  transition:name="none"
+  transition:animate="none"
   class="fixed inset-0 z-100 flex flex-col items-center justify-center gap-12 bg-neutral-100 px-6 dark:bg-neutral-950"
 >
   <p

@@ -8,6 +8,41 @@
   --tracking-nav-active: 0.32em;
 }
 
+@layer base {
+  ::view-transition-old(root) {
+    animation: 200ms ease-in both fade-out;
+  }
+
+  ::view-transition-new(root) {
+    animation: 300ms ease-out both fade-in;
+  }
+
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none;
+    }
+  }
+}
+
 @layer components {
   p {
     @apply font-sans;
@@ -30,6 +65,23 @@
   html,
   body {
     overflow-x: hidden;
+  }
+
+  /* On desktop both layouts use `md:h-screen md:overflow-hidden` — only an
+     inner container scrolls, so the site header / footer live at the same
+     viewport position on every page and `transition:name` morphs them in
+     place (visual no-op, reads as an anchor). On mobile there is no such
+     fixed shell: the page scrolls natively. When the user has scrolled the
+     header offscreen on `/` and navigates to `/about` (which lands at
+     `scroll: 0`), the browser would animate the header from its pre-nav
+     y = -scrollY to y = 0 — it "flies" across the viewport, reading as a
+     jump. Opt out on mobile so the header and footer participate in the
+     root crossfade with the rest of the page content instead of morphing.
+     !important is required to override the per-element rule Astro emits
+     from the `transition:name` directive. */
+  [data-site-header],
+  [data-site-footer] {
+    view-transition-name: none !important;
   }
 }
 

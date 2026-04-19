@@ -32,11 +32,20 @@ const pathname = Astro.url.pathname
     parsed, so the `html.is-home` rule (which holds header/footer/section-nav
     at opacity: 0) is in effect from the very first frame. Without this, the
     module script that adds the class is deferred and the chrome flashes
-    visible on hard refresh before the entry timeline begins. The class is
-    re-added (idempotent) by the module script for view-transition revisits,
-    and removed by `releaseHomeScope()` once chrome has finished fading in. */
+    visible on hard refresh before the entry timeline begins.
+
+    `data-astro-rerun` is required for ClientRouter navigations: Astro's
+    default swap calls swapRootAttributes() which replaces the <html> class
+    list with the incoming document's (empty), and inline scripts don't
+    re-execute on swap unless opted in. Without this, on /about → /
+    navigation the new View Transition snapshot would be captured with
+    chrome at full opacity — then setup() would add `is-home` a moment
+    later, causing a visible flash-then-hide before the entry fade-in.
+
+    `releaseHomeScope()` removes the class once chrome has finished fading
+    in, and `teardown()` (astro:before-swap) removes it when leaving. */
   }
-  <script is:inline>
+  <script is:inline data-astro-rerun>
     document.documentElement.classList.add("is-home")
   </script>
 
@@ -45,6 +54,8 @@ const pathname = Astro.url.pathname
       class="relative container mx-auto flex flex-col md:grid md:h-screen md:grid-cols-1 md:grid-rows-[auto_1fr_auto] md:overflow-hidden"
     >
       <header
+        data-site-header
+        transition:name="site-header"
         class="flex flex-none items-center justify-center px-4 py-8 md:justify-between md:px-8"
         data-enter-chrome
       >
@@ -72,7 +83,7 @@ const pathname = Astro.url.pathname
 
       {/* <SectionNav sections={sections} /> */}
 
-      <div data-enter-chrome>
+      <div data-enter-chrome data-site-footer transition:name="site-footer">
         <Footer />
       </div>
     </div>
@@ -136,7 +147,7 @@ const pathname = Astro.url.pathname
    */
   import gsap from "gsap"
   import { MOTION } from "../lib/motion"
-  import { REDUCED_MOTION_MQL, onReady } from "../lib/runtime"
+  import { REDUCED_MOTION_MQL } from "../lib/runtime"
 
   // Marker class that scopes the "chrome starts hidden" global style to
   // this component. The pre-paint inline script above sets this class
@@ -170,7 +181,15 @@ const pathname = Astro.url.pathname
   // Wait past the initial slow portion of the curtain's power3.in slide
   // so the curtain has cleared enough of the hero before its words begin
   // their rise — the two motions rhyme as the curtain accelerates away.
-  const ENTRY_DELAY_WITH_CURTAIN = 0.55
+  //
+  // The exit is 1.2s of power3.in (cubic). At delay 0.55 the curtain has
+  // only moved (0.55/1.2)³ ≈ 10% of the viewport — hero words begin their
+  // rise while still almost entirely hidden, and the stagger is mostly
+  // complete by the time the curtain clears them, so the motion reads as
+  // a pop-in rather than a reveal. At 0.75 the curtain is ~24% cleared
+  // and visibly accelerating, which is where "rhyme as the curtain
+  // accelerates away" actually begins.
+  const ENTRY_DELAY_WITH_CURTAIN = 0.75
   const ENTRY_DELAY_WITHOUT_CURTAIN = 0.1
 
   let entryDelay = ENTRY_DELAY_WITHOUT_CURTAIN
@@ -320,7 +339,19 @@ const pathname = Astro.url.pathname
     // navigations back to this page restore the initial chrome pose.
     document.documentElement.classList.add("is-home")
 
-    if (document.getElementById("curtain")) {
+    // The curtain is considered "present" only when it will actually play
+    // its ceremony. On ClientRouter navigations within the same session,
+    // the SSR markup is rendered on every page but the ceremony module
+    // script won't re-run, so `curtain:exit-start` / `curtain:done` would
+    // never fire — we'd stall forever at opacity: 0. The `curtain-seen`
+    // class is the public contract the Curtain component exposes for the
+    // "already seen, will be skipped" state; once it's on <html>, treat
+    // the curtain as absent and reveal immediately with the short delay.
+    const curtainEl = document.getElementById("curtain")
+    const curtainSeen =
+      document.documentElement.classList.contains("curtain-seen")
+
+    if (curtainEl && !curtainSeen) {
       // Start entry as the curtain begins to slide away so the two motions
       // rhyme (the curtain uncovers exactly where the hero words rise).
       const onExitStart = () => {
@@ -337,7 +368,12 @@ const pathname = Astro.url.pathname
     enter()
   }
 
-  onReady(setup)
+  // astro:page-load fires on the initial full page load AND after every
+  // ClientRouter navigation, so this is the single correct hook. The prior
+  // DOMContentLoaded-based onReady() wiring only ran once per session —
+  // bundled module scripts don't re-execute on View Transition swaps, so
+  // back-navigation to `/` would have skipped the entry sequence entirely.
+  document.addEventListener("astro:page-load", setup)
   // Kill any in-flight entry timeline on view-transition navigations so
   // tweens don't continue ticking against detached DOM.
   document.addEventListener("astro:before-swap", teardown)
