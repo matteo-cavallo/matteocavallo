@@ -1,0 +1,61 @@
+---
+import ContentItem from "../components/ContentItem.astro"
+import { experience, talks } from "../data/site"
+import Footer from "../components/Footer.astro"
+import Layout from "../layouts/Layout.astro"
+---
+
+<Layout
+  title="Experience — Matteo Cavallo"
+  description="A record of the work that shaped me — the roles, projects, and writing that brought me here."
+>
+  <div class="container mx-auto max-w-3xl px-4 pt-28 pb-20 md:pt-32 md:pb-24">
+    <header class="mb-12 md:mb-16">
+      <h1 class="mb-2 text-4xl md:text-5xl">Experience</h1>
+    </header>
+
+    <section class="mb-20">
+      <h2
+        class="mb-8 text-xs font-medium tracking-widest text-neutral-400 uppercase dark:text-neutral-500"
+      >
+        Work
+      </h2>
+      <div class="space-y-8">
+        {
+          experience.map((item) => (
+            <ContentItem
+              title={item.role}
+              subtitle={item.company}
+              period={item.period}
+              description={item.description}
+            />
+          ))
+        }
+      </div>
+    </section>
+
+    <section
+      class="mb-20 border-t border-neutral-200 pt-8 dark:border-neutral-800"
+    >
+      <h2
+        class="mb-8 font-serif text-xs font-medium tracking-widest text-neutral-400 uppercase dark:text-neutral-500"
+      >
+        Talks &amp; Writings
+      </h2>
+      <div class="space-y-8">
+        {
+          talks.map((item) => (
+            <ContentItem
+              title={item.title}
+              subtitle={item.type}
+              period={item.year}
+              description={item.description}
+              href={item.href}
+            />
+          ))
+        }
+      </div>
+    </section>
+  </div>
+  <Footer />
+</Layout>

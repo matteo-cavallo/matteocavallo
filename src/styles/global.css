@@ -1,136 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 
 @theme {
   --font-serif: "Libre Baskerville", serif;
   --font-sans: "Libre Franklin", sans-serif;
-  --text-nav: 11px;
-  --tracking-nav: 0.28em;
-  --tracking-nav-active: 0.32em;
-}
-
-@layer base {
-  ::view-transition-old(root) {
-    animation: 200ms ease-in both fade-out;
-  }
-
-  ::view-transition-new(root) {
-    animation: 300ms ease-out both fade-in;
-  }
-
-  @keyframes fade-out {
-    from {
-      opacity: 1;
-    }
-    to {
-      opacity: 0;
-    }
-  }
-
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    ::view-transition-old(root),
-    ::view-transition-new(root) {
-      animation: none;
-    }
-  }
-}
-
-@layer components {
-  p {
-    @apply font-sans;
-    text-wrap: pretty;
-  }
-
-  .nav-label {
-    @apply text-nav tracking-nav font-sans text-neutral-400 uppercase transition-colors duration-500 group-hover:text-neutral-600 group-data-[active]:text-neutral-900 dark:text-neutral-500 dark:group-hover:text-neutral-300 dark:group-data-[active]:text-neutral-50;
-  }
-
-  .nav-line {
-    @apply block h-px w-2.5 bg-neutral-300 transition-colors duration-500 group-hover:bg-neutral-500 group-data-[active]:bg-neutral-900 dark:bg-neutral-700 dark:group-hover:bg-neutral-400 dark:group-data-[active]:bg-neutral-50;
-  }
-}
-
-@media (max-width: 767px) {
-  /* Safety net: never allow horizontal scrolling on mobile. If any element
-     briefly overflows (transforms, absolute positioning, animation ghosts)
-     we clip it rather than exposing a horizontal scrollbar. */
-  html,
-  body {
-    overflow-x: hidden;
-  }
-
-  /* On desktop both layouts use `md:h-screen md:overflow-hidden` — only an
-     inner container scrolls, so the site header / footer live at the same
-     viewport position on every page and `transition:name` morphs them in
-     place (visual no-op, reads as an anchor). On mobile there is no such
-     fixed shell: the page scrolls natively. When the user has scrolled the
-     header offscreen on `/` and navigates to `/about` (which lands at
-     `scroll: 0`), the browser would animate the header from its pre-nav
-     y = -scrollY to y = 0 — it "flies" across the viewport, reading as a
-     jump. Opt out on mobile so the header and footer participate in the
-     root crossfade with the rest of the page content instead of morphing.
-     !important is required to override the per-element rule Astro emits
-     from the `transition:name` directive. */
-  [data-site-header],
-  [data-site-footer] {
-    view-transition-name: none !important;
-  }
-}
-
-@media (min-width: 768px) {
-  html,
-  body {
-    height: 100%;
-    overflow: hidden;
-  }
-}
-
-.no-scrollbar {
-  scrollbar-width: none;
-}
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
 }
 
 body {
-  @apply bg-neutral-100 text-neutral-900 dark:bg-neutral-950 dark:text-neutral-50;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+  @apply bg-neutral-50 dark:bg-neutral-950;
+  @apply text-neutral-900 dark:text-neutral-50;
 }
 
-h1,
-h2,
-h3 {
-  text-wrap: balance;
+html.curtain-seen #curtain {
+  display: none;
 }
 
-::selection {
-  background: var(--color-neutral-900);
-  color: var(--color-neutral-100);
-}
-
-@media (prefers-color-scheme: dark) {
-  ::selection {
-    background: var(--color-neutral-100);
-    color: var(--color-neutral-900);
-  }
-}
-
-:focus {
-  outline: none;
-}
-
-:focus-visible {
-  outline: 1px solid currentColor;
-  outline-offset: 4px;
-  border-radius: 2px;
+.curtain-skip #curtain {
+  display: none;
 }

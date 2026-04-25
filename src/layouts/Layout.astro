@@ -1,10 +1,7 @@
 ---
 import "../styles/global.css"
-import { ClientRouter } from "astro:transitions"
 import SEO from "../components/SEO.astro"
-import SmoothScroll from "../components/SmoothScroll.astro"
-import Curtain from "../components/Curtain.astro"
-import Reveal from "../components/Reveal.astro"
+import Header from "../components/Header.astro"
 
 interface Props {
   title?: string
@@ -17,12 +14,16 @@ const { title, description } = Astro.props
 <html lang="en">
   <head>
     <SEO title={title} description={description} />
-    <ClientRouter />
+    <script is:inline>
+      if (sessionStorage.getItem("curtain-shown")) {
+        document.documentElement.classList.add("curtain-seen")
+      }
+    </script>
   </head>
   <body>
-    <Curtain />
-    <SmoothScroll />
-    <Reveal />
+    <Header />
     <slot />
   </body>
 </html>
+
+<script src="../scripts/reveal.ts"></script>

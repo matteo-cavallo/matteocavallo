@@ -1,14 +1,13 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro"
-import ContentItem from "../components/ContentItem.astro"
-import { experience, talks } from "../data/site"
+import Footer from "../components/Footer.astro"
+import Layout from "../layouts/Layout.astro"
 ---
 
-<BaseLayout
+<Layout
   title="About — Matteo Cavallo"
   description="Web engineer based in Paris. A longer take on what I do, why I do it, and the work that brought me here."
 >
-  <div class="max-w-3xl px-4 py-16 md:px-8 md:py-24">
+  <div class="container mx-auto max-w-3xl px-4 pt-28 pb-20 md:pt-32 md:pb-24">
     <header class="mb-12 md:mb-16">
       <h1 class="mb-2 font-serif text-4xl md:text-5xl">About</h1>
       <p class="font-serif text-neutral-500 italic dark:text-neutral-400">
@@ -41,47 +40,6 @@ import { experience, talks } from "../data/site"
       <p>This space will grow with me — changing shape as I do.</p>
     </section>
 
-    <section class="mb-20">
-      <h2
-        class="mb-8 font-serif text-xs font-medium tracking-widest text-neutral-400 uppercase dark:text-neutral-500"
-      >
-        Experience
-      </h2>
-      <div class="space-y-8">
-        {
-          experience.map((item) => (
-            <ContentItem
-              title={item.role}
-              subtitle={item.company}
-              period={item.period}
-              description={item.description}
-            />
-          ))
-        }
-      </div>
-    </section>
-
-    <section
-      class="mb-20 border-t border-neutral-200 pt-8 dark:border-neutral-800"
-    >
-      <h2
-        class="mb-8 font-serif text-xs font-medium tracking-widest text-neutral-400 uppercase dark:text-neutral-500"
-      >
-        Talks &amp; Writings
-      </h2>
-      <div class="space-y-8">
-        {
-          talks.map((item) => (
-            <ContentItem
-              title={item.title}
-              subtitle={item.type}
-              period={item.year}
-              description={item.description}
-              href={item.href}
-            />
-          ))
-        }
-      </div>
-    </section>
   </div>
-</BaseLayout>
+  <Footer />
+</Layout>
