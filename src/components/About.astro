@@ -1,5 +1,7 @@
 ---
 import Section from "./Section.astro"
+import ContentItem from "./ContentItem.astro"
+import { experience, talks } from "../data/site"
 ---
 
 <Section title="About" subtitle="Still falling, still learning.">
@@ -13,11 +15,45 @@ import Section from "./Section.astro"
     something that could reflect not just what I do, but why I do it.
   </p>
   <p data-reveal>This site is where that idea starts to take form.</p>
-  <a
-    href="/about"
-    class="font-sans text-sm text-neutral-500 no-underline hover:underline dark:text-neutral-400"
-    data-reveal
-  >
-    Continue reading →
-  </a>
+  <p data-reveal>
+    It's not a portfolio in the traditional sense. It's a living space — a
+    place to experiment, to connect dots between design and engineering, to
+    explore the balance between logic and emotion.
+  </p>
+  <p data-reveal>
+    I'm learning to move slower. To build with intention. To make things
+    that last.
+  </p>
+  <p data-reveal>This space will grow with me — changing shape as I do.</p>
+
+  <div class="flex flex-col gap-12 mt-8" data-reveal>
+    <div class="flex flex-col gap-4">
+      <p class="text-xs font-medium tracking-widest text-neutral-400 uppercase dark:text-neutral-500">Work</p>
+      <div>
+        {experience.map((item) => (
+          <ContentItem
+            title={item.role}
+            subtitle={item.company}
+            period={item.period}
+            description={item.description}
+          />
+        ))}
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-4">
+      <p class="text-xs font-medium tracking-widest text-neutral-400 uppercase dark:text-neutral-500">Talks & Writings</p>
+      <div>
+        {talks.map((item) => (
+          <ContentItem
+            title={item.title}
+            subtitle={item.type}
+            period={item.year}
+            description={item.description}
+            href={item.href}
+          />
+        ))}
+      </div>
+    </div>
+  </div>
 </Section>

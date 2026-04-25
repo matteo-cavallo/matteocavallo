@@ -1,0 +1,42 @@
+---
+import { getCollection } from "astro:content"
+import Section from "./Section.astro"
+
+const writings = await getCollection("writings", ({ data }) => !data.draft)
+writings.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+const featured = writings.slice(0, 2)
+---
+
+<Section title="Writings" subtitle="Notes from the making.">
+  <div class="w-full space-y-10">
+    {
+      featured.map((piece) => (
+        <div data-reveal>
+          <p class="mb-2 font-sans text-xs tracking-widest text-neutral-400 uppercase dark:text-neutral-500">
+            {piece.data.date.toLocaleDateString("en-US", {
+              timeZone: "UTC",
+              month: "long",
+              year: "numeric",
+            })}
+          </p>
+          <a
+            href={`/writings/${piece.id}`}
+            class="font-serif text-xl text-neutral-900 transition-colors hover:text-neutral-500 dark:text-neutral-100 dark:hover:text-neutral-400"
+          >
+            {piece.data.title}
+          </a>
+          <p class="mt-2 font-serif text-base leading-relaxed text-neutral-500 dark:text-neutral-400">
+            {piece.data.description}
+          </p>
+        </div>
+      ))
+    }
+  </div>
+  <a
+    href="/writings"
+    class="font-sans text-sm text-neutral-500 no-underline hover:underline dark:text-neutral-400"
+    data-reveal
+  >
+    All writings →
+  </a>
+</Section>

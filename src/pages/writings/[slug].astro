@@ -1,0 +1,130 @@
+---
+import { getCollection, render } from "astro:content"
+import type { CollectionEntry } from "astro:content"
+import Footer from "../../components/Footer.astro"
+import Layout from "../../layouts/Layout.astro"
+
+export async function getStaticPaths() {
+  const writings = await getCollection("writings", ({ data }) => !data.draft)
+  return writings.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }))
+}
+
+interface Props {
+  entry: CollectionEntry<"writings">
+}
+
+const { entry } = Astro.props
+const { Content } = await render(entry)
+
+const dateFormatted = entry.data.date.toLocaleDateString("en-US", {
+  timeZone: "UTC",
+  month: "long",
+  day: "numeric",
+  year: "numeric",
+})
+---
+
+<Layout
+  title={`${entry.data.title} — Matteo Cavallo`}
+  description={entry.data.description}
+>
+  <div class="container mx-auto max-w-3xl px-4 pt-28 pb-20 md:pt-32 md:pb-24">
+    <header class="mb-12">
+      <p
+        class="mb-4 font-sans text-xs tracking-widest text-neutral-400 uppercase dark:text-neutral-500"
+      >
+        {dateFormatted}
+      </p>
+      <h1 class="font-serif text-4xl leading-snug md:text-5xl">
+        {entry.data.title}
+      </h1>
+      <p
+        class="mt-4 font-serif text-xl text-neutral-500 italic dark:text-neutral-400"
+      >
+        {entry.data.description}
+      </p>
+    </header>
+
+    <div class="article-body">
+      <Content />
+    </div>
+
+    <div class="mt-16 border-t border-neutral-200 pt-8 dark:border-neutral-800">
+      <a
+        href="/writings"
+        class="font-sans text-sm text-neutral-500 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100"
+      >
+        ← All writings
+      </a>
+    </div>
+  </div>
+  <Footer />
+</Layout>
+
+<style>
+  .article-body :global(p) {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    line-height: 1.85;
+    color: var(--color-neutral-700);
+    margin-bottom: 1.75rem;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .article-body :global(p) {
+      color: var(--color-neutral-300);
+    }
+  }
+
+  .article-body :global(hr) {
+    border: none;
+    border-top: 1px solid var(--color-neutral-200);
+    margin: 2.5rem 0;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .article-body :global(hr) {
+      border-top-color: var(--color-neutral-800);
+    }
+  }
+
+  .article-body :global(em) {
+    font-style: italic;
+  }
+
+  .article-body :global(strong) {
+    font-weight: 700;
+    color: var(--color-neutral-900);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .article-body :global(strong) {
+      color: var(--color-neutral-100);
+    }
+  }
+
+  .article-body :global(h2) {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--color-neutral-900);
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .article-body :global(h2) {
+      color: var(--color-neutral-100);
+    }
+  }
+
+  .article-body :global(a) {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    color: inherit;
+  }
+</style>
