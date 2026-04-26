@@ -24,22 +24,18 @@ const socials = [
 ---
 
 <footer
-  class="container mx-auto max-w-3xl border-t border-neutral-200 px-4 py-8 tracking-wide md:border-t-0 md:py-8 dark:border-neutral-800"
+  class="border-border container mx-auto max-w-3xl border-t px-4 py-8 tracking-wide md:border-t-0"
 >
   <div
-    class="flex flex-col items-center justify-start gap-4 text-center md:items-start md:gap-4 md:text-left"
+    class="flex flex-col items-center justify-start gap-4 text-center md:items-start md:text-left"
   >
     <div
       class="flex flex-row items-baseline gap-2 md:flex-col md:gap-0 md:space-y-2"
     >
-      <p
-        class="font-sans text-xs text-neutral-400 md:text-sm dark:text-neutral-500"
-      >
+      <p class="text-text-faint font-sans text-xs md:text-sm">
         {site.tagline}
       </p>
-      <p
-        class="font-sans text-xs text-neutral-400 md:text-sm dark:text-neutral-500"
-      >
+      <p class="text-text-faint font-sans text-xs md:text-sm">
         © {site.author.name}
         {new Date().getFullYear()}<span class="hidden md:inline">
           All Rights Reserved</span
@@ -54,7 +50,7 @@ const socials = [
             aria-label={label}
             target={external ? "_blank" : undefined}
             rel={external ? "noopener noreferrer" : undefined}
-            class="inline-flex text-neutral-400 transition-colors duration-200 hover:text-neutral-900 dark:text-neutral-500 dark:hover:text-neutral-100"
+            class="text-text-faint hover:text-text inline-flex transition-colors duration-200"
           >
             <Icon name={icon} class="h-4 w-4 md:h-3 md:w-3" />
           </a>

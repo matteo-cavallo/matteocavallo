@@ -4,11 +4,41 @@
 @theme {
   --font-serif: "Libre Baskerville", serif;
   --font-sans: "Libre Franklin", sans-serif;
+
+  /* ─── Semantic color tokens ────────────────────────────────────────────── */
+  /* Tailwind generates bg-bg, text-text, border-border, text-text-muted,    */
+  /* text-text-faint, text-text-inverted utilities from these declarations.   */
+  /* Light-mode defaults; dark-mode values are overridden below via @media.  */
+  --color-bg: var(--color-neutral-50);
+  --color-bg-subtle: var(--color-neutral-100);
+  --color-border: var(--color-neutral-200);
+  --color-text: var(--color-neutral-900);
+  --color-text-muted: var(--color-neutral-500);
+  --color-text-faint: var(--color-neutral-400);
+  --color-text-inverted: var(--color-neutral-50);
+}
+
+/* Dark-mode overrides — take effect because this block is declared after     */
+/* the @theme layer in the compiled output, so the cascade picks it up.       */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: var(--color-neutral-950);
+    --color-bg-subtle: var(--color-neutral-900);
+    --color-border: var(--color-neutral-800);
+    --color-text: var(--color-neutral-50);
+    --color-text-muted: var(--color-neutral-400);
+    --color-text-faint: var(--color-neutral-500);
+    --color-text-inverted: var(--color-neutral-900);
+  }
+}
+
+html {
+  scrollbar-gutter: stable;
 }
 
 body {
-  @apply bg-neutral-50 dark:bg-neutral-950;
-  @apply text-neutral-900 dark:text-neutral-50;
+  background-color: var(--color-bg);
+  color: var(--color-text);
 }
 
 html.curtain-seen #curtain {

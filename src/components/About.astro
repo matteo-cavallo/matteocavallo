@@ -5,30 +5,32 @@ import { experience, talks } from "../data/site"
 ---
 
 <Section title="About" subtitle="Still falling, still learning.">
-  <p data-reveal>
-    For years, I've worked as a frontend engineer, building interfaces for
-    large-scale projects. I've learned precision, structure, and how to make
-    complex systems feel simple.
-  </p>
-  <p data-reveal>
-    But somewhere along the way, I started craving something more personal —
-    something that could reflect not just what I do, but why I do it.
-  </p>
-  <p data-reveal>This site is where that idea starts to take form.</p>
-  <p data-reveal>
-    It's not a portfolio in the traditional sense. It's a living space — a
-    place to experiment, to connect dots between design and engineering, to
-    explore the balance between logic and emotion.
-  </p>
-  <p data-reveal>
-    I'm learning to move slower. To build with intention. To make things
-    that last.
-  </p>
-  <p data-reveal>This space will grow with me — changing shape as I do.</p>
+  <div class="flex flex-col gap-4" data-reveal>
+    <p>
+      For years, I've worked as a frontend engineer, building interfaces for
+      large-scale projects. I've learned precision, structure, and how to make
+      complex systems feel simple.
+    </p>
+    <p>
+      But somewhere along the way, I started craving something more personal —
+      something that could reflect not just what I do, but why I do it.
+    </p>
+    <p>This site is where that idea starts to take form.</p>
+    <p>
+      It's not a portfolio in the traditional sense. It's a living space — a
+      place to experiment, to connect dots between design and engineering, to
+      explore the balance between logic and emotion.
+    </p>
+    <p>
+      I'm learning to move slower. To build with intention. To make things
+      that last.
+    </p>
+    <p>This space will grow with me — changing shape as I do.</p>
+  </div>
 
   <div class="flex flex-col gap-12 mt-8" data-reveal>
     <div class="flex flex-col gap-4">
-      <p class="text-xs font-medium tracking-widest text-neutral-400 uppercase dark:text-neutral-500">Work</p>
+      <p class="text-xs font-medium tracking-widest text-text-faint uppercase">Work</p>
       <div>
         {experience.map((item) => (
           <ContentItem
@@ -42,7 +44,7 @@ import { experience, talks } from "../data/site"
     </div>
 
     <div class="flex flex-col gap-4">
-      <p class="text-xs font-medium tracking-widest text-neutral-400 uppercase dark:text-neutral-500">Talks & Writings</p>
+      <p class="text-xs font-medium tracking-widest text-text-faint uppercase">Talks & Writings</p>
       <div>
         {talks.map((item) => (
           <ContentItem

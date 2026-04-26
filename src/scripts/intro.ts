@@ -39,5 +39,11 @@ if (!sessionStorage.getItem(SESSION_KEY)) {
       { opacity: 0, y: 15, duration: 1.5, stagger: 0.07, ease: "power3.out" },
       "-=0.5",
     )
-    .from("header", { opacity: 0, duration: 0.6, ease: "power2.in" }, "-=0.5")
+    .from("header div>*", {
+      opacity: 0,
+      y: -20,
+      duration: 1,
+      ease: "expo.out",
+      stagger: 0.2,
+    })
 }
