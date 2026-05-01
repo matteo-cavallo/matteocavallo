@@ -22,40 +22,9 @@ import { experience, talks } from "../data/site"
       explore the balance between logic and emotion.
     </p>
     <p>
-      I'm learning to move slower. To build with intention. To make things
-      that last.
+      I'm learning to move slower. To build with intention. To make things that
+      last.
     </p>
     <p>This space will grow with me — changing shape as I do.</p>
-  </div>
-
-  <div class="flex flex-col gap-12 mt-8" data-reveal>
-    <div class="flex flex-col gap-4">
-      <p class="text-xs font-medium tracking-widest text-text-faint uppercase">Work</p>
-      <div>
-        {experience.map((item) => (
-          <ContentItem
-            title={item.role}
-            subtitle={item.company}
-            period={item.period}
-            description={item.description}
-          />
-        ))}
-      </div>
-    </div>
-
-    <div class="flex flex-col gap-4">
-      <p class="text-xs font-medium tracking-widest text-text-faint uppercase">Talks & Writings</p>
-      <div>
-        {talks.map((item) => (
-          <ContentItem
-            title={item.title}
-            subtitle={item.type}
-            period={item.year}
-            description={item.description}
-            href={item.href}
-          />
-        ))}
-      </div>
-    </div>
   </div>
 </Section>

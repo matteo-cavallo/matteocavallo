@@ -1,0 +1,47 @@
+---
+import Layout from "../layouts/Layout.astro"
+import ContentItem from "../components/ContentItem.astro"
+
+import { experience, talks } from "../data/site"
+---
+
+<Layout>
+  <div class="flex max-w-2xl flex-col gap-12">
+    <div class="flex flex-col gap-4">
+      <p class="text-text-faint text-xs font-medium tracking-widest uppercase">
+        Work
+      </p>
+      <div>
+        {
+          experience.map((item) => (
+            <ContentItem
+              title={item.role}
+              subtitle={item.company}
+              period={item.period}
+              description={item.description}
+            />
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-4">
+      <p class="text-text-faint text-xs font-medium tracking-widest uppercase">
+        Talks & Writings
+      </p>
+      <div>
+        {
+          talks.map((item) => (
+            <ContentItem
+              title={item.title}
+              subtitle={item.type}
+              period={item.year}
+              description={item.description}
+              href={item.href}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</Layout>

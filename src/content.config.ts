@@ -8,13 +8,14 @@ const writings = defineCollection({
     base: "./src/content/writings",
     generateId: ({ entry }) => entry.replace(/\.mdx?$/, ""),
   }),
-  schema: ({ image }) => z.object({
-    title: z.string(),
-    description: z.string(),
-    date: z.coerce.date(),
-    draft: z.boolean().optional().default(false),
-    image: image().optional(),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      description: z.string(),
+      date: z.coerce.date(),
+      draft: z.boolean().optional().default(false),
+      image: image().optional(),
+    }),
 })
 
 export const collections = { writings }

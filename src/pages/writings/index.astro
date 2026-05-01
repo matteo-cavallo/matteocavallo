@@ -12,26 +12,23 @@ writings.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   title="Writings — Matteo Cavallo"
   description="Notes on craft, slowness, and the way things are made."
 >
-  <div class="container mx-auto max-w-3xl px-4 pt-4 pb-20 md:pt-8 md:pb-24">
-    <header class="mb-12">
-      <h1 class="text-text mb-2 font-serif text-xl leading-snug font-normal">
-        Writings
-      </h1>
-      <p class="text-text-muted font-serif italic">Notes from the making.</p>
-    </header>
+  <!-- <header class="mb-12">
+    <h1 class="text-text mb-2 font-serif text-xl leading-snug font-normal">
+      Writings
+    </h1>
+    <p class="text-text-muted font-serif italic">Notes from the making.</p>
+  </header> -->
 
-    <section>
-      {
-        writings.map((piece) => (
-          <WritingItem
-            title={piece.data.title}
-            href={`/writings/${piece.id}`}
-            date={piece.data.date}
-            description={piece.data.description}
-          />
-        ))
-      }
-    </section>
-  </div>
-  <Footer />
+  <section>
+    {
+      writings.map((piece) => (
+        <WritingItem
+          title={piece.data.title}
+          href={`/writings/${piece.id}`}
+          date={piece.data.date}
+          description={piece.data.description}
+        />
+      ))
+    }
+  </section>
 </Layout>

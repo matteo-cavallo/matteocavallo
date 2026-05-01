@@ -1,8 +1,8 @@
 ---
-title: "On Building Slowly"
-description: "Why the best things take time, and what that means for the way we make software."
+title: On Building Slowly
+description: Why the best things take time, and what that means for the way we make software.
 date: 2025-01-15
-image: "./assets/on-building-slowly-cover.png"
+image: ./assets/on-building-slowly-cover.png
 ---
 
 There is a quality to things made without hurry. You can feel it in old furniture, in bread left to ferment overnight, in cities that accumulated across centuries. There is an honesty to them — each layer revealing the patience that built it.
