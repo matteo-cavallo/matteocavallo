@@ -49,13 +49,18 @@ const dateFormatted = entry.data.date.toLocaleDateString("en-US", {
 
     {
       entry.data.image && (
-        <div class="mb-12 md:mx-[-16px]">
+        <figure class="mb-12 w-fit md:mx-[-16px]">
           <Image
             src={entry.data.image}
-            alt=""
-            class="w-full object-cover md:rounded-sm"
+            alt={entry.data.imageCaption ?? ""}
+            class="w-auto object-contain md:max-h-[500px] md:rounded-sm"
           />
-        </div>
+          {entry.data.imageCaption && (
+            <figcaption class="text-text-faint mt-2 text-center font-sans text-xs md:px-1">
+              {entry.data.imageCaption}
+            </figcaption>
+          )}
+        </figure>
       )
     }
 

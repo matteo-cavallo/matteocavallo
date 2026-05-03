@@ -15,6 +15,7 @@ const writings = defineCollection({
       date: z.coerce.date(),
       draft: z.boolean().optional().default(false),
       image: image().optional(),
+      imageCaption: z.string().optional(),
     }),
 })
 
