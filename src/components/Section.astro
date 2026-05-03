@@ -8,18 +8,18 @@ const { title, subtitle } = Astro.props
 ---
 
 <section class="flex flex-col gap-12">
-  <div class="space-y-2 md:w-1/3">
+  <div class="space-y-2">
     <h2
-      class="text-text font-serif text-xl leading-snug font-normal"
+      class="text-text font-serif text-2xl leading-snug font-normal"
       data-reveal
     >
       {title}
     </h2>
-    <p class="text-text-muted font-serif italic" data-reveal>
+    <p class="text-text-muted font-serif text-lg italic" data-reveal>
       {subtitle}
     </p>
   </div>
-  <div class="flex w-full flex-col gap-4 text-base leading-relaxed">
+  <div class="flex w-full flex-col gap-4 text-lg leading-relaxed">
     <slot />
   </div>
 </section>

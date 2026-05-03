@@ -3,7 +3,7 @@ import "../styles/global.css"
 import SEO from "../components/SEO.astro"
 import Signature from "../components/Signature.astro"
 import Footer from "../components/Footer.astro"
-import Header from "../components/Header.astro"
+import { ClientRouter } from "astro:transitions"
 
 interface Props {
   title?: string
@@ -15,20 +15,18 @@ const { title, description } = Astro.props
 
 <html lang="en">
   <head>
+    <ClientRouter />
     <SEO title={title} description={description} />
-    <script is:inline>
-      if (sessionStorage.getItem("curtain-shown")) {
-        document.documentElement.classList.add("curtain-seen")
-      }
-    </script>
   </head>
   <body>
     <div
-      class="mt-8 flex max-w-5xl flex-col md:mt-20 md:mb-40 md:flex-row lg:mx-auto lg:mt-32"
+      class="mx-auto mt-8 flex max-w-5xl flex-col md:mt-20 md:mb-40 md:flex-row lg:mx-auto lg:mt-32"
     >
-      <aside class="md:w-64 md:shrink-0">
+      <aside class="shrink-0 md:w-64">
         <div class="space-y-6 px-6 pb-4 md:sticky md:top-20 md:space-y-12">
-          <Signature class="h-5 w-auto" />
+          <a href="/" class="block">
+            <Signature class="signature h-5 w-auto" />
+          </a>
           <nav class="flex flex-row gap-4 overflow-x-auto md:flex-col md:gap-2">
             <a href="/">About</a>
             <a href="/writings">Writings</a>
@@ -45,6 +43,3 @@ const { title, description } = Astro.props
     </div>
   </body>
 </html>
-
-<!-- <script src="../scripts/intro.ts"></script> -->
-<script src="../scripts/reveal.ts"></script>
