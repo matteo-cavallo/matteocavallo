@@ -5,7 +5,7 @@ import WritingItem from "./WritingItem.astro"
 
 const writings = await getCollection("writings", ({ data }) => !data.draft)
 writings.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-const featured = writings.slice(0, 2)
+const featured = writings.slice(0, 3)
 ---
 
 <Section title="Writings" subtitle="Notes from the making.">
@@ -24,9 +24,9 @@ const featured = writings.slice(0, 2)
   <!-- <div class="mt-6">
     <a
       href="/writings"
-      class="text-neutral-500 underline underline-offset-3 transition-all duration-150 hover:font-bold"
+      class="text-text-muted hover:text-text font-sans text-sm underline underline-offset-3 transition-colors"
     >
-      All writings →
+      All writings
     </a>
   </div> -->
 </Section>

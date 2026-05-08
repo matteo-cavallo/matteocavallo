@@ -3,13 +3,16 @@ import Signature from "./Signature.astro"
 ---
 
 <header
-  class="mx-auto flex max-w-3xl flex-row justify-between gap-6 px-6 py-4 md:px-0"
+  class="mx-auto flex max-w-3xl flex-row justify-between gap-6 px-6 py-6 md:px-0"
 >
   <a href="/" class="block">
     <Signature class="h-5 w-auto" />
   </a>
   <nav class="flex flex-row gap-4 text-lg">
     <!-- <a href="/about">About</a> -->
-    <a href="/writings">Writings</a>
+    <a
+      href="/writings"
+      class="hover:text-text-muted transition-all duration-150">Writings</a
+    >
   </nav>
 </header>

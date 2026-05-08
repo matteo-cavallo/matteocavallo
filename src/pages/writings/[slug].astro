@@ -33,17 +33,15 @@ const dateFormatted = entry.data.date.toLocaleDateString("en-US", {
   description={entry.data.description}
 >
   <div class="mx-auto max-w-3xl py-6">
-    <header class="mb-12">
-      <p
-        class="text-text-faint mb-4 font-sans text-xs tracking-widest uppercase"
-      >
-        {dateFormatted}
-      </p>
-      <h1 class="font-serif text-2xl leading-snug md:text-5xl">
+    <header class="mb-12 md:mb-16">
+      <h1 class="text-text mb-2 text-3xl leading-none font-bold md:text-5xl">
         {entry.data.title}
       </h1>
-      <p class="text-text-muted mt-4 font-serif text-xl italic">
+      <p class="text-text-muted mb-4 text-xl md:text-2xl">
         {entry.data.description}
+      </p>
+      <p class="text-text-faint font-sans text-xs tracking-widest">
+        {dateFormatted}
       </p>
     </header>
 
@@ -64,7 +62,7 @@ const dateFormatted = entry.data.date.toLocaleDateString("en-US", {
       )
     }
 
-    <div class="article-body">
+    <div class="article-body ">
       <Content />
     </div>
 
@@ -81,9 +79,8 @@ const dateFormatted = entry.data.date.toLocaleDateString("en-US", {
 
 <style>
   .article-body :global(p) {
-    font-family: var(--font-serif);
-    font-size: 1.125rem; /* text-lg — intentionally larger for long-form readability */
-    line-height: 1.75;
+    font-family: var(--font-sans);
+    font-size: 1.125rem; text-lg — intentionally larger for long-form readability
     color: var(--color-neutral-700);
     margin-bottom: 1.75rem;
   }
