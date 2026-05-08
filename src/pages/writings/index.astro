@@ -18,17 +18,18 @@ writings.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
     </h1>
     <p class="text-text-muted font-serif italic">Notes from the making.</p>
   </header> -->
-
-  <section>
-    {
-      writings.map((piece) => (
-        <WritingItem
-          title={piece.data.title}
-          href={`/writings/${piece.id}`}
-          date={piece.data.date}
-          description={piece.data.description}
-        />
-      ))
-    }
-  </section>
+  <div class="py-6">
+    <section>
+      {
+        writings.map((piece) => (
+          <WritingItem
+            title={piece.data.title}
+            href={`/writings/${piece.id}`}
+            date={piece.data.date}
+            description={piece.data.description}
+          />
+        ))
+      }
+    </section>
+  </div>
 </Layout>

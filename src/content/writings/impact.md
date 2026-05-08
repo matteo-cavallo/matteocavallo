@@ -1,0 +1,19 @@
+---
+title: Chase impact, not success.
+description: Why is important to follow impact
+date: 2026-05-05
+image: ./assets/2026-05-05.jpeg
+imageCaption: "Paris, May 2026"
+---
+
+By the impact you can leave on the people around you, in a few words, how much of the work you do can benefits other people in a meaningful way.
+
+What value can you bring to society?
+
+Instead of focusing on achieving personal results, I'm trying to shift perspective and focus on what matters to others.
+
+My point is, choose one thing that only you can do a bring the highest value, remove or delegate the rest.
+
+
+
+D'ici is a letter from Paris — written by a young Italian working in tech, thinking about what it means to stay human in the middle of all of this. If someone sent this to you, you can subscribe here.

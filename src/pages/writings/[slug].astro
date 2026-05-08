@@ -32,7 +32,7 @@ const dateFormatted = entry.data.date.toLocaleDateString("en-US", {
   title={`${entry.data.title} — Matteo Cavallo`}
   description={entry.data.description}
 >
-  <div class="mx-auto max-w-2xl">
+  <div class="mx-auto max-w-3xl py-6">
     <header class="mb-12">
       <p
         class="text-text-faint mb-4 font-sans text-xs tracking-widest uppercase"
@@ -49,11 +49,11 @@ const dateFormatted = entry.data.date.toLocaleDateString("en-US", {
 
     {
       entry.data.image && (
-        <figure class="mb-12 w-fit md:mx-[-16px]">
+        <figure class="mb-12 md:mx-[-16px]">
           <Image
             src={entry.data.image}
             alt={entry.data.imageCaption ?? ""}
-            class="w-auto object-contain md:max-h-[500px] md:rounded-sm"
+            class="w-full rounded-sm object-cover object-center md:max-h-[500px]"
           />
           {entry.data.imageCaption && (
             <figcaption class="text-text-faint mt-2 text-center font-sans text-xs md:px-1">

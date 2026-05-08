@@ -9,7 +9,7 @@ const featured = writings.slice(0, 2)
 ---
 
 <Section title="Writings" subtitle="Notes from the making.">
-  <div class="w-full" data-reveal>
+  <div class="w-full">
     {
       featured.map((piece) => (
         <WritingItem
@@ -21,10 +21,12 @@ const featured = writings.slice(0, 2)
       ))
     }
   </div>
-  <a
-    href="/writings"
-    class="font-sans text-sm text-text-muted no-underline hover:underline"
-  >
-    All writings →
-  </a>
+  <!-- <div class="mt-6">
+    <a
+      href="/writings"
+      class="text-neutral-500 underline underline-offset-3 transition-all duration-150 hover:font-bold"
+    >
+      All writings →
+    </a>
+  </div> -->
 </Section>

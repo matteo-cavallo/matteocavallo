@@ -23,24 +23,9 @@ const socials = [
 ]
 ---
 
-<footer class="border-border border-t py-8 tracking-wide md:border-t-0 md:px-0">
-  <div
-    class="flex flex-col items-center justify-start gap-4 text-center md:items-start md:text-left"
-  >
-    <div
-      class="flex flex-row items-baseline gap-2 md:flex-col md:gap-0 md:space-y-2"
-    >
-      <p class="text-text-faint font-sans text-sm md:text-sm">
-        {site.tagline}
-      </p>
-      <p class="text-text-faint font-sans text-sm md:text-sm">
-        © {site.author.name}
-        {new Date().getFullYear()}<span class="hidden md:inline">
-          All Rights Reserved</span
-        >
-      </p>
-    </div>
-    <div class="flex items-center gap-4">
+<footer class="border-t border-neutral-200 px-6 py-8">
+  <div class="mx-auto flex max-w-3xl flex-col gap-6">
+    <div class="flex flex-row gap-4">
       {
         socials.map(({ href, icon, label, external }) => (
           <a
@@ -48,12 +33,15 @@ const socials = [
             aria-label={label}
             target={external ? "_blank" : undefined}
             rel={external ? "noopener noreferrer" : undefined}
-            class="text-text-faint hover:text-text inline-flex transition-colors duration-200"
+            class="text-neutral-500 underline underline-offset-3"
           >
             <Icon name={icon} class="h-4 w-4" />
           </a>
         ))
       }
     </div>
+    <p class="font-light text-neutral-500">
+      {site.tagline}
+    </p>
   </div>
 </footer>
