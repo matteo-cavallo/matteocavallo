@@ -9,7 +9,7 @@ export const site = {
   tagline: "Made slowly in Paris.",
   author: {
     name: "Matteo Cavallo",
-    email: "m.cavallo1011@gmail.com",
+    email: "mc@matteocavallo.com",
     location: "Paris, France",
     address: {
       locality: "Paris",

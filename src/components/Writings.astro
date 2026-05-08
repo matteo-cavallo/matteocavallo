@@ -9,7 +9,7 @@ const featured = writings.slice(0, 3)
 ---
 
 <Section title="Writings" subtitle="Notes from the making.">
-  <div class="w-full">
+  <div class="flex flex-col">
     {
       featured.map((piece) => (
         <WritingItem
@@ -21,12 +21,7 @@ const featured = writings.slice(0, 3)
       ))
     }
   </div>
-  <!-- <div class="mt-6">
-    <a
-      href="/writings"
-      class="text-text-muted hover:text-text font-sans text-sm underline underline-offset-3 transition-colors"
-    >
-      All writings
-    </a>
-  </div> -->
+  <p class="mt-(--spacing-fluid-l) text-sm">
+    <a href="/writings">All writings →</a>
+  </p>
 </Section>

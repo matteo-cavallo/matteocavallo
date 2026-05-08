@@ -1,0 +1,52 @@
+---
+import Section from "./Section.astro"
+import { talks } from "../data/site"
+---
+
+<Section title="Selected work" subtitle="Things I've made along the way.">
+  <div class="flex flex-col">
+    {
+      talks.map((item) => (
+        <a
+          href={item.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group block py-(--spacing-fluid-l) border-b border-border-subtle first:pt-0 last:border-0 last:pb-0 no-underline hover:no-underline"
+        >
+          <h3 class="text-(length:--text-fluid-base) leading-(--line-height-tight) font-semibold text-text">
+            <span class="project-link">{item.title}</span>
+            <span
+              aria-hidden="true"
+              class="text-text-faint group-hover:text-text-muted ml-1 inline-block text-sm transition-transform duration-200 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+            >
+              ↗
+            </span>
+          </h3>
+          <p class="text-text-muted mt-1 text-sm lowercase">
+            {item.type} <span class="tabular-nums">{item.year}</span>
+          </p>
+          {item.description && (
+            <p class="text-text mt-(--spacing-fluid-s) max-w-[55ch]">
+              {item.description}
+            </p>
+          )}
+        </a>
+      ))
+    }
+  </div>
+</Section>
+
+<style>
+  .project-link {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 1px;
+    transition: background-size 350ms cubic-bezier(0.65, 0, 0.35, 1);
+    padding-bottom: 0.1em;
+  }
+  .group:hover .project-link,
+  .group:focus-visible .project-link {
+    background-size: 100% 1px;
+  }
+</style>

@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css"
+import type { TransitionAnimationPair } from "astro"
 import SEO from "../components/SEO.astro"
 import Header from "../components/Header.astro"
 import Footer from "../components/Footer.astro"
@@ -11,18 +12,109 @@ interface Props {
 }
 
 const { title, description } = Astro.props
+
+const forwards: TransitionAnimationPair = {
+  old: {
+    name: "fadeOutUp",
+    duration: "0.2s",
+    easing: "ease-in",
+    fillMode: "forwards",
+  },
+  new: {
+    name: "fadeInUp",
+    duration: "0.3s",
+    delay: "0.2s",
+    easing: "ease-out",
+    fillMode: "backwards",
+  },
+}
+
+const backwards: TransitionAnimationPair = {
+  old: {
+    name: "fadeOutDown",
+    duration: "0.2s",
+    easing: "ease-in",
+    fillMode: "forwards",
+  },
+  new: {
+    name: "fadeInDown",
+    duration: "0.3s",
+    delay: "0.2s",
+    easing: "ease-out",
+    fillMode: "backwards",
+  },
+}
+
+const pageTransition = { forwards, backwards }
 ---
 
-<html lang="en">
+<html lang="en" transition:animate="none">
   <head>
     <ClientRouter />
     <SEO title={title} description={description} />
   </head>
-  <body>
+  <body class="min-h-screen flex flex-col">
     <Header />
-    <main class="mx-auto max-w-3xl px-6 md:px-0">
+    <main
+      transition:animate={pageTransition}
+      class="mx-auto w-full max-w-2xl flex-1 px-(--spacing-fluid-l) pt-(--spacing-fluid-xl) pb-(--spacing-fluid-3xl) [&>*:last-child]:mb-0"
+    >
       <slot />
     </main>
     <Footer />
   </body>
 </html>
+
+<style is:global>
+  @keyframes fadeOutUp {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeOutDown {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+      animation: none !important;
+    }
+  }
+</style>

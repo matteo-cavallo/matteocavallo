@@ -1,0 +1,9 @@
+---
+title: A new beginning
+description: When life challenges you
+date: 2026-05-03
+image: ./assets/2026-05-03.jpeg
+imageCaption: "Paris, May 2026"
+---
+
+There's a lot of tension, and I feel it all around me.

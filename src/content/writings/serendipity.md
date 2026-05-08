@@ -17,3 +17,5 @@ John Lennon said it better than I can: _"Life is what happens to you while you'r
 And I think there's a reason for that. When you step outside your comfort zone, everything becomes naturally interesting. The autopilot switches off. Curiosity comes in, unfiltered — the vivid light of the thing itself, not the version you imagined.
 
 Letting go of the safety of planning is not recklessness. It's confidence in your own ability to meet what comes.
+
+---

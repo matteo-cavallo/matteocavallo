@@ -19,4 +19,17 @@ const writings = defineCollection({
     }),
 })
 
-export const collections = { writings }
+const pages = defineCollection({
+  loader: glob({
+    pattern: "*.md",
+    base: "./src/content/pages",
+    generateId: ({ entry }) => entry.replace(/\.mdx?$/, ""),
+  }),
+  schema: z.object({
+    title: z.string(),
+    subtitle: z.string().optional(),
+    description: z.string().optional(),
+  }),
+})
+
+export const collections = { writings, pages }

@@ -4,14 +4,14 @@ import Signature from "./Signature.astro"
 
 <div
   id="curtain"
-  class="bg-bg fixed inset-0 z-20 flex flex-col items-center justify-center gap-6"
+  class="bg-bg fixed inset-0 z-20 flex flex-col items-center justify-center gap-(--spacing-fluid-l) px-(--spacing-fluid-l)"
 >
-  <div
+  <p
     id="curtain-text"
-    class="max-w-xs text-center font-serif text-xl leading-snug md:max-w-md md:text-3xl"
+    class="text-(length:--text-fluid-xl) leading-(--line-height-tight) tracking-(--tracking-tight) max-w-xl text-center font-semibold text-balance"
   >
-    I believe that <em>good work</em> can change things — for people, for communities,
+    I believe that <em>good work</em> can change things &mdash; for people, for communities,
     for the world around us.
-  </div>
-  <Signature class="h-4 w-auto md:h-6" />
+  </p>
+  <Signature class="h-4 w-auto md:h-5" />
 </div>

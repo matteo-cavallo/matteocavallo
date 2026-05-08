@@ -1,12 +1,23 @@
 ---
+import { getEntry, render } from "astro:content"
 import Layout from "../layouts/Layout.astro"
-import Vision from "../components/Vision.astro"
-import About from "../components/About.astro"
+import Section from "../components/Section.astro"
+import Experience from "../components/Experience.astro"
+
+const entry = await getEntry("pages", "about")
+if (!entry) throw new Error("Missing src/content/pages/about.md")
+
+const { Content } = await render(entry)
 ---
 
-<Layout>
-  <div class="py-6">
-    <Vision />
-    <About />
-  </div>
+<Layout
+  title={`${entry.data.title} — Matteo Cavallo`}
+  description={entry.data.description}
+>
+  <Section title={entry.data.title} subtitle={entry.data.subtitle}>
+    <div class="prose">
+      <Content />
+    </div>
+  </Section>
+  <Experience />
 </Layout>

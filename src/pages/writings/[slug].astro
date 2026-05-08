@@ -2,7 +2,6 @@
 import { getCollection, render } from "astro:content"
 import type { CollectionEntry } from "astro:content"
 import { Image } from "astro:assets"
-import Footer from "../../components/Footer.astro"
 import Layout from "../../layouts/Layout.astro"
 
 export async function getStaticPaths() {
@@ -32,29 +31,34 @@ const dateFormatted = entry.data.date.toLocaleDateString("en-US", {
   title={`${entry.data.title} — Matteo Cavallo`}
   description={entry.data.description}
 >
-  <div class="mx-auto max-w-3xl py-6">
-    <header class="mb-12 md:mb-16">
-      <h1 class="text-text mb-2 text-3xl leading-none font-bold md:text-5xl">
+  <article>
+    <header class="mb-(--spacing-fluid-2xl)">
+      <p class="text-text-muted text-sm tabular-nums lowercase">
+        writing &nbsp;·&nbsp;
+        <time datetime={entry.data.date.toISOString()}>{dateFormatted}</time>
+      </p>
+      <h1
+        class="mt-(--spacing-fluid-m) text-(length:--text-fluid-3xl) leading-(--line-height-display) tracking-(--tracking-display) font-semibold text-balance"
+      >
         {entry.data.title}
       </h1>
-      <p class="text-text-muted mb-4 text-xl md:text-2xl">
-        {entry.data.description}
-      </p>
-      <p class="text-text-faint font-sans text-xs tracking-widest">
-        {dateFormatted}
+      <p
+        class="text-text-muted mt-(--spacing-fluid-m) text-(length:--text-fluid-base) leading-(--line-height-snug) max-w-[55ch]"
+      >
+        <em>{entry.data.description}</em>
       </p>
     </header>
 
     {
       entry.data.image && (
-        <figure class="mb-12 md:mx-[-16px]">
+        <figure class="mb-(--spacing-fluid-2xl)">
           <Image
             src={entry.data.image}
             alt={entry.data.imageCaption ?? ""}
             class="w-full rounded-sm object-cover object-center md:max-h-[500px]"
           />
           {entry.data.imageCaption && (
-            <figcaption class="text-text-faint mt-2 text-center font-sans text-xs md:px-1">
+            <figcaption class="text-text-faint mt-(--spacing-fluid-s) text-center text-sm">
               {entry.data.imageCaption}
             </figcaption>
           )}
@@ -62,63 +66,12 @@ const dateFormatted = entry.data.date.toLocaleDateString("en-US", {
       )
     }
 
-    <div class="article-body ">
+    <div class="prose">
       <Content />
     </div>
 
-    <div class="mt-12">
-      <a
-        href="/writings"
-        class="text-text-muted hover:text-text font-sans text-sm transition-colors"
-      >
-        ← All writings
-      </a>
-    </div>
-  </div>
+    <nav class="mt-(--spacing-fluid-3xl)">
+      <a href="/writings" class="text-sm">← All writings</a>
+    </nav>
+  </article>
 </Layout>
-
-<style>
-  .article-body :global(p) {
-    font-family: var(--font-sans);
-    font-size: 1.125rem; text-lg — intentionally larger for long-form readability
-    color: var(--color-neutral-700);
-    margin-bottom: 1.75rem;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .article-body :global(p) {
-      color: var(--color-neutral-300);
-    }
-  }
-
-  .article-body :global(hr) {
-    border: none;
-    border-top: 1px solid var(--color-border);
-    margin: 2.5rem 0;
-  }
-
-  .article-body :global(em) {
-    font-style: italic;
-  }
-
-  .article-body :global(strong) {
-    font-weight: 700;
-    color: var(--color-text);
-  }
-
-  .article-body :global(h2) {
-    font-family: var(--font-serif);
-    font-size: 1.25rem; /* text-xl — aligned with heading scale */
-    font-weight: 400;
-    color: var(--color-text);
-    margin-top: 3rem;
-    margin-bottom: 1rem;
-    line-height: 1.4;
-  }
-
-  .article-body :global(a) {
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    color: inherit;
-  }
-</style>

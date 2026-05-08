@@ -1,0 +1,23 @@
+---
+import Section from "./Section.astro"
+import { experience } from "../data/site"
+---
+
+<Section title="Experience" subtitle="Where the craft has taken shape.">
+  <div class="flex flex-col">
+    {
+      experience.map((item) => (
+        <div class="py-(--spacing-fluid-l) border-b border-border-subtle first:pt-0 last:border-0 last:pb-0">
+          <h3 class="text-(length:--text-fluid-base) leading-(--line-height-tight) font-semibold text-text">
+            {item.role}
+            <span class="text-text-muted font-normal"> · {item.company}</span>
+          </h3>
+          <p class="text-text-muted mt-1 text-sm tabular-nums">{item.period}</p>
+          <p class="text-text mt-(--spacing-fluid-s) max-w-[55ch]">
+            {item.description}
+          </p>
+        </div>
+      ))
+    }
+  </div>
+</Section>
