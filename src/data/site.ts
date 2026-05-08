@@ -26,6 +26,26 @@ export const site = {
   },
 }
 
+export const principles = [
+  {
+    title: "Good work can change things.",
+    description: "For people, for communities, for the world around us.",
+  },
+  {
+    title: "Clarity matters.",
+    description: "I believe in quiet design, in beauty as a form of truth.",
+  },
+  {
+    title: "Purpose over performance.",
+    description:
+      "What we make should leave the world &mdash; even slightly &mdash; better.",
+  },
+  {
+    title: "People first.",
+    description: "The quiet power of collaboration, empathy, and care.",
+  },
+]
+
 export const experience = [
   {
     role: "Senior Web Engineer",
@@ -43,7 +63,7 @@ export const experience = [
   },
 ]
 
-export const talks = [
+export const work = [
   {
     title: "Building an Open Source React UI Library",
     href: "https://medium.com/@m.cavallo1011/list/building-an-open-source-react-ui-library-8d39ebd5c402",

@@ -10,21 +10,19 @@ const nav = [
 ]
 ---
 
-<header class="site-header">
-  <div
-    class="mx-auto flex w-full max-w-2xl items-center justify-between gap-(--spacing-fluid-m) px-(--spacing-fluid-l) py-(--spacing-fluid-l)"
-  >
-    <a href="/" class="signature-link" aria-label="Home, Matteo Cavallo">
-      <Signature class="h-5 w-auto md:h-6" />
+<header>
+  <div class="container header-inner">
+    <a href="/" aria-label="Home, Matteo Cavallo" class="logo-link">
+      <Signature />
     </a>
-    <nav aria-label="Primary" class="site-nav">
+    <nav aria-label="Primary">
       {
         nav.map(({ label, href }) => {
           const isActive = topLevel === href
           return (
             <a
               href={href}
-              class:list={["nav-link", { active: isActive }]}
+              class:list={[{ active: isActive }]}
               aria-current={isActive ? "page" : undefined}
             >
               {label}
@@ -37,24 +35,29 @@ const nav = [
 </header>
 
 <style>
-  .signature-link {
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-fluid-m);
+    padding-block: var(--spacing-fluid-l);
+  }
+
+  .logo-link {
     display: inline-flex;
-    text-decoration: none;
-    color: var(--color-text);
     line-height: 1;
   }
 
-  .site-nav {
+  nav {
     display: flex;
     align-items: center;
     gap: var(--spacing-fluid-2xs);
     margin-inline-end: calc(-1 * var(--spacing-fluid-s));
   }
 
-  .nav-link {
+  nav a {
     display: inline-flex;
     align-items: center;
-    text-decoration: none;
     color: var(--color-text);
     line-height: 1;
     padding: var(--spacing-fluid-xs) var(--spacing-fluid-s);
@@ -62,12 +65,12 @@ const nav = [
     transition: font-weight 200ms ease;
   }
 
-  .nav-link.active {
+  nav a.active {
     font-weight: var(--font-weight-semibold);
   }
 
   @media (hover: hover) {
-    .nav-link:hover {
+    nav a:hover {
       font-weight: var(--font-weight-semibold);
     }
   }

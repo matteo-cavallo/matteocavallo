@@ -1,4 +1,5 @@
 import { h } from "hastscript"
+import type { Options } from "rehype-autolink-headings"
 
 const AnchorLinkIcon = h(
   "svg",
@@ -18,8 +19,7 @@ const AnchorLinkIcon = h(
   }),
 )
 
-/** @type {import('rehype-autolink-headings').Options} */
-export const autolinkConfig = {
+export const autolinkConfig: Options = {
   behavior: "append",
   group: ({ tagName }) =>
     h(`div.heading-wrapper.level-${tagName}`, { tabIndex: -1 }),

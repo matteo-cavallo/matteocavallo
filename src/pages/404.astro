@@ -1,0 +1,45 @@
+---
+import Layout from "../layouts/Layout.astro"
+import { site } from "../data/site"
+---
+
+<Layout
+  title={`404 — ${site.author.name}`}
+  description="Page not found."
+>
+  <section class="not-found">
+    <p class="kicker">404</p>
+    <h1>Page not found.</h1>
+    <p><a href="/">← Back home</a></p>
+  </section>
+</Layout>
+
+<style>
+  .not-found {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-fluid-m);
+  }
+
+  .kicker {
+    font-size: var(--text-fluid-xs);
+    color: var(--color-text-muted);
+    text-transform: lowercase;
+    letter-spacing: var(--tracking-loose);
+    font-variant-numeric: tabular-nums;
+  }
+
+  h1 {
+    font-size: var(--text-fluid-3xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-display);
+    letter-spacing: var(--tracking-display);
+  }
+
+  a {
+    font-size: var(--text-fluid-xs);
+    text-decoration: underline;
+    text-decoration-color: var(--color-gray-7);
+    text-underline-offset: max(0.15em, 3px);
+  }
+</style>

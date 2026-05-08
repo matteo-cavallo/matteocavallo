@@ -1,13 +1,10 @@
-// @ts-check
 import { defineConfig } from "astro/config"
 import { rehypeHeadingIds } from "@astrojs/markdown-remark"
 import mdx from "@astrojs/mdx"
-import tailwindcss from "@tailwindcss/vite"
 import icon from "astro-icon"
 import rehypeAutolinkHeadings from "rehype-autolink-headings"
-import { autolinkConfig } from "./plugins/rehype-autolink-config.mjs"
+import { autolinkConfig } from "./plugins/rehype-autolink-config"
 
-// https://astro.build/config
 export default defineConfig({
   integrations: [icon(), mdx()],
   markdown: {
@@ -15,8 +12,5 @@ export default defineConfig({
       rehypeHeadingIds,
       [rehypeAutolinkHeadings, autolinkConfig],
     ],
-  },
-  vite: {
-    plugins: [tailwindcss()],
   },
 })

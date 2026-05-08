@@ -3,6 +3,7 @@ import { Image } from "astro:assets"
 import type { ImageMetadata } from "astro"
 import Layout from "./Layout.astro"
 import PageHeader from "../components/PageHeader.astro"
+import { site } from "../data/site"
 
 interface Props {
   title: string
@@ -22,7 +23,7 @@ const dateFormatted = date.toLocaleDateString("en-US", {
 })
 ---
 
-<Layout title={`${title} — Matteo Cavallo`} description={description}>
+<Layout title={`${title} — ${site.author.name}`} description={description}>
   <article>
     <PageHeader
       title={title}
@@ -32,16 +33,14 @@ const dateFormatted = date.toLocaleDateString("en-US", {
 
     {
       image && (
-        <figure class="writing-cover">
+        <figure class="cover">
           <Image
             src={image}
             alt={imageCaption ?? ""}
-            class="writing-cover-image"
+            class="cover-image"
           />
           {imageCaption && (
-            <figcaption class="writing-cover-caption">
-              {imageCaption}
-            </figcaption>
+            <figcaption class="cover-caption">{imageCaption}</figcaption>
           )}
         </figure>
       )
@@ -51,18 +50,18 @@ const dateFormatted = date.toLocaleDateString("en-US", {
       <slot />
     </section>
 
-    <nav class="writing-back">
+    <nav class="back-nav">
       <a href="/writings">← All writings</a>
     </nav>
   </article>
 </Layout>
 
 <style>
-  .writing-cover {
+  .cover {
     margin-bottom: var(--spacing-fluid-2xl);
   }
 
-  .writing-cover-image {
+  .cover-image {
     width: 100%;
     border-radius: 2px;
     object-fit: cover;
@@ -71,20 +70,26 @@ const dateFormatted = date.toLocaleDateString("en-US", {
   }
 
   @media (min-width: 768px) {
-    .writing-cover-image {
+    .cover-image {
       max-height: 500px;
     }
   }
 
-  .writing-cover-caption {
+  .cover-caption {
     margin-top: var(--spacing-fluid-s);
     text-align: center;
     color: var(--color-text-faint);
     font-size: var(--text-fluid-xs);
   }
 
-  .writing-back {
+  .back-nav {
     margin-top: var(--spacing-fluid-3xl);
     font-size: var(--text-fluid-xs);
+  }
+
+  .back-nav a {
+    text-decoration: underline;
+    text-decoration-color: var(--color-gray-7);
+    text-underline-offset: max(0.15em, 3px);
   }
 </style>

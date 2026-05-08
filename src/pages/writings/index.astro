@@ -1,19 +1,19 @@
 ---
-import { getCollection } from "astro:content"
 import Layout from "../../layouts/Layout.astro"
 import PageHeader from "../../components/PageHeader.astro"
 import WritingItem from "../../components/WritingItem.astro"
+import { site } from "../../data/site"
+import { getPublishedWritings } from "../../utils/writings"
 
-const writings = await getCollection("writings", ({ data }) => !data.draft)
-writings.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+const writings = await getPublishedWritings()
 ---
 
 <Layout
-  title="Writings — Matteo Cavallo"
+  title={`Writings — ${site.author.name}`}
   description="Notes on craft, slowness, and the way things are made."
 >
   <PageHeader title="Writings" subtitle="Notes from the making." />
-  <section class="flex flex-col">
+  <section class="writings-list">
     {
       writings.map((piece) => (
         <WritingItem
@@ -26,3 +26,10 @@ writings.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
     }
   </section>
 </Layout>
+
+<style>
+  .writings-list {
+    display: flex;
+    flex-direction: column;
+  }
+</style>

@@ -7,20 +7,30 @@ interface Props {
 const { title, subtitle } = Astro.props
 ---
 
-<section class="mb-(--spacing-fluid-3xl) flex flex-col">
-  <h2
-    class="text-(length:--text-fluid-xl) leading-(--line-height-tight) tracking-(--tracking-tight) font-semibold mb-(--spacing-fluid-l)"
-  >
-    {title}
-  </h2>
-  {
-    subtitle && (
-      <p class="text-text-muted mb-(--spacing-fluid-l) max-w-[55ch]">
-        {subtitle}
-      </p>
-    )
-  }
-  <div>
-    <slot />
-  </div>
+<section class="section">
+  <h2 class="section-title">{title}</h2>
+  {subtitle && <p class="section-subtitle">{subtitle}</p>}
+  <slot />
 </section>
+
+<style>
+  .section {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: var(--spacing-fluid-3xl);
+  }
+
+  .section-title {
+    font-size: var(--text-fluid-xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+    letter-spacing: var(--tracking-tight);
+    margin-bottom: var(--spacing-fluid-l);
+  }
+
+  .section-subtitle {
+    color: var(--color-text-muted);
+    margin-bottom: var(--spacing-fluid-l);
+    max-width: 55ch;
+  }
+</style>

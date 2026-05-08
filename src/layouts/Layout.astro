@@ -9,12 +9,9 @@ import { ClientRouter } from "astro:transitions"
 interface Props {
   title?: string
   description?: string
-  frontmatter?: { title?: string; description?: string }
 }
 
-const { frontmatter } = Astro.props
-const title = Astro.props.title ?? frontmatter?.title
-const description = Astro.props.description ?? frontmatter?.description
+const { title, description } = Astro.props
 
 const forwards: TransitionAnimationPair = {
   old: {
@@ -56,68 +53,11 @@ const pageTransition = { forwards, backwards }
     <ClientRouter />
     <SEO title={title} description={description} />
   </head>
-  <body class="flex min-h-screen flex-col">
+  <body>
     <Header />
-    <main
-      transition:animate={pageTransition}
-      class="mx-auto w-full max-w-2xl flex-1 px-(--spacing-fluid-l) pt-(--spacing-fluid-xl) pb-(--spacing-fluid-3xl) [&>*:last-child]:mb-0"
-    >
+    <main transition:animate={pageTransition}>
       <slot />
     </main>
     <Footer />
   </body>
 </html>
-
-<style is:global>
-  @keyframes fadeOutUp {
-    from {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateY(-8px);
-    }
-  }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(16px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes fadeOutDown {
-    from {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateY(8px);
-    }
-  }
-
-  @keyframes fadeInDown {
-    from {
-      opacity: 0;
-      transform: translateY(-16px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    ::view-transition-group(*),
-    ::view-transition-old(*),
-    ::view-transition-new(*) {
-      animation: none !important;
-    }
-  }
-</style>

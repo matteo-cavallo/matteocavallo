@@ -1,14 +1,195 @@
 ---
-import Hero from "../components/Hero.astro"
 import Layout from "../layouts/Layout.astro"
-import Vision from "../components/Vision.astro"
-import Writings from "../components/Writings.astro"
-import Projects from "../components/Projects.astro"
+import Section from "../components/Section.astro"
+import WritingItem from "../components/WritingItem.astro"
+import { principles, work } from "../data/site"
+import { getPublishedWritings } from "../utils/writings"
+
+const featured = (await getPublishedWritings()).slice(0, 3)
 ---
 
 <Layout>
-  <Hero />
-  <Vision />
-  <Writings />
-  <Projects />
+  <section class="hero">
+    <h1>
+      I craft meaningful digital experiences with <em>care</em>, <em
+        >clarity</em
+      > and <em>intention</em> &mdash; helping people leave things better than they
+      found them.
+    </h1>
+  </section>
+
+  <Section title="Vision" subtitle="The compass for how I build, think, and live.">
+    <ol class="vision-list">
+      {
+        principles.map(({ title, description }) => (
+          <li>
+            <strong>{title}</strong>{" "}
+            <span class="vision-desc" set:html={description} />
+          </li>
+        ))
+      }
+    </ol>
+  </Section>
+
+  <Section title="Writings" subtitle="Notes from the making.">
+    <div class="item-list">
+      {
+        featured.map((piece) => (
+          <WritingItem
+            title={piece.data.title}
+            href={`/writings/${piece.id}`}
+            date={piece.data.date}
+            description={piece.data.description}
+          />
+        ))
+      }
+    </div>
+    <p class="section-more"><a href="/writings">All writings →</a></p>
+  </Section>
+
+  <Section title="Selected work" subtitle="Things I've made along the way.">
+    <div class="item-list">
+      {
+        work.map((item) => (
+          <a
+            href={item.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="work-item"
+          >
+            <h3 class="work-title">
+              <span class="link-underline">{item.title}</span>
+              <span aria-hidden="true" class="work-arrow">↗</span>
+            </h3>
+            <p class="work-meta">
+              {item.type} <span>{item.year}</span>
+            </p>
+            {item.description && (
+              <p class="work-description">{item.description}</p>
+            )}
+          </a>
+        ))
+      }
+    </div>
+  </Section>
 </Layout>
+
+<style>
+  /* ─── Hero ──────────────────────────────────────────────────────────── */
+  .hero {
+    margin-bottom: var(--spacing-fluid-3xl);
+  }
+
+  .hero h1 {
+    font-size: var(--text-fluid-3xl);
+    line-height: var(--line-height-display);
+    letter-spacing: var(--tracking-display);
+    font-weight: var(--font-weight-semibold);
+    text-wrap: balance;
+  }
+
+  /* ─── Vision ────────────────────────────────────────────────────────── */
+  .vision-list {
+    list-style: none;
+    padding-left: 1.6em;
+    counter-reset: list-item;
+  }
+
+  .vision-list li {
+    position: relative;
+    counter-increment: list-item;
+    margin-top: var(--spacing-fluid-s);
+  }
+
+  .vision-list li:first-child {
+    margin-top: 0;
+  }
+
+  .vision-list li::before {
+    content: counter(list-item) ".";
+    position: absolute;
+    left: -1.6em;
+    width: 1.6em;
+    color: var(--color-text-muted);
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--font-weight-medium);
+  }
+
+  .vision-desc {
+    color: var(--color-text-muted);
+  }
+
+  /* ─── Shared list layout ─────────────────────────────────────────────── */
+  .item-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .section-more {
+    margin-top: var(--spacing-fluid-l);
+    font-size: var(--text-fluid-xs);
+  }
+
+  .section-more a {
+    text-decoration: underline;
+    text-decoration-color: var(--color-gray-7);
+    text-underline-offset: max(0.15em, 3px);
+  }
+
+  /* ─── Work items ─────────────────────────────────────────────────────── */
+  .work-item {
+    display: block;
+    padding-block: var(--spacing-fluid-l);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .work-item:first-child {
+    padding-top: 0;
+  }
+
+  .work-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .work-item:hover .link-underline,
+  .work-item:focus-visible .link-underline {
+    background-size: 100% 1px;
+  }
+
+  .work-title {
+    font-size: var(--text-fluid-base);
+    line-height: var(--line-height-tight);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+  }
+
+  .work-arrow {
+    color: var(--color-text-faint);
+    margin-left: 0.25rem;
+    display: inline-block;
+    font-size: var(--text-fluid-xs);
+    transition:
+      transform 200ms ease-out,
+      color 200ms ease-out;
+  }
+
+  .work-item:hover .work-arrow {
+    color: var(--color-text-muted);
+    transform: translate(0.125rem, -0.125rem);
+  }
+
+  .work-meta {
+    color: var(--color-text-muted);
+    margin-top: 0.25rem;
+    font-size: var(--text-fluid-xs);
+    text-transform: lowercase;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .work-description {
+    color: var(--color-text);
+    margin-top: var(--spacing-fluid-s);
+    max-width: 55ch;
+  }
+</style>

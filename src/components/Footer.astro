@@ -29,11 +29,9 @@ const socials = [
 ]
 ---
 
-<footer class="border-t border-border-subtle">
-  <div
-    class="mx-auto flex max-w-2xl flex-col gap-(--spacing-fluid-l) px-(--spacing-fluid-l) py-(--spacing-fluid-2xl)"
-  >
-    <ul class="flex flex-row flex-wrap gap-(--spacing-fluid-l) text-sm">
+<footer>
+  <div class="container footer-inner">
+    <ul class="socials">
       {
         socials.map(({ href, label, icon, external }) => (
           <li>
@@ -41,24 +39,72 @@ const socials = [
               href={href}
               target={external ? "_blank" : undefined}
               rel={external ? "noopener noreferrer" : undefined}
-              class="inline-flex items-center gap-2 no-underline hover:underline"
+              class="social-link"
             >
-              <Icon name={icon} class="h-3.5 w-3.5" aria-hidden="true" />
+              <Icon name={icon} class="social-icon" aria-hidden="true" />
               <span>{label}</span>
             </a>
           </li>
         ))
       }
     </ul>
-    <p class="banner text-text-muted text-sm inline-flex items-center gap-2">
-      <span class="emoji" aria-hidden="true">🇫🇷</span>
+    <p class="tagline">
+      <span class="flag" aria-hidden="true">🇫🇷</span>
       <span>{site.tagline}</span>
     </p>
   </div>
 </footer>
 
 <style>
-  .banner .emoji {
+  footer {
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .footer-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-fluid-l);
+    padding-block: var(--spacing-fluid-2xl);
+  }
+
+  .socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-fluid-l);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: var(--text-fluid-xs);
+  }
+
+  .social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-text);
+  }
+
+  @media (hover: hover) {
+    .social-link:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .social-icon {
+    width: 0.875rem;
+    height: 0.875rem;
+    flex-shrink: 0;
+  }
+
+  .tagline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-text-muted);
+    font-size: var(--text-fluid-xs);
+  }
+
+  .flag {
     display: inline-block;
     transform: scale(1.3) translateY(0.01em);
     transform-origin: center;
