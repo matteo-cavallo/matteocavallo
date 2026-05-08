@@ -1,0 +1,32 @@
+---
+import Layout from "./Layout.astro"
+import PageHeader from "../components/PageHeader.astro"
+
+interface Props {
+  title?: string
+  subtitle?: string
+  description?: string
+  kicker?: string
+  frontmatter?: {
+    title?: string
+    subtitle?: string
+    description?: string
+    kicker?: string
+  }
+}
+
+const { frontmatter } = Astro.props
+const title = Astro.props.title ?? frontmatter?.title
+const subtitle = Astro.props.subtitle ?? frontmatter?.subtitle
+const description = Astro.props.description ?? frontmatter?.description
+const kicker = Astro.props.kicker ?? frontmatter?.kicker
+---
+
+<Layout title={title} description={description}>
+  <article>
+    {title && <PageHeader title={title} subtitle={subtitle} kicker={kicker} />}
+    <section class="prose">
+      <slot />
+    </section>
+  </article>
+</Layout>

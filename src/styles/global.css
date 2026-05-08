@@ -181,9 +181,15 @@ html.curtain-seen #curtain {
   margin-top: var(--spacing-fluid-l);
 }
 
-.prose p + p {
+.prose > p + p {
   margin-top: 0;
   text-indent: 1.3em;
+}
+
+/* Opt out — anything inside .not-prose is left alone. */
+.prose .not-prose,
+.prose .not-prose * {
+  text-indent: 0;
 }
 
 .prose h2,

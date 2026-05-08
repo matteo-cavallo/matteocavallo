@@ -1,8 +1,11 @@
 ---
+layout: ../layouts/ProseLayout.astro
 title: About
 subtitle: Still falling, still learning.
 description: Web engineer based in Paris. A longer take on what I do, why I do it, and the work that brought me here.
 ---
+
+import Experience from "../components/Experience.astro"
 
 For years, I've worked as a frontend engineer, building interfaces for large-scale projects. I've learned precision, structure, and how to make complex systems feel simple.
 
@@ -24,3 +27,7 @@ The compass for how I build, think, and live.
 2. **Clarity matters.** I believe in quiet design, in beauty as a form of truth.
 3. **Purpose over performance.** What we make should leave the world — even slightly — better.
 4. **People first.** The quiet power of collaboration, empathy, and care.
+
+<div class="not-prose">
+  <Experience />
+</div>

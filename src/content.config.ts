@@ -4,7 +4,7 @@ import { z } from "astro/zod"
 
 const writings = defineCollection({
   loader: glob({
-    pattern: "*.md",
+    pattern: "*.{md,mdx}",
     base: "./src/content/writings",
     generateId: ({ entry }) => entry.replace(/\.mdx?$/, ""),
   }),
@@ -19,17 +19,4 @@ const writings = defineCollection({
     }),
 })
 
-const pages = defineCollection({
-  loader: glob({
-    pattern: "*.md",
-    base: "./src/content/pages",
-    generateId: ({ entry }) => entry.replace(/\.mdx?$/, ""),
-  }),
-  schema: z.object({
-    title: z.string(),
-    subtitle: z.string().optional(),
-    description: z.string().optional(),
-  }),
-})
-
-export const collections = { writings, pages }
+export const collections = { writings }
