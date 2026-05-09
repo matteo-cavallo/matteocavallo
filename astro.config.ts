@@ -8,9 +8,6 @@ import { autolinkConfig } from "./plugins/rehype-autolink-config"
 export default defineConfig({
   integrations: [icon(), mdx()],
   markdown: {
-    rehypePlugins: [
-      rehypeHeadingIds,
-      [rehypeAutolinkHeadings, autolinkConfig],
-    ],
+    rehypePlugins: [rehypeHeadingIds, [rehypeAutolinkHeadings, autolinkConfig]],
   },
 })

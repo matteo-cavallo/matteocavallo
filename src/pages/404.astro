@@ -3,13 +3,10 @@ import Layout from "../layouts/Layout.astro"
 import { site } from "../data/site"
 ---
 
-<Layout
-  title={`404 — ${site.author.name}`}
-  description="Page not found."
->
+<Layout title={`404 — ${site.author.name}`} description="Page not found.">
   <section class="not-found">
-    <p class="kicker">404</p>
-    <h1>Page not found.</h1>
+    <p class="page-kicker">404</p>
+    <h1 class="page-title">Page not found.</h1>
     <p><a href="/">← Back home</a></p>
   </section>
 </Layout>
@@ -21,19 +18,9 @@ import { site } from "../data/site"
     gap: var(--spacing-fluid-m);
   }
 
-  .kicker {
-    font-size: var(--text-fluid-xs);
-    color: var(--color-text-muted);
-    text-transform: lowercase;
-    letter-spacing: var(--tracking-loose);
-    font-variant-numeric: tabular-nums;
-  }
-
-  h1 {
-    font-size: var(--text-fluid-3xl);
-    font-weight: var(--font-weight-semibold);
-    line-height: var(--line-height-display);
-    letter-spacing: var(--tracking-display);
+  /* flex gap handles spacing; suppress the page-kicker margin-bottom that would double it */
+  .not-found .page-kicker {
+    margin-bottom: 0;
   }
 
   a {

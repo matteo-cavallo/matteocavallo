@@ -8,8 +8,10 @@ interface Props {
 
 const { title, href, date, description } = Astro.props
 
-const year = date.toLocaleDateString("en-US", {
+const dateFormatted = date.toLocaleDateString("en-US", {
   timeZone: "UTC",
+  month: "long",
+  day: "numeric",
   year: "numeric",
 })
 ---
@@ -17,7 +19,7 @@ const year = date.toLocaleDateString("en-US", {
 <a href={href} class="item">
   <h3><span class="link-underline">{title}</span></h3>
   <p class="meta">
-    writing <time datetime={date.toISOString()}>{year}</time>
+    <time datetime={date.toISOString()}>{dateFormatted}</time>
   </p>
   {description && <p class="description">{description}</p>}
 </a>
@@ -53,13 +55,13 @@ const year = date.toLocaleDateString("en-US", {
 
   .meta {
     color: var(--color-text-muted);
-    margin-top: 0.25rem;
+    margin-top: var(--spacing-fluid-2xs);
     font-size: var(--text-fluid-xs);
   }
 
   .description {
     color: var(--color-text);
     margin-top: var(--spacing-fluid-s);
-    max-width: 55ch;
+    max-width: var(--measure-narrow);
   }
 </style>

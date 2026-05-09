@@ -17,7 +17,7 @@ const { title, subtitle } = Astro.props
   .section {
     display: flex;
     flex-direction: column;
-    margin-bottom: var(--spacing-fluid-3xl);
+    margin-top: var(--spacing-fluid-3xl);
   }
 
   .section-title {
@@ -31,6 +31,6 @@ const { title, subtitle } = Astro.props
   .section-subtitle {
     color: var(--color-text-muted);
     margin-bottom: var(--spacing-fluid-l);
-    max-width: 55ch;
+    max-width: var(--measure-narrow);
   }
 </style>

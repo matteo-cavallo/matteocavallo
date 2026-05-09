@@ -1,73 +1,109 @@
 ---
-import ProseLayout from "../layouts/ProseLayout.astro"
+import Layout from "../layouts/Layout.astro"
 import Section from "../components/Section.astro"
 import { experience, principles } from "../data/site"
 ---
 
-<ProseLayout
-  title="About"
-  subtitle="Still falling, still learning."
+<Layout
+  title="About — Matteo Cavallo"
   description="Web engineer based in Paris. A longer take on what I do, why I do it, and the work that brought me here."
 >
-  <p>
-    For years, I've worked as a frontend engineer, building interfaces for
-    large-scale projects. I've learned precision, structure, and how to make
-    complex systems feel simple.
-  </p>
+  <header class="page-header">
+    <h1 class="page-title">About</h1>
+    <p class="page-subtitle"><em>Still falling, still learning.</em></p>
+  </header>
 
-  <p>
-    But somewhere along the way, I started craving something more personal —
-    something that could reflect not just what I do, but why I do it.
-  </p>
+  <article>
+    <p>
+      For years, I've worked as a frontend engineer, building interfaces for
+      large-scale projects. I've learned precision, structure, and how to make
+      complex systems feel simple.
+    </p>
 
-  <p>This site is where that idea starts to take form.</p>
+    <p>
+      But somewhere along the way, I started craving something more personal —
+      something that could reflect not just what I do, but why I do it.
+    </p>
 
-  <p>
-    It's not a portfolio in the traditional sense. It's a living space — a
-    place to experiment, to connect dots between design and engineering, to
-    explore the balance between logic and emotion.
-  </p>
+    <p>This site is where that idea starts to take form.</p>
 
-  <p>I'm learning to move slower. To build with intention. To make things that last.</p>
+    <p>
+      It's not a portfolio in the traditional sense. It's a living space — a
+      place to experiment, to connect dots between design and engineering, to
+      explore the balance between logic and emotion.
+    </p>
 
-  <p>This space will grow with me — changing shape as I do.</p>
+    <p>
+      I'm learning to move slower. To build with intention. To make things that
+      last.
+    </p>
 
-  <h2>Vision</h2>
+    <p>This space will grow with me — changing shape as I do.</p>
+  </article>
 
-  <p>The compass for how I build, think, and live.</p>
+  <Section title="Vision" subtitle="The compass for how I build, think, and live.">
+    <ol class="principles-list">
+      {
+        principles.map(({ title, description }) => (
+          <li>
+            <strong>{title}</strong> <span set:html={description} />
+          </li>
+        ))
+      }
+    </ol>
+  </Section>
 
-  <ol>
-    {
-      principles.map(({ title, description }) => (
-        <li>
-          <strong>{title}</strong>{" "}
-          <span set:html={description} />
-        </li>
-      ))
-    }
-  </ol>
-
-  <div class="not-prose">
-    <Section title="Experience" subtitle="Where the craft has taken shape.">
-      <div class="experience-list">
-        {
-          experience.map((item) => (
-            <div class="experience-item">
-              <h3 class="experience-role">
-                {item.role}
-                <span class="experience-company"> · {item.company}</span>
-              </h3>
-              <p class="experience-period">{item.period}</p>
-              <p class="experience-description">{item.description}</p>
-            </div>
-          ))
-        }
-      </div>
-    </Section>
-  </div>
-</ProseLayout>
+  <Section title="Experience" subtitle="Where the craft has taken shape.">
+    <div class="experience-list">
+      {
+        experience.map((item) => (
+          <div class="experience-item">
+            <h3 class="experience-role">
+              {item.role}
+              <span class="experience-company"> · {item.company}</span>
+            </h3>
+            <p class="experience-period">{item.period}</p>
+            <p class="experience-description">{item.description}</p>
+          </div>
+        ))
+      }
+    </div>
+  </Section>
+</Layout>
 
 <style>
+  .principles-list {
+    list-style: none;
+    padding-left: 1.6em;
+    counter-reset: list-item;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .principles-list li {
+    position: relative;
+    counter-increment: list-item;
+    margin-top: var(--spacing-fluid-s);
+  }
+
+  .principles-list li:first-child {
+    margin-top: 0;
+  }
+
+  .principles-list li::before {
+    content: counter(list-item) ".";
+    position: absolute;
+    left: -1.6em;
+    width: 1.6em;
+    color: var(--color-text-muted);
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--font-weight-medium);
+  }
+
+  .principles-list span {
+    color: var(--color-text-muted);
+  }
+
   .experience-list {
     display: flex;
     flex-direction: column;
@@ -81,7 +117,6 @@ import { experience, principles } from "../data/site"
   .experience-item:first-child {
     padding-top: 0;
   }
-
   .experience-item:last-child {
     border-bottom: none;
     padding-bottom: 0;
@@ -101,7 +136,7 @@ import { experience, principles } from "../data/site"
 
   .experience-period {
     color: var(--color-text-muted);
-    margin-top: 0.25rem;
+    margin-top: var(--spacing-fluid-2xs);
     font-size: var(--text-fluid-xs);
     font-variant-numeric: tabular-nums;
   }
@@ -109,6 +144,6 @@ import { experience, principles } from "../data/site"
   .experience-description {
     color: var(--color-text);
     margin-top: var(--spacing-fluid-s);
-    max-width: 55ch;
+    max-width: var(--measure-narrow);
   }
 </style>
