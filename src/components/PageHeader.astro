@@ -2,13 +2,49 @@
 interface Props {
   title: string
   kicker?: string
+  datePublished?: string | Date
+  dateModified?: string | Date
+  image?: string
+  imageAlt?: string
 }
 
-const { title, kicker } = Astro.props
+const { title, kicker, datePublished, dateModified, image, imageAlt } = Astro.props
+
+function fmtDate(val: string | Date, forceYear = false): string {
+  const d = new Date(val)
+  const showYear = forceYear || d.getUTCFullYear() !== new Date().getUTCFullYear()
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: "UTC",
+    month: "short",
+    day: "numeric",
+    ...(showYear ? { year: "numeric" } : {}),
+  }).format(d)
+}
+
+const plantedStr = datePublished ? fmtDate(datePublished, true) : null
+const tendedStr =
+  dateModified && String(dateModified) !== String(datePublished)
+    ? fmtDate(dateModified)
+    : null
 ---
 
 <header class="page-header">
   {kicker && <p class="page-kicker">{kicker}</p>}
-  <h1 class="page-title">{title}</h1>
-  <slot />
+  {image && (
+    <div class="page-image">
+      <img src={image} alt={imageAlt ?? ""} />
+    </div>
+  )}
+  <hgroup role="group" aria-roledescription="Heading group">
+    <h1 class="page-title">{title}</h1>
+    <slot />
+  </hgroup>
+  {
+    plantedStr && (
+      <p class="page-dates">
+        Planted {plantedStr}
+        {tendedStr && <span class="tended"> + tended {tendedStr}</span>}
+      </p>
+    )
+  }
 </header>

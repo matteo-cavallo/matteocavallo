@@ -23,6 +23,7 @@ export const site = {
     github: "https://github.com/matteocavallo",
     instagram: "https://www.instagram.com/mattecavallo/",
     linkedin: "https://www.linkedin.com/in/cavallomatteo/",
+    arena: "https://www.are.na/matteo-cavallo/channels",
   },
 }
 

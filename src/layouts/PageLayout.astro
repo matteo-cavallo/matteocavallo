@@ -8,6 +8,10 @@ interface Props {
     title: string
     subtitle?: string
     description?: string
+    datePublished?: string | Date
+    dateModified?: string | Date
+    image?: string
+    imageAlt?: string
   }
 }
 
@@ -18,7 +22,13 @@ const { frontmatter } = Astro.props
   title={`${frontmatter.title} — ${site.author.name}`}
   description={frontmatter.description}
 >
-  <PageHeader title={frontmatter.title}>
+  <PageHeader
+    title={frontmatter.title}
+    datePublished={frontmatter.datePublished}
+    dateModified={frontmatter.dateModified}
+    image={frontmatter.image}
+    imageAlt={frontmatter.imageAlt}
+  >
     {frontmatter.subtitle && (
       <p class="page-subtitle">{frontmatter.subtitle}</p>
     )}

@@ -164,10 +164,32 @@ main {
   letter-spacing: var(--tracking-display);
   text-wrap: balance;
 }
+.page-image {
+  margin-bottom: var(--spacing-fluid-l);
+}
+.page-image img {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top center;
+}
 .page-subtitle {
+  font-size: var(--text-fluid-lg);
+  line-height: var(--line-height-tight);
   color: var(--color-text-muted);
   margin-top: var(--spacing-fluid-s);
   max-width: var(--measure-narrow);
+  text-wrap: balance;
+}
+.page-dates {
+  margin-top: var(--spacing-fluid-m);
+  font-size: var(--text-fluid-xs);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.page-dates .tended {
+  color: var(--color-text-faint);
 }
 
 /* ─── Article ────────────────────────────────────────────────────────────── */
@@ -231,8 +253,25 @@ article {
     }
   }
 
-  & :is(ul, ol) {
+  & ul {
     padding-left: 1.5em;
+  }
+
+  & ol {
+    list-style: none;
+    padding-left: 1.3em;
+  }
+
+  & ol > li {
+    position: relative;
+  }
+
+  & ol > li::before {
+    content: counter(list-item);
+    position: absolute;
+    left: -1.3em;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-muted);
   }
 
   & li + li {

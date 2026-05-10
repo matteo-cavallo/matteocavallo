@@ -1,6 +1,4 @@
 ---
-import Signature from "./Signature.astro"
-
 const currentPath = Astro.url.pathname
 const topLevel = "/" + (currentPath.split("/")[1] ?? "")
 
@@ -13,7 +11,11 @@ const nav = [
 <header>
   <div class="container header-inner">
     <a href="/" aria-label="Home, Matteo Cavallo" class="logo-link">
-      <Signature />
+      <img
+        src="https://i0.wp.com/www.tomrichmond.com/wp-content/uploads/2017/03/Alfred.jpg?resize=800%2C758&ssl=1"
+        alt="Matteo Cavallo"
+        class="logo-image"
+      />
     </a>
     <nav aria-label="Primary">
       {
@@ -47,6 +49,16 @@ const nav = [
     display: inline-flex;
     line-height: 1;
   }
+
+  .logo-image {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+  }
+
 
   nav {
     display: flex;
