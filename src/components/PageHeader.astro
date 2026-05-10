@@ -1,4 +1,6 @@
 ---
+import { Icon } from "astro-icon/components"
+
 interface Props {
   title: string
   kicker?: string
@@ -42,9 +44,20 @@ const tendedStr =
   {
     plantedStr && (
       <p class="page-dates">
-        Planted {plantedStr}
+        <Icon name="lucide:sprout" class="sprout-icon" aria-hidden="true" />Planted {plantedStr}
         {tendedStr && <span class="tended"> + tended {tendedStr}</span>}
       </p>
     )
   }
 </header>
+
+<style>
+  .sprout-icon {
+    display: inline-block;
+    width: 0.85em;
+    height: 0.85em;
+    vertical-align: -0.1em;
+    margin-inline-end: 0.35em;
+    color: var(--color-text-faint);
+  }
+</style>
