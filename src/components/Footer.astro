@@ -74,9 +74,9 @@ const socials = [
   }
 
   .socials {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-fluid-l);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-fluid-s) var(--spacing-fluid-l);
     list-style: none;
     padding: 0;
     margin: 0;
