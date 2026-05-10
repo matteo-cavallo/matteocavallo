@@ -53,14 +53,14 @@ export const experience = [
     company: "Qonto",
     period: "2024—Present",
     description:
-      "Building web experiences for a fintech platform that serves hundreds of thousands of businesses. Learning to balance speed with care, working at scale while keeping the human experience at the center.",
+      "Building at the scale of a fintech platform used by hundreds of thousands of businesses. Leading a large migration from Ember to React, and building developer tooling that makes the work lighter for the whole team.",
   },
   {
     role: "Mobile Engineer",
     company: "Soldo",
     period: "2020—2024",
     description:
-      "Spent four years building and evolving a React Native design system from the ground up. Learned that good systems aren't just about code — they're about empowering teams, maintaining consistency, and knowing when to be flexible.",
+      "Four years building a React Native design system from its first component to a mature, team-wide foundation. Learned that good systems are as much about trust and communication as they are about code.",
   },
 ]
 

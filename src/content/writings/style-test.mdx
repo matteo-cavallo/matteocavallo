@@ -1,0 +1,117 @@
+---
+title: "Typographic reference"
+description: A kitchen-sink document for validating prose styles — headings, lists, blockquotes, code, asides, and figures.
+date: 2026-05-10
+draft: false
+image: 2026-05-05.jpeg
+imageCaption: "Paris, May 2026"
+---
+
+import { Image } from "astro:assets"
+import photo from "./assets/2026-05-03.jpeg"
+
+This is a paragraph of body text. It sits at the base size, rendered in the sans-serif typeface, at a comfortable line-height for reading. **Bold text** draws the eye. _Italic text_ (rendered in the serif) signals a shift in register. **_Bold italic_** is used sparingly. A [link to an external source](https://www.are.na) should be clearly underlined and transition on hover.
+
+---
+
+## A second-level heading
+
+The h2 sits at the next step up in the type scale. It should have meaningful white space above it — enough to feel like a new chapter, not just a new paragraph. Below it, body text resumes at its regular size and rhythm.
+
+This paragraph follows the heading. It should not be indented. The spacing between it and the heading should feel balanced — neither cramped nor distant. Paragraphs following each other should share consistent vertical rhythm.
+
+### A third-level heading
+
+The h3 is smaller and lighter in visual weight than the h2. It works as a subdivision within a section. Followed by a short paragraph, it should anchor without overwhelming.
+
+Use h3 when the content has real hierarchy. Avoid it as decoration.
+
+---
+
+## Lists
+
+### Unordered
+
+A diamond bullet list. Each item should be clearly separated and easy to scan.
+
+- First item, written as a complete thought or short phrase
+- Second item, which might be slightly longer and wrap to a second line to test how the bullet aligns
+- Third item
+- Fourth item, for good measure
+
+### Ordered
+
+A numbered list. The counter should be muted relative to the text.
+
+1. Read the brief before you write a single line
+2. Sketch before you code
+3. When something feels off, stop and ask why
+4. Ship the thing — iteration beats perfection in a drawer
+
+---
+
+## Blockquote
+
+A plain blockquote, without attribution:
+
+> The best time to plant a tree was twenty years ago. The second best time is now.
+
+A blockquote with a `<cite>` attribution:
+
+<blockquote>
+  <p>
+    You have power over your mind, not outside events. Realize this, and you
+    will find strength.
+  </p>
+  <cite>Marcus Aurelius, Meditations</cite>
+</blockquote>
+
+---
+
+## Code
+
+Inline code: use `const` instead of `let` when the binding won't be reassigned. Prefer `===` over `==`.
+
+A short code block:
+
+```ts
+function formatDate(date: Date): string {
+  return date.toLocaleDateString("en-US", {
+    timeZone: "UTC",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  })
+}
+```
+
+---
+
+## Aside
+
+An aside is used for supplementary information — context, warnings, or notes that sit adjacent to the main flow without interrupting it.
+
+<aside>
+
+**A note on this document.** This file exists purely to test and validate prose styles. It should not be linked from the index. Elements are chosen to stress-test spacing, alignment, and typographic hierarchy across all supported content types.
+
+</aside>
+
+---
+
+## Figure
+
+A figure with an image and caption, rendered inline within the prose flow.
+
+<figure>
+  <Image src={photo} alt="Paris rooftops, spring 2026" />
+  <figcaption>
+    **Paris rooftops, May 2026.** Photo by the author. Fujifilm X100V.
+  </figcaption>
+</figure>
+
+---
+
+## Final paragraph
+
+This is a closing paragraph, used to verify that the prose returns cleanly to body text after all the other elements. Spacing above it (from the preceding element) should feel consistent. The text wraps naturally, and the rhythm established at the top carries through to the end.
