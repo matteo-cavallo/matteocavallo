@@ -3,6 +3,8 @@ import { getCollection, render } from "astro:content"
 import type { CollectionEntry } from "astro:content"
 import { Image } from "astro:assets"
 import Layout from "../../layouts/Layout.astro"
+import PageHeader from "../../components/PageHeader.astro"
+import { formatDate } from "../../utils/date"
 import { site } from "../../data/site"
 
 export async function getStaticPaths() {
@@ -21,26 +23,13 @@ const { entry } = Astro.props
 const { Content } = await render(entry)
 const { title, description, date, image, imageCaption } = entry.data
 
-const dateFormatted = date.toLocaleDateString("en-US", {
-  timeZone: "UTC",
-  month: "long",
-  day: "numeric",
-  year: "numeric",
-})
+const dateFormatted = formatDate(date)
 ---
 
 <Layout title={`${title} — ${site.author.name}`} description={description}>
-  <header class="page-header">
-    <p class="page-kicker">{dateFormatted}</p>
-    <h1 class="page-title">{title}</h1>
-    {
-      description && (
-        <p class="page-subtitle">
-          {description}
-        </p>
-      )
-    }
-  </header>
+  <PageHeader title={title} kicker={dateFormatted}>
+    {description && <p class="page-subtitle">{description}</p>}
+  </PageHeader>
 
   {
     image && (
@@ -58,7 +47,7 @@ const dateFormatted = date.toLocaleDateString("en-US", {
   </article>
 
   <nav class="back-nav">
-    <a href="/writings">← All writings</a>
+    <a href="/writings" class="muted-link">← All writings</a>
   </nav>
 </Layout>
 
@@ -87,41 +76,5 @@ const dateFormatted = date.toLocaleDateString("en-US", {
   .back-nav {
     margin-top: var(--spacing-fluid-3xl);
     font-size: var(--text-fluid-xs);
-  }
-
-  .back-nav a {
-    text-decoration: underline;
-    text-decoration-color: var(--color-gray-7);
-    text-underline-offset: max(0.15em, 3px);
-  }
-</style>
-
-<style is:global>
-  article .heading-anchor {
-    color: var(--color-text-faint);
-    display: inline-block;
-    margin-inline-start: 0.25em;
-    text-decoration: none;
-    opacity: 0;
-    transition:
-      opacity 200ms ease,
-      color 200ms ease;
-  }
-
-  article :is(h2, h3, h4, h5, h6):hover .heading-anchor,
-  article .heading-anchor:focus-visible {
-    opacity: 1;
-  }
-
-  @media (hover: hover) {
-    article .heading-anchor:hover {
-      color: var(--color-text);
-    }
-  }
-
-  @media (hover: none) {
-    article .heading-anchor {
-      opacity: 1;
-    }
   }
 </style>

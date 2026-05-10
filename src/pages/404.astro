@@ -7,7 +7,7 @@ import { site } from "../data/site"
   <section class="not-found">
     <p class="page-kicker">404</p>
     <h1 class="page-title">Page not found.</h1>
-    <p><a href="/">← Back home</a></p>
+    <p class="back-link"><a href="/" class="muted-link">← Back home</a></p>
   </section>
 </Layout>
 
@@ -23,10 +23,7 @@ import { site } from "../data/site"
     margin-bottom: 0;
   }
 
-  a {
+  .back-link {
     font-size: var(--text-fluid-xs);
-    text-decoration: underline;
-    text-decoration-color: var(--color-gray-7);
-    text-underline-offset: max(0.15em, 3px);
   }
 </style>

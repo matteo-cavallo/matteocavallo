@@ -1,0 +1,18 @@
+---
+import Section from "./Section.astro"
+import ExperienceItem from "./ExperienceItem.astro"
+import { experience } from "../data/site"
+---
+
+<Section title="Experience" subtitle="Where the craft has taken shape.">
+  <div class="experience-list">
+    {experience.map((item) => <ExperienceItem {...item} />)}
+  </div>
+</Section>
+
+<style>
+  .experience-list {
+    display: flex;
+    flex-direction: column;
+  }
+</style>

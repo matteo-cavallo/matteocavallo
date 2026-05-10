@@ -1,0 +1,18 @@
+---
+import Section from "./Section.astro"
+import WorkItem from "./WorkItem.astro"
+import { work } from "../data/site"
+---
+
+<Section title="Selected work" subtitle="Things I've made along the way.">
+  <div class="work-list">
+    {work.map((item) => <WorkItem {...item} />)}
+  </div>
+</Section>
+
+<style>
+  .work-list {
+    display: flex;
+    flex-direction: column;
+  }
+</style>

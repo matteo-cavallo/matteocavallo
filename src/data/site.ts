@@ -63,6 +63,9 @@ export const experience = [
   },
 ]
 
+export type Principle = (typeof principles)[number]
+export type Experience = (typeof experience)[number]
+
 export const work = [
   {
     title: "Building an Open Source React UI Library",
@@ -89,3 +92,5 @@ export const work = [
       "A weekly podcast I co-created during university with Lorenzo. We talked about work, learning, and life from a student's perspective. Ten episodes of conversations, ideas, and not taking ourselves too seriously.",
   },
 ]
+
+export type Work = (typeof work)[number]

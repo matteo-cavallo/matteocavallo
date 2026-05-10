@@ -1,0 +1,56 @@
+---
+import type { Experience } from "../data/site"
+
+type Props = Experience
+
+const { role, company, period, description } = Astro.props
+---
+
+<div class="experience-item">
+  <h3 class="experience-role">
+    {role}<span class="experience-company"> · {company}</span>
+  </h3>
+  <p class="experience-period">{period}</p>
+  <p class="experience-description">{description}</p>
+</div>
+
+<style>
+  .experience-item {
+    padding-block: var(--spacing-fluid-l);
+    border-bottom: 1px solid var(--color-border-subtle);
+
+    &:first-child {
+      padding-top: 0;
+    }
+
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+  }
+
+  .experience-role {
+    font-size: var(--text-fluid-base);
+    line-height: var(--line-height-tight);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+  }
+
+  .experience-company {
+    color: var(--color-text-muted);
+    font-weight: var(--font-weight-normal);
+  }
+
+  .experience-period {
+    color: var(--color-text-muted);
+    margin-top: var(--spacing-fluid-2xs);
+    font-size: var(--text-fluid-xs);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .experience-description {
+    color: var(--color-text);
+    margin-top: var(--spacing-fluid-s);
+    max-width: var(--measure-narrow);
+  }
+</style>

@@ -8,8 +8,10 @@ const { title, subtitle } = Astro.props
 ---
 
 <section class="section">
-  <h2 class="section-title">{title}</h2>
-  {subtitle && <p class="section-subtitle">{subtitle}</p>}
+  <header class="section-header">
+    <h2 class="section-title">{title}</h2>
+    {subtitle && <p class="section-subtitle">{subtitle}</p>}
+  </header>
   <slot />
 </section>
 
@@ -20,17 +22,38 @@ const { title, subtitle } = Astro.props
     margin-top: var(--spacing-fluid-3xl);
   }
 
+  .section-header {
+    margin-bottom: var(--spacing-fluid-m);
+  }
+
   .section-title {
     font-size: var(--text-fluid-xl);
     font-weight: var(--font-weight-semibold);
     line-height: var(--line-height-tight);
     letter-spacing: var(--tracking-tight);
-    margin-bottom: var(--spacing-fluid-l);
+    text-wrap: balance;
   }
 
   .section-subtitle {
     color: var(--color-text-muted);
-    margin-bottom: var(--spacing-fluid-l);
+    margin-top: var(--spacing-fluid-s);
     max-width: var(--measure-narrow);
+  }
+
+  @keyframes section-enter {
+    from {
+      opacity: 0;
+      translate: 0 1.25rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .section {
+        animation: section-enter linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 20%;
+      }
+    }
   }
 </style>

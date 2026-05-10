@@ -6,14 +6,10 @@ interface Props {
   description: string
 }
 
-const { title, href, date, description } = Astro.props
+import { formatDate } from "../utils/date"
 
-const dateFormatted = date.toLocaleDateString("en-US", {
-  timeZone: "UTC",
-  month: "long",
-  day: "numeric",
-  year: "numeric",
-})
+const { title, href, date, description } = Astro.props
+const dateFormatted = formatDate(date)
 ---
 
 <a href={href} class="item">
@@ -29,34 +25,35 @@ const dateFormatted = date.toLocaleDateString("en-US", {
     display: block;
     padding-block: var(--spacing-fluid-l);
     border-bottom: 1px solid var(--color-border-subtle);
-  }
 
-  .item:first-child {
-    padding-top: 0;
-  }
+    &:first-child {
+      padding-top: 0;
+    }
 
-  .item:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    &:is(:hover, :focus-visible) .link-underline {
+      background-size: 100% 1px;
+    }
   }
 
   h3 {
     font-size: var(--text-fluid-lg);
+    font-weight: var(--font-weight-semibold);
     line-height: var(--line-height-tight);
     letter-spacing: var(--tracking-tight);
-    font-weight: var(--font-weight-semibold);
+    text-wrap: balance;
     color: var(--color-text);
-  }
-
-  .item:hover .link-underline,
-  .item:focus-visible .link-underline {
-    background-size: 100% 1px;
   }
 
   .meta {
     color: var(--color-text-muted);
     margin-top: var(--spacing-fluid-2xs);
     font-size: var(--text-fluid-xs);
+    font-variant-numeric: tabular-nums;
   }
 
   .description {

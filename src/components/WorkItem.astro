@@ -1,0 +1,75 @@
+---
+import type { Work } from "../data/site"
+
+type Props = Work
+
+const { title, href, type, year, description } = Astro.props
+---
+
+<a href={href} target="_blank" rel="noopener noreferrer" class="work-item">
+  <h3 class="work-title">
+    <span class="link-underline">{title}</span>
+    <span aria-hidden="true" class="work-arrow">↗</span>
+  </h3>
+  <p class="work-meta">{type} <span>{year}</span></p>
+  <p class="work-description">{description}</p>
+</a>
+
+<style>
+  .work-item {
+    display: block;
+    padding-block: var(--spacing-fluid-l);
+    border-bottom: 1px solid var(--color-border-subtle);
+
+    &:first-child {
+      padding-top: 0;
+    }
+
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    &:is(:hover, :focus-visible) .link-underline {
+      background-size: 100% 1px;
+    }
+
+    &:hover .work-arrow {
+      color: var(--color-text-muted);
+      transform: translate(0.125rem, -0.125rem);
+    }
+  }
+
+  .work-title {
+    font-size: var(--text-fluid-lg);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+    letter-spacing: var(--tracking-tight);
+    text-wrap: balance;
+    color: var(--color-text);
+  }
+
+  .work-arrow {
+    color: var(--color-text-faint);
+    margin-left: var(--spacing-fluid-2xs);
+    display: inline-block;
+    font-size: var(--text-fluid-xs);
+    transition:
+      transform 200ms ease-out,
+      color 200ms ease-out;
+  }
+
+  .work-meta {
+    color: var(--color-text-muted);
+    margin-top: var(--spacing-fluid-2xs);
+    font-size: var(--text-fluid-xs);
+    text-transform: lowercase;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .work-description {
+    color: var(--color-text);
+    margin-top: var(--spacing-fluid-s);
+    max-width: var(--measure-narrow);
+  }
+</style>

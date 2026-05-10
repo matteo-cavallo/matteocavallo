@@ -53,25 +53,25 @@ const nav = [
     align-items: center;
     gap: var(--spacing-fluid-2xs);
     margin-inline-end: calc(-1 * var(--spacing-fluid-s));
-  }
 
-  nav a {
-    display: inline-flex;
-    align-items: center;
-    color: var(--color-text);
-    line-height: 1;
-    padding: var(--spacing-fluid-xs) var(--spacing-fluid-s);
-    border-radius: 9999px;
-    transition: font-weight 200ms ease;
-  }
+    & a {
+      display: inline-flex;
+      align-items: center;
+      color: var(--color-text);
+      line-height: 1;
+      padding: var(--spacing-fluid-xs) var(--spacing-fluid-s);
+      border-radius: 9999px;
+      transition: font-weight 200ms ease;
 
-  nav a.active {
-    font-weight: var(--font-weight-semibold);
-  }
+      &.active {
+        font-weight: var(--font-weight-semibold);
+      }
 
-  @media (hover: hover) {
-    nav a:hover {
-      font-weight: var(--font-weight-semibold);
+      @media (hover: hover) {
+        &:hover {
+          font-weight: var(--font-weight-semibold);
+        }
+      }
     }
   }
 </style>

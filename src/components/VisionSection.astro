@@ -1,0 +1,9 @@
+---
+import Section from "./Section.astro"
+import PrinciplesList from "./PrinciplesList.astro"
+import { principles } from "../data/site"
+---
+
+<Section title="Vision" subtitle="The compass for how I build, think, and live.">
+  <PrinciplesList items={principles} />
+</Section>
