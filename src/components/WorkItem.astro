@@ -3,73 +3,173 @@ import type { Work } from "../data/site"
 
 type Props = Work
 
-const { title, href, type, year, description } = Astro.props
+const { title, href, type, year, description, image, imageAlt } = Astro.props
 ---
 
-<a href={href} target="_blank" rel="noopener noreferrer" class="work-item">
-  <h3 class="work-title">
-    <span class="link-underline">{title}</span>
-    <span aria-hidden="true" class="work-arrow">↗</span>
-  </h3>
-  <p class="work-meta">{type} <span>{year}</span></p>
-  <p class="work-description">{description}</p>
-</a>
+<details class="work-item">
+  <summary class="work-summary">
+    <svg
+      class="disclosure-icon"
+      width="10"
+      height="10"
+      viewBox="0 0 10 10"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path d="M3 1.5L7 5L3 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div class="work-header">
+      <span class="work-title">{title}</span>
+      <span class="work-type">{type}</span>
+    </div>
+    <span class="work-year">{year}</span>
+  </summary>
+  <div class="work-body">
+    <div class="work-text">
+      <p class="work-description">{description}</p>
+      <a href={href} target="_blank" rel="noopener noreferrer" class="work-link">
+        Visit ↗
+      </a>
+    </div>
+    {image && (
+      <img src={image} alt={imageAlt ?? title} class="work-image" />
+    )}
+  </div>
+</details>
 
 <style>
   .work-item {
-    display: block;
-    padding-block: var(--spacing-fluid-l);
     border-bottom: 1px solid var(--color-border-subtle);
 
-    &:first-child {
-      padding-top: 0;
-    }
-
-    &:last-child {
+    &:last-of-type {
       border-bottom: none;
-      padding-bottom: 0;
+    }
+  }
+
+  .work-summary {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-fluid-xs);
+    padding-block: var(--spacing-fluid-s);
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+
+    &::-webkit-details-marker {
+      display: none;
     }
 
-    &:is(:hover, :focus-visible) .link-underline {
-      background-size: 100% 1px;
+    &:hover .work-title {
+      color: var(--color-text);
     }
+  }
 
-    &:hover .work-arrow {
-      color: var(--color-text-muted);
-      transform: translate(0.125rem, -0.125rem);
-    }
+  .disclosure-icon {
+    flex-shrink: 0;
+    color: var(--color-text-faint);
+    transition: rotate 180ms ease-out, color 180ms ease-out;
+    align-self: flex-start;
+    margin-top: 0.35em;
+  }
+
+  details[open] .disclosure-icon {
+    rotate: 90deg;
+    color: var(--color-text-muted);
+  }
+
+  .work-header {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1em;
   }
 
   .work-title {
-    font-size: var(--text-fluid-lg);
+    font-size: var(--text-fluid-sm);
     font-weight: var(--font-weight-semibold);
-    line-height: var(--line-height-tight);
-    letter-spacing: var(--tracking-tight);
-    text-wrap: balance;
     color: var(--color-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
-  .work-arrow {
+  details[open] .work-title {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  .work-type {
+    font-size: var(--text-fluid-xs);
     color: var(--color-text-faint);
-    margin-left: var(--spacing-fluid-2xs);
-    display: inline-block;
-    font-size: var(--text-fluid-xs);
-    transition:
-      transform 200ms ease-out,
-      color 200ms ease-out;
+    text-transform: lowercase;
   }
 
-  .work-meta {
-    color: var(--color-text-muted);
-    margin-top: var(--spacing-fluid-2xs);
+  .work-year {
     font-size: var(--text-fluid-xs);
-    text-transform: lowercase;
+    color: var(--color-text-faint);
+    flex-shrink: 0;
     font-variant-numeric: tabular-nums;
+    align-self: flex-start;
+    margin-top: 0.2em;
+  }
+
+  .work-body {
+    padding-left: calc(10px + var(--spacing-fluid-xs));
+    padding-bottom: var(--spacing-fluid-s);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-fluid-s);
   }
 
   .work-description {
-    color: var(--color-text);
-    margin-top: var(--spacing-fluid-s);
-    max-width: var(--measure-narrow);
+    font-size: var(--text-fluid-xs);
+    color: var(--color-text-muted);
+    line-height: var(--line-height-body);
+  }
+
+  .work-link {
+    font-size: var(--text-fluid-xs);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25em;
+
+    &:hover {
+      color: var(--color-text);
+    }
+  }
+
+  .work-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-fluid-s);
+  }
+
+  .work-image {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+
+  @media (min-width: 640px) {
+    .work-body {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: var(--spacing-fluid-m);
+    }
+
+    .work-text {
+      flex: 1;
+    }
+
+    .work-image {
+      width: auto;
+      max-height: 10rem;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
   }
 </style>

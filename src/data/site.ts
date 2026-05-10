@@ -91,7 +91,17 @@ export const work = [
     year: "2021",
     description:
       "A weekly podcast I co-created during university with Lorenzo. We talked about work, learning, and life from a student's perspective. Ten episodes of conversations, ideas, and not taking ourselves too seriously.",
+    image: "/work/accademia-dei-pugni.jpeg",
+    imageAlt: "Accademia dei Pugni podcast cover",
   },
 ]
 
-export type Work = (typeof work)[number]
+export type Work = {
+  title: string
+  href: string
+  type: string
+  year: string
+  description: string
+  image?: string
+  imageAlt?: string
+}

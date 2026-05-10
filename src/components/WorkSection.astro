@@ -4,13 +4,20 @@ import WorkItem from "./WorkItem.astro"
 import { work } from "../data/site"
 ---
 
-<Section title="Selected work" subtitle="Things I've made along the way.">
-  <div class="work-list">
-    {work.map((item) => <WorkItem {...item} />)}
-  </div>
-</Section>
+<div class="work-section">
+  <Section title="Selected work" subtitle="Things I've made along the way.">
+    <div class="work-list">
+      {work.map((item) => <WorkItem {...item} />)}
+    </div>
+  </Section>
+</div>
 
 <style>
+
+  .work-section :global(.section) {
+    margin-top: var(--spacing-fluid-2xl);
+  }
+
   .work-list {
     display: flex;
     flex-direction: column;

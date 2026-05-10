@@ -23,7 +23,7 @@ const dateFormatted = formatDate(date)
 <style>
   .item {
     display: block;
-    padding-block: var(--spacing-fluid-l);
+    padding-block: var(--spacing-fluid-m);
     border-bottom: 1px solid var(--color-border-subtle);
 
     &:first-child {
@@ -41,10 +41,9 @@ const dateFormatted = formatDate(date)
   }
 
   h3 {
-    font-size: var(--text-fluid-lg);
+    font-size: var(--text-fluid-base);
     font-weight: var(--font-weight-semibold);
     line-height: var(--line-height-tight);
-    letter-spacing: var(--tracking-tight);
     text-wrap: balance;
     color: var(--color-text);
   }
@@ -57,8 +56,10 @@ const dateFormatted = formatDate(date)
   }
 
   .description {
-    color: var(--color-text);
-    margin-top: var(--spacing-fluid-s);
+    color: var(--color-text-muted);
+    margin-top: var(--spacing-fluid-xs);
+    font-size: var(--text-fluid-xs);
+    line-height: var(--line-height-body);
     max-width: var(--measure-narrow);
   }
 </style>
