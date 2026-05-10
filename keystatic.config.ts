@@ -14,10 +14,9 @@ export default config({
         description: fields.text({ label: "Description", multiline: true }),
         date: fields.date({ label: "Date" }),
         draft: fields.checkbox({ label: "Draft", defaultValue: false }),
-        image: fields.image({
-          label: "Image",
-          directory: "src/content/writings/assets",
-          publicPath: "./assets/",
+        image: fields.text({
+          label: "Cover Image",
+          description: "Filename from src/content/writings/assets/ (e.g. photo.jpeg)",
         }),
         imageCaption: fields.text({ label: "Image Caption" }),
         content: fields.mdx({ label: "Content" }),
