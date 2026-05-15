@@ -1,7 +1,7 @@
 export const site = {
   title: "Matteo Cavallo",
   description:
-    "Web engineer crafting meaningful digital experiences with care, clarity and intention. Building interfaces for purpose-driven people who want to leave things better than they found them.",
+    "Matteo Cavallo is a Senior Web Engineer based in Paris. He crafts meaningful digital experiences with care, clarity and intention — helping purpose-driven people leave things better than they found them.",
   url: "https://matteocavallo.com",
   locale: "en_US",
   keywords:
