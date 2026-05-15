@@ -1,0 +1,43 @@
+---
+import Signature from "./Signature.astro"
+---
+
+<div id="curtain" style="display:none">
+  <p id="curtain-text">
+    I believe that <em>good work</em> can change things — for people, for communities,
+    for the world around us.
+  </p>
+  <Signature />
+</div>
+
+<style>
+  :global(html.curtain-done) #curtain {
+    display: none;
+  }
+
+  #curtain {
+    background-color: var(--color-bg);
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-fluid-xl);
+  }
+
+  #curtain-text {
+    max-width: 18rem;
+    text-align: center;
+    font-family: var(--font-serif);
+    font-size: var(--text-fluid-lg);
+    line-height: var(--line-height-tight);
+  }
+
+  @media (min-width: 768px) {
+    #curtain-text {
+      max-width: 28rem;
+    }
+  }
+</style>

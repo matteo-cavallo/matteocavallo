@@ -52,6 +52,11 @@ const pageTransition = { forwards, backwards }
   <head>
     <ClientRouter />
     <SEO title={title} description={description} />
+    <script is:inline>
+      if (sessionStorage.getItem('curtain-shown')) {
+        document.documentElement.classList.add('curtain-done')
+      }
+    </script>
   </head>
   <body>
     <Header />
@@ -61,3 +66,5 @@ const pageTransition = { forwards, backwards }
     <Footer />
   </body>
 </html>
+
+<script src="../scripts/intro.ts"></script>
