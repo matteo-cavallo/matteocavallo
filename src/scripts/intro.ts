@@ -51,7 +51,7 @@ document.addEventListener("astro:page-load", () => {
       ease: "expo.out",
     })
     // 3. curtain slides up
-    .to(curtain, { y: "-100%", duration: 0.85, ease: "power2.inOut" })
+    .to(curtain, { y: "-100%", duration: 0.85, ease: "power2.inOut" }, "-=1")
     // 4. hero text fades in (overlapping with curtain exit)
     .from(
       splitHero.words,
