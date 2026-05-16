@@ -1,9 +1,9 @@
 ---
 import Section from "./Section.astro"
 import WritingItem from "./WritingItem.astro"
-import { getPublishedWritings } from "../utils/writings"
+import { getFeaturedWritings } from "../utils/writings"
 
-const featured = (await getPublishedWritings()).slice(0, 3)
+const featured = await getFeaturedWritings()
 ---
 
 <Section title="Writings" subtitle="Notes from the making.">

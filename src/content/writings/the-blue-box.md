@@ -5,6 +5,7 @@ date: 2026-05-16
 draft: false
 image: the-blue-box.jpeg
 imageCaption: Paris, May 2026
+featured: true
 ---
 
 Living in Paris has a specific feeling. Not the postcard one — the other one. The one where you wake up, commute, work, come home, and somewhere between the cracks of the daily routine you realize you haven't really been there.

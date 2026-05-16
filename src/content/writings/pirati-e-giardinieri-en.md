@@ -1,10 +1,11 @@
 ---
 title: Pirates and Gardeners
 description: On coming home.
-date: 2026-05-16
+date: 2025-05-16
 draft: false
 image: paris-roofs.jpeg
 imageCaption: Paris, 2025
+featured: true
 ---
 <small>This piece was originally written in Italian. If you'd like to read it in its 
 original language, you can find it [here](pirati-e-giardinieri).</small><br/><br/>

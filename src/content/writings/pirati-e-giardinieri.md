@@ -1,7 +1,7 @@
 ---
 title: Pirati e Giardinieri (IT)
 description: Sul ritorno a casa.
-date: 2026-05-16
+date: 2025-05-16
 draft: false
 image: paris-roofs.jpeg
 imageCaption: Paris, 2025
