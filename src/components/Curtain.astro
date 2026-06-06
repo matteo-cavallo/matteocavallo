@@ -2,7 +2,7 @@
 import Signature from "./Signature.astro"
 ---
 
-<div id="curtain" style="display:none">
+<div id="curtain">
   <p id="curtain-text">
     I believe that <em>good work</em> can change things — for people, for communities,
     for the world around us.
@@ -13,6 +13,10 @@ import Signature from "./Signature.astro"
 <style>
   :global(html.curtain-done) #curtain {
     display: none;
+  }
+
+  :global(#curtain svg) {
+    opacity: 0;
   }
 
   #curtain {
@@ -28,6 +32,7 @@ import Signature from "./Signature.astro"
   }
 
   #curtain-text {
+    opacity: 0;
     max-width: 18rem;
     text-align: center;
     font-family: var(--font-serif);

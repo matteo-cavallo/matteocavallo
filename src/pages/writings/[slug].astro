@@ -31,9 +31,11 @@ const { title, description, date, image, imageCaption } = entry.data
 const imageData = image
   ? allImages[`/src/content/writings/assets/${image}`]?.default
   : null
+
+const ogImage = imageData ? new URL(imageData.src, site.url).href : undefined
 ---
 
-<Layout title={`${title} — ${site.author.name}`} description={description}>
+<Layout title={`${title} — ${site.author.name}`} description={description} image={ogImage}>
   <PageHeader title={title} datePublished={date}>
     {description && <p class="page-subtitle">{description}</p>}
   </PageHeader>

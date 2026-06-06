@@ -24,7 +24,13 @@ document.addEventListener("astro:page-load", () => {
   const split = SplitText.create("#curtain-text", { type: "words" })
   const splitHero = SplitText.create("#hero-text", { type: "words" })
 
-  curtain.style.display = "flex"
+  // Synchronously set "from" states before any paint — prevents flash of
+  // unstyled curtain content between DOM render and when GSAP runs.
+  gsap.set(split.words, { opacity: 0, y: 12 })
+  gsap.set("#curtain-text", { opacity: 1 })
+  gsap.set("#curtain path", { drawSVG: "0%" })
+  gsap.set("#curtain svg", { opacity: 1 })
+
   document.documentElement.style.overflow = "hidden"
 
   gsap
@@ -36,16 +42,16 @@ document.addEventListener("astro:page-load", () => {
       },
     })
     // 1. curtain text words fade in
-    .from(split.words, {
-      opacity: 0,
-      y: 12,
+    .to(split.words, {
+      opacity: 1,
+      y: 0,
       duration: 0.75,
       stagger: 0.08,
       ease: "power3.out",
     })
     // 2. signature draws (after text completes)
-    .from("path", {
-      drawSVG: 0,
+    .to("#curtain path", {
+      drawSVG: "100%",
       duration: 0.5,
       stagger: 0.2,
       ease: "expo.out",

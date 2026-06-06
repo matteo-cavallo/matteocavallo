@@ -4,11 +4,12 @@ import { site } from "../data/site"
 interface Props {
   title?: string
   description?: string
+  image?: string
 }
 
-const { title = site.title, description = site.description } = Astro.props
+const { title = site.title, description = site.description, image } = Astro.props
 const canonicalUrl = new URL(Astro.url.pathname, site.url).href
-const imageUrl = `${site.url}/matteo-2.jpeg`
+const imageUrl = image ?? `${site.url}/matteo-2.jpeg`
 
 const jsonLd = {
   "@context": "https://schema.org",
