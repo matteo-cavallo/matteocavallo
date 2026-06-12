@@ -3,63 +3,53 @@ interface Props {
   title: string
   href: string
   date: Date
-  description: string
 }
 
 import { formatDate } from "../utils/date"
 
-const { title, href, date, description } = Astro.props
+const { title, href, date } = Astro.props
 const dateFormatted = formatDate(date)
 ---
 
 <a href={href} class="item">
-  <h3><span class="link-underline">{title}</span></h3>
+  <h3 class="title">{title}</h3>
   <p class="meta">
     <time datetime={date.toISOString()}>{dateFormatted}</time>
   </p>
-  {description && <p class="description">{description}</p>}
 </a>
 
 <style>
   .item {
-    display: block;
-    padding-block: var(--spacing-fluid-m);
-    border-bottom: 1px solid var(--color-border-subtle);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    column-gap: var(--spacing-fluid-m);
+    padding-block: var(--spacing-fluid-s);
 
     &:first-child {
       padding-top: 0;
     }
-
-    &:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-
-    &:is(:hover, :focus-visible) .link-underline {
-      background-size: 100% 1px;
-    }
   }
 
-  h3 {
-    font-size: var(--text-fluid-base);
-    font-weight: var(--font-weight-semibold);
+  .title {
+    grid-column: 1;
+    font-size: var(--text-fluid-sm);
+    font-weight: var(--font-weight-normal);
     line-height: var(--line-height-tight);
-    text-wrap: balance;
+    color: var(--color-text-muted);
+    transition: color 200ms ease;
+  }
+
+  .item:is(:hover, :focus-visible) .title {
     color: var(--color-text);
   }
 
   .meta {
-    color: var(--color-text-muted);
-    margin-top: var(--spacing-fluid-2xs);
+    grid-column: 2;
+    grid-row: 1;
+    color: var(--color-text-faint);
     font-size: var(--text-fluid-xs);
     font-variant-numeric: tabular-nums;
-  }
-
-  .description {
-    color: var(--color-text-muted);
-    margin-top: var(--spacing-fluid-xs);
-    font-size: var(--text-fluid-xs);
-    line-height: var(--line-height-body);
-    max-width: var(--measure-narrow);
+    white-space: nowrap;
   }
 </style>

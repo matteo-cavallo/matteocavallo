@@ -4,17 +4,8 @@ import WorkItem from "./WorkItem.astro"
 import { work } from "../data/site"
 ---
 
-<div class="work-section">
-  <Section title="Selected work" subtitle="Things I've made along the way.">
-    <div class="work-list">
-      {work.map((item) => <WorkItem {...item} />)}
-    </div>
-  </Section>
-</div>
-
-<style>
-  .work-list {
-    display: flex;
-    flex-direction: column;
-  }
-</style>
+<Section title="Selected work" subtitle="Things I've made along the way.">
+  <div class="stack">
+    {work.map((item) => <WorkItem {...item} />)}
+  </div>
+</Section>

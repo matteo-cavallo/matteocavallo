@@ -27,24 +27,9 @@ export const site = {
   },
 }
 
-export const principles = [
-  {
-    title: "Good work can change things.",
-    description: "For people, for communities, for the world around us.",
-  },
-  {
-    title: "Clarity matters.",
-    description: "I believe in quiet design, in beauty as a form of truth.",
-  },
-  {
-    title: "Purpose over performance.",
-    description:
-      "What we make should leave the world &mdash; even slightly &mdash; better.",
-  },
-  {
-    title: "People first.",
-    description: "The quiet power of collaboration, empathy, and care.",
-  },
+export const nav = [
+  { label: "About", href: "/about" },
+  { label: "Writings", href: "/writings" },
 ]
 
 export const experience = [
@@ -64,7 +49,6 @@ export const experience = [
   },
 ]
 
-export type Principle = (typeof principles)[number]
 export type Experience = (typeof experience)[number]
 
 export const work = [

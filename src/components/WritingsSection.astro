@@ -7,27 +7,23 @@ const featured = await getFeaturedWritings()
 ---
 
 <Section title="Writings" subtitle="Notes from the making.">
-  <div class="writings-list">
+  <div class="stack">
     {
       featured.map((piece) => (
         <WritingItem
           title={piece.data.title}
           href={`/writings/${piece.id}`}
           date={piece.data.date}
-          description={piece.data.description}
         />
       ))
     }
   </div>
-  <p class="section-more"><a href="/writings" class="muted-link">All writings →</a></p>
+  <p class="section-more">
+    <a href="/writings" class="muted-link">All writings →</a>
+  </p>
 </Section>
 
 <style>
-  .writings-list {
-    display: flex;
-    flex-direction: column;
-  }
-
   .section-more {
     margin-top: var(--spacing-fluid-l);
     font-size: var(--text-fluid-xs);

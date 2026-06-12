@@ -1,21 +1,14 @@
 ---
+import { nav } from "../data/site"
+
 const currentPath = Astro.url.pathname
 const topLevel = "/" + (currentPath.split("/")[1] ?? "")
-
-const nav = [
-  { label: "About", href: "/about" },
-  { label: "Writings", href: "/writings" },
-]
 ---
 
 <header>
   <div class="container header-inner">
     <a href="/" aria-label="Home, Matteo Cavallo" class="logo-link">
-      <img
-        src="https://i0.wp.com/www.tomrichmond.com/wp-content/uploads/2017/03/Alfred.jpg?resize=800%2C758&ssl=1"
-        alt="Matteo Cavallo"
-        class="logo-image"
-      />
+      <img src="/alfred.jpg" alt="Matteo Cavallo" class="logo-image" />
     </a>
     <nav aria-label="Primary">
       {
@@ -58,7 +51,6 @@ const nav = [
     object-position: top center;
     display: block;
   }
-
 
   nav {
     display: flex;

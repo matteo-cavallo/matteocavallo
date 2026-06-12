@@ -33,8 +33,7 @@ Qualche giorno prima di partire stavo parlando con un amico. Uno di quelli con i
 
 «Guarda le bestie. Loro non si svegliano un giorno dicendo: mi sono stufato, mollo tutto e vado a Parigi. Loro vivono e basta. Noi no. Noi dobbiamo sempre cercare qualcosa di più. Forse è l'evoluzione, forse è una maledizione.»
 
-
-Quella sera ho rivisto [The Holdovers](https://en.wikipedia.org/wiki/The_Holdovers) — un film su chi resta, su chi viene lasciato indietro mentre il mondo si muove, e scopre qualcosa di preciso proprio perché non si è mosso. 
+Quella sera ho rivisto [The Holdovers](https://en.wikipedia.org/wiki/The_Holdovers) — un film su chi resta, su chi viene lasciato indietro mentre il mondo si muove, e scopre qualcosa di preciso proprio perché non si è mosso.
 
 Mi ha fatto pensare. Anch'io sono preda di quel tarlo, di quella voglia di essere di più, di fare di più. Ma quella notte, invece di combatterlo, ci ho fatto i conti. Ho pensato allo zaino di ricordi — le persone lasciate, quelle che amo ancora, tutte le cose non dette.
 
@@ -44,7 +43,7 @@ Le persone si dividono in due tipi: Pirati e Giardinieri. I Pirati viaggiano, es
 
 Per molto tempo ho pensato di dover scegliere.
 
-Ma i Greci avevano una parola per quello che succede dopo: [νόστος, nostos](https://en.wikipedia.org/wiki/Nostos) — il ritorno a casa. Da lì viene il concetto di _nostalgia_: non malinconia del passato, ma il dolore fisico di chi non è ancora arrivato. 
+Ma i Greci avevano una parola per quello che succede dopo: [νόστος, nostos](https://en.wikipedia.org/wiki/Nostos) — il ritorno a casa. Da lì viene il concetto di _nostalgia_: non malinconia del passato, ma il dolore fisico di chi non è ancora arrivato.
 
 Ulisse era il Pirata per eccellenza. Vent'anni di guerra e di mare aperto, di mostri e isole incantate. Eppure tutto quel viaggio era solo il modo più lungo per tornare a Itaca. Al suo giardino.
 

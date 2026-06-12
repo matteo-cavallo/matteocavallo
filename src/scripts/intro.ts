@@ -21,8 +21,17 @@ document.addEventListener("astro:page-load", () => {
     return
   }
 
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    // honor reduced motion — skip the reveal entirely
+    curtain.style.display = "none"
+    sessionStorage.setItem(SESSION_KEY, "1")
+    return
+  }
+
   const split = SplitText.create("#curtain-text", { type: "words" })
-  const splitHero = SplitText.create("#hero-text", { type: "words" })
+  // #hero-text only exists on the homepage; the curtain runs on any first-visit page
+  const heroEl = document.getElementById("hero-text")
+  const splitHero = heroEl ? SplitText.create(heroEl, { type: "words" }) : null
 
   // Synchronously set "from" states before any paint — prevents flash of
   // unstyled curtain content between DOM render and when GSAP runs.
@@ -33,7 +42,7 @@ document.addEventListener("astro:page-load", () => {
 
   document.documentElement.style.overflow = "hidden"
 
-  gsap
+  const tl = gsap
     .timeline({
       delay: 0.1,
       onComplete: () => {
@@ -58,10 +67,13 @@ document.addEventListener("astro:page-load", () => {
     })
     // 3. curtain slides up
     .to(curtain, { y: "-100%", duration: 0.85, ease: "power2.inOut" }, "-=1")
-    // 4. hero text fades in (overlapping with curtain exit)
-    .from(
+
+  // 4. hero text fades in (overlapping with curtain exit) — homepage only
+  if (splitHero) {
+    tl.from(
       splitHero.words,
       { opacity: 0, y: 12, duration: 0.75, stagger: 0.055, ease: "power3.out" },
       "-=0.45",
     )
+  }
 })

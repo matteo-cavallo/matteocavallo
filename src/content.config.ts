@@ -9,14 +9,14 @@ const writings = defineCollection({
     generateId: ({ entry }) => entry.replace(/\.mdx?$/, ""),
   }),
   schema: z.object({
-      title: z.string(),
-      description: z.string(),
-      date: z.coerce.date(),
-      draft: z.boolean().optional().default(false),
-      featured: z.boolean().optional().default(false),
-      image: z.string().optional(),
-      imageCaption: z.string().optional(),
-    }),
+    title: z.string(),
+    description: z.string(),
+    date: z.coerce.date(),
+    draft: z.boolean().optional().default(false),
+    featured: z.boolean().optional().default(false),
+    image: z.string().optional(),
+    imageCaption: z.string().optional(),
+  }),
 })
 
 export const collections = { writings }

@@ -9,7 +9,7 @@ import { site } from "../../data/site"
 
 const allImages = import.meta.glob<{ default: ImageMetadata }>(
   "/src/content/writings/assets/**/*.{png,jpg,jpeg,webp,gif}",
-  { eager: true }
+  { eager: true },
 )
 
 export async function getStaticPaths() {
@@ -32,13 +32,31 @@ const imageData = image
   ? allImages[`/src/content/writings/assets/${image}`]?.default
   : null
 
+if (image && !imageData) {
+  throw new Error(
+    `"${entry.id}" references image "${image}" but no matching file exists in src/content/writings/assets/`,
+  )
+}
+
 const processedOgImage = imageData
-  ? await getImage({ src: imageData, format: "jpeg", width: 1200 })
+  ? await getImage({
+      src: imageData,
+      format: "jpeg",
+      width: 1200,
+      height: 630,
+      fit: "cover",
+    })
   : null
-const ogImage = processedOgImage ? `${site.url}${processedOgImage.src}` : undefined
+const ogImage = processedOgImage
+  ? `${site.url}${processedOgImage.src}`
+  : undefined
 ---
 
-<Layout title={`${title} — ${site.author.name}`} description={description} image={ogImage}>
+<Layout
+  title={`${title} — ${site.author.name}`}
+  description={description}
+  image={ogImage}
+>
   <PageHeader title={title} datePublished={date}>
     {description && <p class="page-subtitle">{description}</p>}
   </PageHeader>

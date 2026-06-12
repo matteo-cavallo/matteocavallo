@@ -55,8 +55,8 @@ const pageTransition = { forwards, backwards }
     <ClientRouter />
     <SEO title={title} description={description} image={image} />
     <script is:inline>
-      if (sessionStorage.getItem('curtain-shown')) {
-        document.documentElement.classList.add('curtain-done')
+      if (sessionStorage.getItem("curtain-shown")) {
+        document.documentElement.classList.add("curtain-done")
       }
     </script>
   </head>

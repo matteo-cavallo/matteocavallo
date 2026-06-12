@@ -15,23 +15,15 @@ const writings = await getPublishedWritings()
   <PageHeader title="Writings">
     <p class="page-subtitle">Notes from the making.</p>
   </PageHeader>
-  <section class="writings-list">
+  <section class="stack">
     {
       writings.map((piece) => (
         <WritingItem
           title={piece.data.title}
           href={`/writings/${piece.id}`}
           date={piece.data.date}
-          description={piece.data.description}
         />
       ))
     }
   </section>
 </Layout>
-
-<style>
-  .writings-list {
-    display: flex;
-    flex-direction: column;
-  }
-</style>

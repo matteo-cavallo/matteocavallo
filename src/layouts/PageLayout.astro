@@ -29,9 +29,11 @@ const { frontmatter } = Astro.props
     image={frontmatter.image}
     imageAlt={frontmatter.imageAlt}
   >
-    {frontmatter.subtitle && (
-      <p class="page-subtitle">{frontmatter.subtitle}</p>
-    )}
+    {
+      frontmatter.subtitle && (
+        <p class="page-subtitle">{frontmatter.subtitle}</p>
+      )
+    }
   </PageHeader>
   <slot />
 </Layout>

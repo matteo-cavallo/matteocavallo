@@ -3,5 +3,6 @@ import mdx from "@astrojs/mdx"
 import icon from "astro-icon"
 
 export default defineConfig({
+  site: "https://matteocavallo.com",
   integrations: [icon(), mdx()],
 })

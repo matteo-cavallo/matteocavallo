@@ -6,7 +6,7 @@ type Props = Work
 const { title, href, type, year, description, image, imageAlt } = Astro.props
 ---
 
-<div class="work-item">
+<div class="work-item list-item">
   <details>
     <summary class="work-summary">
       <div class="work-header">
@@ -25,39 +25,54 @@ const { title, href, type, year, description, image, imageAlt } = Astro.props
         fill="none"
         aria-hidden="true"
       >
-        <path d="M3 1.5L7 5L3 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path
+          d="M3 1.5L7 5L3 8.5"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
       </svg>
     </summary>
   </details>
   <div class="work-body-outer">
     <div class="work-body">
       <div class="work-body-inner">
-      <div class="work-text">
-        <p class="work-description">{description}</p>
-        <a href={href} target="_blank" rel="noopener noreferrer" class="work-link">
-          Visit
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-            <path d="M2 8L8 2M8 2H3.5M8 2V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-      </div>
-      {image && (
-        <img src={image} alt={imageAlt ?? title} class="work-image" />
-      )}
+        <div class="work-text">
+          <p class="work-description">{description}</p>
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="work-link"
+          >
+            Visit
+            <svg
+              width="10"
+              height="10"
+              viewBox="0 0 10 10"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M2 8L8 2M8 2H3.5M8 2V6.5"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"></path>
+            </svg>
+          </a>
+        </div>
+        {
+          image && (
+            <img src={image} alt={imageAlt ?? title} class="work-image" />
+          )
+        }
       </div>
     </div>
   </div>
 </div>
 
 <style>
-  .work-item {
-    border-bottom: 1px solid var(--color-border-subtle);
-
-    &:last-child {
-      border-bottom: none;
-    }
-  }
-
   details {
     list-style: none;
 
@@ -89,7 +104,7 @@ const { title, href, type, year, description, image, imageAlt } = Astro.props
 
   .work-title {
     font-size: var(--text-fluid-sm);
-    font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-normal);
     color: var(--color-text-muted);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -131,7 +146,9 @@ const { title, href, type, year, description, image, imageAlt } = Astro.props
     flex-shrink: 0;
     color: var(--color-text-faint);
     rotate: -90deg;
-    transition: rotate 180ms ease-out, color 180ms ease-out;
+    transition:
+      rotate 180ms ease-out,
+      color 180ms ease-out;
   }
 
   details[open] .disclosure-icon {
