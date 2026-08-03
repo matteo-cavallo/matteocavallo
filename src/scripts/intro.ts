@@ -65,8 +65,8 @@ document.addEventListener("astro:page-load", () => {
       stagger: 0.2,
       ease: "expo.out",
     })
-    // 3. curtain slides up
-    .to(curtain, { y: "-100%", duration: 0.85, ease: "power2.inOut" }, "-=1")
+    // 3. curtain slides up (starts just after the signature finishes drawing)
+    .to(curtain, { y: "-100%", duration: 0.85, ease: "power2.inOut" }, "-=0.1")
 
   // 4. hero text fades in (overlapping with curtain exit) — homepage only
   if (splitHero) {
