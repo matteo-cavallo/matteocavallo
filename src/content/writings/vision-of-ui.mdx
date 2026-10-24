@@ -1,0 +1,55 @@
+---
+title: What happens when interfaces are not only for humans anymore?
+description: Agents don't need to see. We do. What that means for the interfaces we build.
+date: 2026-05-16
+draft: false
+image: agents.jpeg
+imageCaption: July 2026
+featured: true
+---
+
+I've spent a lot of time building interfaces that feel good for humans to use.
+
+Now there's a new kind of user in the applications we build: agents.
+
+---
+
+Agents don't need to "see" anything. No layout, no hierarchy, no hover states. They read structured data, call an API, and move on. An application built only for agents doesn't need an interface at all.
+
+But most applications won't be for agents only. Some people will keep using them the traditional way — looking, clicking, moving through the page. Some agents will work on their own, stopping only to ask for a confirmation before something sensitive, like a payment. And in between sits the most interesting case: humans and agents working together, in the same application.
+
+That's where the interface matters again. Not for the agent — for the human.
+
+---
+
+When two people don't share a language, they point at things. They draw. They use whatever both of them can understand.
+
+Humans and agents already share text. They're starting to share images, videos, graphics. The next shared language is the interactive interface itself: the agent doesn't just answer, it builds the screen you need to see the answer.
+
+Ask a question, get an interface built for that question. Only that one.
+
+---
+
+This is where I think most people picture it wrong.
+
+The agent won't draw the interface from scratch, pixel by pixel. That would be fragile, inconsistent, impossible to trust. It will compose it from pieces someone already made — a table, a chart, a form, a confirmation step — and from the rules for how those pieces fit together.
+
+A dictionary.
+
+We write the words: components, tokens, patterns, the grammar that holds them together. The agent writes the sentences.
+
+It's already happening. With [MCP Apps](https://blog.modelcontextprotocol.io/posts/2026-01-26-mcp-apps/), a tool doesn't just return text — it returns a real interface that renders inside the conversation. With [json-render](https://github.com/vercel-labs/json-render), you define a catalog of components, and the model can only answer with JSON built from that catalog. Nothing outside the dictionary reaches the screen.
+
+---
+
+Taken to the extreme, every screen of every application could be generated on demand. And if interfaces become that cheap to produce, the screen stops being where the value is.
+
+The value moves below it. Into the dictionary. Into the data behind it, the actions an agent can safely perform, the moments where a human has to say yes.
+
+---
+
+So, what happens when interfaces are not only for humans anymore?
+
+We stop designing screens. We start designing the language screens are made of.
+
+That's still interface work. Maybe the most important kind.
